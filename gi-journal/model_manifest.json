@@ -1,0 +1,15 @@
+{
+  "manifest_version": 1,
+  "models": {
+    "e4b": {
+      "model_id": "mlx-community/gemma-4-e4b-it-4bit",
+      "revision": "475b9088d29754a3379866cf5aeb6b41acd313c2",
+      "snapshot_path": ".hf_cache/models--mlx-community--gemma-4-e4b-it-4bit/snapshots/475b9088d29754a3379866cf5aeb6b41acd313c2"
+    },
+    "e2b": {
+      "model_id": "mlx-community/gemma-4-e2b-it-4bit",
+      "revision": "238767527555cb75a05732a84dff5d6ba0dd6809",
+      "snapshot_path": ".hf_cache/models--mlx-community--gemma-4-e2b-it-4bit/snapshots/238767527555cb75a05732a84dff5d6ba0dd6809"
+    }
+  }
+}
