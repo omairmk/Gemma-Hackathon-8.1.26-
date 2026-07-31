@@ -1,5 +1,8 @@
 STARTER_CODE_ALLOWED:
 STATUS:
+EVENT_STARTER_CODE_ALLOWED: UNANSWERED
+DEVICE_INFERENCE_STATUS: IN_PROGRESS
+APP_END_TO_END_STATUS: NOT_RUN
 
 # GITimeline mobile precheck record
 
@@ -7,15 +10,29 @@ STATUS:
 
 | Field | Value |
 |---|---|
-| Project/app target build command | Exact remote pin: blocked before compile by upstream v0.14.0 checksum mismatch. Non-qualifying `/private/tmp` checksum overlay: arm64 simulator `build-for-testing` passed. See `BUILD_STATUS.md`. |
-| Test target build/test command | Same non-qualifying overlay: arm64 iPhone 17 Pro / iOS 26.5 simulator `xcodebuild ... test` passed 11/11 app-target tests. |
+| Project/app target build command | Exact official correction revision resolves; clean arm64 iPhone 17 Pro Max / iOS 26.5 simulator build passed. See `BUILD_STATUS.md`. |
+| Test target build/test command | Clean exact-revision project: arm64 simulator `xcodebuild ... test` passed 11/11 app-target tests. |
 | LiteRT-LM package | `https://github.com/google-ai-edge/LiteRT-LM.git` |
-| LiteRT-LM tag | `v0.14.0` |
-| LiteRT-LM commit | `80f301ff9a3b02c2c1e7be2dd1a567752f7b51b6` |
-| `Package.resolved` present | Yes; exact v0.14.0 / `80f301ff9a3b02c2c1e7be2dd1a567752f7b51b6`. |
+| LiteRT-LM tag/API base | `v0.14.0` |
+| LiteRT-LM exact correction commit | `f73637c57f0940b53da184e0d5adfc52a4e55eef` |
+| `Package.resolved` present | Yes; exact revision `f73637c57f0940b53da184e0d5adfc52a4e55eef`. |
 | Bundle ID | `com.omairmkhan.GITimeline` |
-| Model ID | `litert-community/gemma-4-E4B-it-litert-lm` |
+| Model ID | No model selected; Gallery-pinned Gemma 3n E2B is the first-baseline candidate pending owner/device memory confirmation and download approval. |
 | Prompt/validator example passes | Yes; included in 14/14 passing host tests. |
+
+## INDEPENDENT GATES
+
+| Axis | Verdict | Evidence/blocker |
+|---|---|---|
+| Dependency | PASS | Exact official correction revision resolves; 14 host and 11 arm64 simulator tests pass. |
+| Physical device build | BLOCKED | Read-only CoreDevice query returned `No devices found`; owner must connect and unlock the intended iPhone. |
+| Model integrity | NOT_RUN | No qualifying Gemma 3n LiteRT-LM iOS artifact is present locally. |
+| Engine initialization | NOT_RUN | Requires verified model and physical iPhone. |
+| Multimodal/content dependence | NOT_RUN | No physical image request has run. |
+| Structured output | NOT_RUN | Parser tests pass; no physical model response exists. |
+| Stability | NOT_RUN | Five-run device sequence has not run. |
+| Offline cold launch | NOT_RUN | Owner-controlled Airplane Mode gate has not run. |
+| Normal-app end to end | NOT_RUN | Physical review/save/history/relaunch/delete flow has not run. |
 
 ## PHONE
 
@@ -40,7 +57,7 @@ STATUS:
 | `maxNumTokens` | `2048` |
 | Sampler `topK` | `1` |
 | Sampler temperature | `0` |
-| Exact image+text message form | `Message(of: .imageFile(draftURL.path), .text(Self.prompt))`; compiled in the non-qualifying overlay, not inference-tested. |
+| Exact image+text message form | `Message(of: .imageFile(draftURL.path), .text(Self.prompt))`; compiled in the clean exact-revision project, not inference-tested. |
 
 ## PHYSICAL GATES
 
@@ -63,6 +80,8 @@ STATUS:
 
 ## KNOWN LIMITATIONS / NO-GO REASON
 
-- `STARTER_CODE_ALLOWED` is still unanswered.
-- The exact official remote LiteRT-LM v0.14.0 pin is blocked by an upstream release-manifest checksum mismatch; no dependency deviation is committed.
-- Every PHONE and PHYSICAL GATES field above remains unrun and intentionally blank. Simulator/host passes do not substitute for E4B loading, contrasting-image behavior, Airplane Mode, memory/latency, SwiftData CRUD, or device protection/deletion evidence.
+- `EVENT_STARTER_CODE_ALLOWED` is still unanswered; this blocks event eligibility, not private device testing.
+- The dependency gate now passes at the exact official checksum-correction revision.
+- No physical iPhone is currently visible to CoreDevice.
+- No qualifying iOS model artifact is present; a gated multi-gigabyte download requires owner terms acceptance and approval.
+- Every PHONE and PHYSICAL GATES field above remains unrun and intentionally blank. Simulator/host passes do not substitute for exact-candidate loading, contrasting-image behavior, Airplane Mode, memory/latency, SwiftData CRUD, or device protection/deletion evidence.
