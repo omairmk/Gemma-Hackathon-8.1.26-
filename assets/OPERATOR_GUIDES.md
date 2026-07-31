@@ -1,5 +1,7 @@
 # Operator guides — event queue
 
+**PRIVATE OPERATOR HANDOFF:** this guide contains organizer-provided intake links. Do not publish it; remove those links and local identifiers from any public copy.
+
 Each guide is deliberately executable without improvising. Time is an estimate excluding waits/downloads. Stop rather than guessing when a stated condition fails; capture the listed evidence and return it to the build operator.
 
 ## 1. Starter-code rules question — 3 minutes
@@ -10,9 +12,9 @@ Each guide is deliberately executable without improvising. Time is an estimate e
 
 ## 2. Building access and Cerebras forms — 6 minutes
 
-**Do:** Open the organizer email titled **“New message in Build with Gemma NYC: On-Device AI for Healthcare”** and use its latest [One WTC security-list form](https://forms.gle/bt7woPmo48GnQ1tw7); submit before Friday 12:00 PM ET using the full legal name exactly as shown on government photo ID. Open **“Action needed: register for Cerebras credits by Friday 8PM”** and use the [Cerebras credits form](https://forms.gle/6i9a32hUhfWa2aQ68); submit before Friday 8:00 PM ET. Save the on-screen confirmations because a receipt email is not guaranteed. If a form says a response already exists, capture that state rather than submitting a duplicate.
+**Do:** The One WTC security-list deadline has passed and completion is unverified. Open the organizer email titled **“New message in Build with Gemma NYC: On-Device AI for Healthcare”** and inspect its latest [One WTC security-list form](https://forms.gle/bt7woPmo48GnQ1tw7). If it shows an existing response or confirmation, capture that state; if it is closed or no confirmation can be established, capture the page and notify the organizer immediately. Do not submit a duplicate or claim that an earlier submission was missed. Open **“Action needed: register for Cerebras credits by Friday 8PM”** and use the [Cerebras credits form](https://forms.gle/6i9a32hUhfWa2aQ68); submit before Friday 8:00 PM ET. Save every on-screen confirmation because a receipt email is not guaranteed.
 
-**Expected:** Each page shows a submission confirmation. **Stop:** If a form is unavailable, asks for unexpected sensitive information, or the deadline has passed, capture the page and notify the organizer; do not invent a submission. **Evidence:** confirmation screenshots and timestamps (avoid showing secrets). **Unblocks:** event attendance/credits logistics.
+**Expected:** One WTC shows either verifiable confirmation/existing-response evidence or a captured closed/unverified state ready for organizer follow-up; Cerebras shows a submission confirmation. **Stop:** If a form is unavailable, asks for unexpected sensitive information, or no longer accepts responses, capture the page and notify the organizer; do not invent a submission or non-submission. **Evidence:** confirmation/state screenshots and timestamps (avoid showing secrets). **Unblocks:** event attendance/credits logistics only to the extent the organizer confirms it.
 
 ## 3. Accept the Xcode license — before any device work — 5 minutes
 
@@ -46,8 +48,82 @@ Each guide is deliberately executable without improvising. Time is an estimate e
 
 **Expected:** Fill only observed values in `MOBILE_PRECHECK.md`; a failure is a valid NO-GO. **Stop:** On model/hash mismatch, non-contrasting or non-repeatable behavior where the precheck requires it, unexpected network requirement, crash, missing peak-memory/latency record, failed CRUD/draft/DEBUG check, failed persistence/deletion, wrong attribution/manual-flow text, or any claim the operator cannot observe. Do not reorder acceptance, skip a failure, or fill blanks optimistically. **Evidence:** completed precheck; both contrasting outputs and repeated-brown comparison; five warm latencies and peak memory; CRUD/draft results and DEBUG logs; screenshots/video of Airplane Mode, reviewed-save, History/Detail, relaunch, deletion, five clean analyses, and manual Detail text; exact failures. **Unblocks:** `STATUS: GO` only when every required gate genuinely passes.
 
-## 8. Mac Wi-Fi-off check — 8 minutes
+## 8. Mac dual-model qualification and one-command Wi-Fi-off check — 20–35 minutes
 
-**Do:** Finish all local-server/model setup first. Capture the current local test state. In macOS menu bar click Wi-Fi → toggle **Wi-Fi Off**. Restart the local application/server exactly as its `PRECHECK.md` prescribes; rerun the specified smoke request with a synthetic fixture. Re-enable Wi-Fi afterward.
+**Do — keep Wi-Fi on for all qualification steps:** From the repository root run `cd gi-journal`. Qualify **both** models sequentially on the only qualifying port, 8080: E4B first and E2B second. E4B passing or appearing fast never permits skipping E2B.
 
-**Expected:** Record the actual restart/request outcome and loopback evidence; success must not be inferred from a localhost URL alone. **Stop:** If the test needs a download, external service, or model is unavailable; record NO-GO/error rather than reconnecting and calling it offline. **Evidence:** Wi-Fi-off screenshot, terminal command/output, PID-bound loopback socket evidence, request result and timestamp. **Unblocks:** Mac offline gate.
+Start and qualify E4B:
+
+```sh
+E4B_MODEL="$PWD/.hf_cache/models--mlx-community--gemma-4-e4b-it-4bit/snapshots/475b9088d29754a3379866cf5aeb6b41acd313c2"
+MODEL_KEY=e4b PORT=8080 scripts/start_model.sh
+IFS= read -r E4B_PID < .model_logs/model-8080.pid
+.venv/bin/python -I scripts/server_process.py --pid "$E4B_PID" --model "$E4B_MODEL" --port 8080
+scripts/verify_socket.sh "$E4B_PID" 8080
+if .venv/bin/python -I scripts/smoke_test_model.py --model-key e4b --pid "$E4B_PID" --evidence smoke_evidence_e4b.json; then
+  .venv/bin/python -I scripts/create_eligible_candidate.py --evidence smoke_evidence_e4b.json
+else
+  echo "E4B did not earn a candidate; preserve smoke_evidence_e4b.json and continue to E2B."
+fi
+```
+
+Before E2B, revalidate and stop only the exact E4B process; never kill a PID that fails either validation:
+
+```sh
+if kill -0 "$E4B_PID" 2>/dev/null; then
+  .venv/bin/python -I scripts/server_process.py --pid "$E4B_PID" --model "$E4B_MODEL" --port 8080
+  scripts/verify_socket.sh "$E4B_PID" 8080
+  kill "$E4B_PID"
+fi
+STOP_WAIT=0
+while kill -0 "$E4B_PID" 2>/dev/null && [ "$STOP_WAIT" -lt 15 ]; do
+  /bin/sleep 1
+  STOP_WAIT=$((STOP_WAIT + 1))
+done
+if kill -0 "$E4B_PID" 2>/dev/null; then echo "STOP: validated E4B PID did not exit." >&2; false; fi
+if /usr/sbin/lsof -nP -iTCP:8080 -sTCP:LISTEN; then echo "STOP: port 8080 was not released." >&2; false; fi
+```
+
+Then start and independently qualify E2B on the same port with its own evidence and candidate:
+
+```sh
+E2B_MODEL="$PWD/.hf_cache/models--mlx-community--gemma-4-e2b-it-4bit/snapshots/238767527555cb75a05732a84dff5d6ba0dd6809"
+MODEL_KEY=e2b PORT=8080 scripts/start_model.sh
+IFS= read -r E2B_PID < .model_logs/model-8080.pid
+.venv/bin/python -I scripts/server_process.py --pid "$E2B_PID" --model "$E2B_MODEL" --port 8080
+scripts/verify_socket.sh "$E2B_PID" 8080
+if .venv/bin/python -I scripts/smoke_test_model.py --model-key e2b --pid "$E2B_PID" --evidence smoke_evidence_e2b.json; then
+  .venv/bin/python -I scripts/create_eligible_candidate.py --evidence smoke_evidence_e2b.json
+else
+  echo "E2B did not earn a candidate; preserve smoke_evidence_e2b.json."
+fi
+```
+
+Revalidate and stop the exact E2B process before selection so the selected model must cold-start inside offline proof:
+
+```sh
+if kill -0 "$E2B_PID" 2>/dev/null; then
+  .venv/bin/python -I scripts/server_process.py --pid "$E2B_PID" --model "$E2B_MODEL" --port 8080
+  scripts/verify_socket.sh "$E2B_PID" 8080
+  kill "$E2B_PID"
+fi
+STOP_WAIT=0
+while kill -0 "$E2B_PID" 2>/dev/null && [ "$STOP_WAIT" -lt 15 ]; do
+  /bin/sleep 1
+  STOP_WAIT=$((STOP_WAIT + 1))
+done
+if kill -0 "$E2B_PID" 2>/dev/null; then echo "STOP: validated E2B PID did not exit." >&2; false; fi
+if /usr/sbin/lsof -nP -iTCP:8080 -sTCP:LISTEN; then echo "STOP: port 8080 was not released." >&2; false; fi
+```
+
+Revalidate each candidate that exists with `.venv/bin/python -I scripts/primary_manifest.py --manifest .devdata_preflight/candidates/e4b.json` or the corresponding `e2b.json`. This recomputes the evidence-file hash, frozen-contract hashes, full model-snapshot content fingerprint, before/after process identity/socket proofs, fixture/result and determinism assertions, latency binding, and pinned model binding; file existence alone is not eligibility. Choose validated E4B only when its validated `warm_seconds` is at most 60 seconds. Otherwise choose validated E2B. If the required candidate is absent or fails revalidation, stop and record `NO-GO`.
+
+**Do — selected candidate only:** Do not toggle Wi-Fi manually. Run exactly one qualifying offline command, substituting only the selected validated candidate name:
+
+```sh
+PRIMARY_MANIFEST="$PWD/.devdata_preflight/candidates/e4b.json" scripts/offline_test.sh
+```
+
+Use `e2b.json` instead only when the selection rule chose eligible E2B. The script revalidates the candidate before discovering or changing Wi-Fi, installs a restore trap, turns Wi-Fi off, requires an established no-default-route result, cold-restarts the selected local model, validates the new PID's exact workspace executable/model/host/port and exactly `127.0.0.1:8080 (LISTEN)`, makes one request with the already-earned template, restores Wi-Fi, verifies the restored state, and only then prints PASS. Never bypass a refusal.
+
+**Expected:** Two distinct full-smoke evidence files, zero to two independently earned candidate files, a rule-selected and revalidated primary, and—only if offline proof succeeds—a zero exit plus the script's PASS line, one saved `offline_smoke_evidence.json`, exact new-PID process/loopback proof, established no-default-route result, one earned-template request, and verified Wi-Fi restoration. Success must not be inferred from a server start, localhost URL, evidence filename, candidate filename, or Wi-Fi toggle alone. **Stop:** If either mandatory smoke is skipped, an old PID cannot be exactly validated/stopped, port 8080 remains occupied, selection would require inferred eligibility, the candidate is missing/unverified, another default route remains, route absence cannot be established, the test needs a download/external service, the server/request fails, Wi-Fi restoration is not verified, or any step times out. Preserve exact output and record `NO-GO`. **Evidence:** both smoke files, available candidate files, selection rule and warm latency, terminal command/output, Wi-Fi-off/on screenshots, route result, PID-bound exact process/loopback evidence, one-request result, selected candidate path, and timestamp. **Unblocks:** Mac offline gate only when every scripted step passes.

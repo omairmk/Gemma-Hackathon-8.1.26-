@@ -53,6 +53,7 @@ build/
 # Local logs and scratch work
 *.log
 work/
+/outputs/
 
 # Read-only upstream evidence checkout; app resolves the exact remote Swift package instead
 /gi-timeline/Vendor/LiteRT-LM/
