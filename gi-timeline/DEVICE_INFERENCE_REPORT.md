@@ -41,8 +41,9 @@ A fresh sanitized Xcode device query returned no physical iOS devices. Therefore
 | Model | `litert-community/gemma-4-E4B-it-litert-lm` |
 | Artifact revision | `28299f30ee4d43294517a4ac93abd6163412f07f` |
 | LiteRT-LM revision | `f73637c57f0940b53da184e0d5adfc52a4e55eef` |
-| Engine / vision backend | GPU / non-nil CPU vision |
-| Context capacity | 2048 |
+| Engine / vision backend | GPU / CPU (non-nil) |
+| Physical visual-token graph | `vision_70` (`visualTokenBudget=70`) |
+| Generation context capacity | 1024 |
 | Sampler | `topK=1`, `topP=1`, temperature `0`, seed `0` |
 | Prompt | `gi-observation-v1` |
 | Request | sanitized image file plus text prompt |

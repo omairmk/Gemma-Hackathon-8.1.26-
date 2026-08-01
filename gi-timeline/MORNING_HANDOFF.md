@@ -22,7 +22,7 @@ The UI screenshots and XCUITests use an explicit deterministic provider compiled
 - Bytes: `3,659,530,240`
 - SHA-256: `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`
 - LiteRT-LM: `f73637c57f0940b53da184e0d5adfc52a4e55eef`
-- Physical policy: GPU engine / non-nil CPU vision
+- Physical policy: GPU engine / non-nil CPU vision, `vision_70` (`visualTokenBudget=70`), `maxNumTokens=1024`
 - Simulator exception: CPU engine / CPU vision
 
 ## 4. Whether real image pixels affected output

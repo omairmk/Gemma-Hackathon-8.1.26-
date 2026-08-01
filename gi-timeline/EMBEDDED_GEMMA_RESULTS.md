@@ -13,7 +13,7 @@ Updated: 2026-08-01 14:36 EDT (America/New_York)
 - SHA-256: `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`
 - Scheme/configuration: `GITimeline Hackathon` / `Hackathon`
 - Bundle path: `EmbeddedModels/gemma-4-E4B-it.litertlm`
-- Physical policy: GPU engine / non-nil CPU vision
+- Physical policy: GPU engine / non-nil CPU vision, `vision_70` (`visualTokenBudget=70`), `maxNumTokens=1024`
 - Arm64 Simulator exception: CPU engine / CPU vision
 
 ## Build evidence
