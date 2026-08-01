@@ -160,7 +160,7 @@ struct NewEntryView: View {
       Group {
         switch viewModel.flowState {
         case .empty, .preparingPhoto:
-          NewEntryStartView(viewModel: viewModel, showCamera: $showCamera)
+          NewEntryStartView(viewModel: viewModel, runtime: runtime, showCamera: $showCamera)
         case .reading:
           ReadingPhotoView(viewModel: viewModel)
         case .reviewing:
@@ -174,7 +174,8 @@ struct NewEntryView: View {
             message: message,
             viewModel: viewModel,
             showCamera: $showCamera,
-            retryRuntime: { Task { await viewModel.prepareAutomaticRuntime(using: runtime, retry: true) } }
+            retryRuntime: { Task { await viewModel.prepareAutomaticRuntime(using: runtime, retry: true) } },
+            prepareRuntime: { await viewModel.prepareAutomaticRuntime(using: runtime) }
           )
         }
       }
@@ -211,7 +212,9 @@ struct NewEntryView: View {
     .fullScreenCover(isPresented: $showCamera) {
       CameraCaptureView { data in
         guard let data else { return }
-        try? viewModel.prepareImageData(data)
+        do { try viewModel.prepareImageData(data) }
+        catch { return }
+        Task { await viewModel.prepareAutomaticRuntime(using: runtime) }
       }
       .ignoresSafeArea()
     }
@@ -221,15 +224,12 @@ struct NewEntryView: View {
     }) { DeviceInferenceLabTab(runtime: runtime) }
     .sheet(isPresented: $showModelImport) { ModelImportSheet(viewModel: viewModel) }
     #endif
-    .task {
-      guard !AppRuntime.isUnitTesting, !usesDeterministicUITestProvider else { return }
-      await viewModel.prepareAutomaticRuntime(using: runtime)
-    }
   }
 }
 
 private struct NewEntryStartView: View {
   @ObservedObject var viewModel: NewEntryViewModel
+  let runtime: ModelRuntimeCoordinator
   @Binding var showCamera: Bool
 
   var body: some View {
@@ -257,7 +257,13 @@ private struct NewEntryStartView: View {
           .buttonStyle(.plain)
           .disabled(!viewModel.canReplaceOrClear)
           .accessibilityIdentifier("choosePhoto")
-          .onChange(of: viewModel.selectedItem) { _, _ in Task { await viewModel.loadSelection() } }
+          .onChange(of: viewModel.selectedItem) { _, _ in
+            Task {
+              await viewModel.loadSelection()
+              guard viewModel.currentDraftURL != nil else { return }
+              await viewModel.prepareAutomaticRuntime(using: runtime)
+            }
+          }
 
           Divider().padding(.leading, 44)
 
@@ -694,6 +700,7 @@ private struct EntryFlowFailureView: View {
   @ObservedObject var viewModel: NewEntryViewModel
   @Binding var showCamera: Bool
   let retryRuntime: () -> Void
+  let prepareRuntime: () async -> Void
 
   var body: some View {
     ScrollView {
@@ -728,7 +735,13 @@ private struct EntryFlowFailureView: View {
         }
         .buttonStyle(.bordered)
         .disabled(!viewModel.canReplaceOrClear)
-        .onChange(of: viewModel.selectedItem) { _, _ in Task { await viewModel.loadSelection() } }
+        .onChange(of: viewModel.selectedItem) { _, _ in
+          Task {
+            await viewModel.loadSelection()
+            guard viewModel.currentDraftURL != nil else { return }
+            await prepareRuntime()
+          }
+        }
 
         Button("Start over", role: .destructive) { viewModel.clear() }
           .frame(maxWidth: .infinity, minHeight: 44)

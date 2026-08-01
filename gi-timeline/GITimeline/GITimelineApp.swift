@@ -134,16 +134,6 @@ struct AppRootView: View {
       try? EntryStore(context: context).reconcile(imageStore: images)
       if !AppRuntime.isUnitTesting { AppFolders.enforceStoreProtection() }
     }
-    .task {
-      guard !AppRuntime.isUnitTesting else { return }
-      #if DEBUG
-      let arguments = ProcessInfo.processInfo.arguments
-      guard !arguments.contains("--ui-test-fake-gemma"),
-        !arguments.contains("--ui-test-first-run")
-      else { return }
-      #endif
-      _ = await inferenceRuntime.prepareLocalAnalysis()
-    }
     .onReceive(NotificationCenter.default.publisher(for: .giTimelineShowHistory)) { notification in
       requestedHistoryEntryID = notification.object as? UUID
       selectedTab = .history
