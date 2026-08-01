@@ -9,6 +9,11 @@ DerivedData/
 build/
 *.xcarchive
 *.ipa
+*.xcresult
+*.app/
+*.dSYM/
+*.dSYM.zip
+*.xcactivitylog
 
 # Python/runtime environments and caches
 .venv/
