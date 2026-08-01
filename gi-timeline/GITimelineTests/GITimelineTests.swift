@@ -21,7 +21,7 @@ import XCTest
     XCTAssertNil(harness.viewModel.reviewedObservation)
     XCTAssertTrue(FileManager.default.fileExists(atPath: draft.path))
     XCTAssertTrue(harness.viewModel.canSave)
-    XCTAssertEqual(harness.viewModel.statusMessage, "AI analysis unavailable — you can still save this entry manually")
+    XCTAssertEqual(harness.viewModel.statusMessage, "Couldn’t read that photo. Try another.")
 
     harness.viewModel.save()
     XCTAssertEqual(harness.store.records.count, 1)
@@ -205,7 +205,7 @@ import XCTest
     let disconnected = try makeHarness(modelReady: false, descriptor: nil)
     defer { disconnected.cleanup() }
     XCTAssertEqual(disconnected.viewModel.runtimeBadgeLabel, "UI demo · Gemma not connected")
-    XCTAssertEqual(disconnected.viewModel.analyzeUnavailableReason, "No Gemma model is selected for this build.")
+    XCTAssertEqual(disconnected.viewModel.analyzeUnavailableReason, "Local analysis is not available in this build.")
 
     let unverified = try makeHarness(
       modelReady: false,
@@ -216,7 +216,7 @@ import XCTest
     )
     defer { unverified.cleanup() }
     XCTAssertEqual(unverified.viewModel.runtimeBadgeLabel, "Gemma 4 E4B · iPhone Simulator")
-    XCTAssertEqual(unverified.viewModel.analyzeUnavailableReason, "Import and verify the exact Gemma model first.")
+    XCTAssertEqual(unverified.viewModel.analyzeUnavailableReason, "Getting on-device analysis ready…")
 
     let unprepared = try makeHarness(
       modelReady: false,
@@ -226,7 +226,7 @@ import XCTest
       executionLocation: .simulatorLocal
     )
     defer { unprepared.cleanup() }
-    XCTAssertEqual(unprepared.viewModel.analyzeUnavailableReason, "Prepare Gemma before analyzing.")
+    XCTAssertEqual(unprepared.viewModel.analyzeUnavailableReason, "Getting on-device analysis ready…")
 
     let ready = try makeHarness(
       descriptor: .liteRTGemma4E4B,
@@ -234,7 +234,7 @@ import XCTest
       executionLocation: .simulatorLocal
     )
     defer { ready.cleanup() }
-    XCTAssertEqual(ready.viewModel.analyzeUnavailableReason, "Choose a photo or demo image to analyze.")
+    XCTAssertEqual(ready.viewModel.analyzeUnavailableReason, "Choose a photo to begin.")
     try ready.viewModel.prepareImageData(imageData())
     XCTAssertNil(ready.viewModel.analyzeUnavailableReason)
   }
@@ -275,13 +275,13 @@ import XCTest
     XCTAssertFalse(harness.viewModel.canImportModel)
     try await Task.sleep(for: .milliseconds(30))
     XCTAssertTrue(harness.viewModel.isBusy)
-    XCTAssertEqual(harness.viewModel.statusMessage, "AI analysis timed out — waiting for the local engine to finish")
+    XCTAssertEqual(harness.viewModel.statusMessage, "Reading is taking longer than expected.")
 
     await waitForAnalysis(harness.viewModel)
     XCTAssertNil(harness.viewModel.reviewedObservation)
     XCTAssertTrue(harness.viewModel.canSave)
     XCTAssertFalse(harness.viewModel.canImportModel)
-    XCTAssertEqual(harness.viewModel.statusMessage, "AI analysis timed out — you can still save this entry manually")
+    XCTAssertEqual(harness.viewModel.statusMessage, "Couldn’t read that photo. Try another.")
   }
 
   func testMissingOrUninitializableModelKeepsImportAvailable() async throws {
@@ -410,6 +410,21 @@ import XCTest
     XCTAssertEqual(InferenceConfiguration.runtimeDefault, fallback)
   }
 
+  func testPhysicalCPUFallbackChangesOnlyMainBackendAndIsExplicitlyNamed() {
+    let baseline = InferenceConfiguration.deterministicBaseline
+    let fallback = InferenceConfiguration.physicalCPUFallback
+    XCTAssertEqual(fallback.id, "physical-cpu-engine-fallback-v1")
+    XCTAssertEqual(fallback.engineBackend, "cpu")
+    XCTAssertEqual(baseline.visionBackend, fallback.visionBackend)
+    XCTAssertEqual(baseline.maxNumTokens, fallback.maxNumTokens)
+    XCTAssertEqual(baseline.topK, fallback.topK)
+    XCTAssertEqual(baseline.topP, fallback.topP)
+    XCTAssertEqual(baseline.temperature, fallback.temperature)
+    XCTAssertEqual(baseline.seed, fallback.seed)
+    XCTAssertEqual(baseline.promptVersion, fallback.promptVersion)
+    XCTAssertEqual(baseline.imageMessageForm, fallback.imageMessageForm)
+  }
+
   func testModelImportReceiptRoundTripRetainsSource() throws {
     let root = temporaryRoot()
     defer { try? FileManager.default.removeItem(at: root) }
@@ -431,6 +446,71 @@ import XCTest
     XCTAssertTrue(FileManager.default.fileExists(atPath: source.path), "successful import must retain the staged source")
     XCTAssertTrue(FileManager.default.fileExists(atPath: result.modelURL.path))
     XCTAssertNotNil(try importer.verifiedModel(for: descriptor))
+  }
+
+  func testBundledModelResolutionUsesReadOnlyLocationAndBuildKeyedReceipt() throws {
+    let root = temporaryRoot()
+    defer { try? FileManager.default.removeItem(at: root) }
+    let embedded = root.appendingPathComponent("EmbeddedModels", isDirectory: true)
+    let models = root.appendingPathComponent("Models", isDirectory: true)
+    try FileManager.default.createDirectory(at: embedded, withIntermediateDirectories: true)
+    let payload = Data("tiny bundled deterministic model fixture".utf8)
+    let descriptor = try tinyDescriptor(data: payload)
+    try payload.write(to: embedded.appendingPathComponent(descriptor.artifactFilename))
+    let build = ModelAppBuildIdentity(
+      bundleIdentifier: "com.example.GITimeline.hackathon",
+      shortVersion: "1.0",
+      buildNumber: "42"
+    )
+    let importer = ModelImporter(
+      modelsDirectory: models,
+      embeddedModelsDirectory: embedded,
+      appBuildIdentity: build
+    )
+
+    let first = try importer.verifiedBundledModel(for: descriptor)
+    let second = try importer.verifiedBundledModel(for: descriptor)
+
+    XCTAssertEqual(first.location.kind, .applicationBundle)
+    XCTAssertEqual(first.modelURL, embedded.appendingPathComponent(descriptor.artifactFilename))
+    XCTAssertEqual(first.receipt.appBuildIdentity, build)
+    XCTAssertEqual(first.receipt.locationKind, .applicationBundle)
+    XCTAssertEqual(
+      first.receipt.verifiedAt.timeIntervalSince1970,
+      second.receipt.verifiedAt.timeIntervalSince1970,
+      accuracy: 1,
+      "same-build launch should reuse verification"
+    )
+    XCTAssertFalse(FileManager.default.fileExists(atPath: try importer.modelURL(for: descriptor).path))
+  }
+
+  func testBundledReceiptInvalidatesForNewAppBuild() throws {
+    let root = temporaryRoot()
+    defer { try? FileManager.default.removeItem(at: root) }
+    let embedded = root.appendingPathComponent("EmbeddedModels", isDirectory: true)
+    let models = root.appendingPathComponent("Models", isDirectory: true)
+    try FileManager.default.createDirectory(at: embedded, withIntermediateDirectories: true)
+    let expected = Data("expected same length".utf8)
+    let descriptor = try tinyDescriptor(data: expected)
+    let artifact = embedded.appendingPathComponent(descriptor.artifactFilename)
+    try expected.write(to: artifact)
+    let buildOne = ModelAppBuildIdentity(bundleIdentifier: "test.bundle", shortVersion: "1", buildNumber: "1")
+    let importerOne = ModelImporter(
+      modelsDirectory: models,
+      embeddedModelsDirectory: embedded,
+      appBuildIdentity: buildOne
+    )
+    _ = try importerOne.verifiedBundledModel(for: descriptor)
+
+    try Data("tampered same length".utf8).write(to: artifact)
+    let buildTwo = ModelAppBuildIdentity(bundleIdentifier: "test.bundle", shortVersion: "1", buildNumber: "2")
+    let importerTwo = ModelImporter(
+      modelsDirectory: models,
+      embeddedModelsDirectory: embedded,
+      appBuildIdentity: buildTwo
+    )
+
+    XCTAssertThrowsError(try importerTwo.verifiedBundledModel(for: descriptor))
   }
 
   func testWrongHashPreservesSourceAndPromotesNothing() throws {
@@ -560,6 +640,107 @@ import XCTest
     await preparation.value
   }
 
+  func testAttachingPhotoAutomaticallyReadsThenRequiresEverySuggestionToBeReviewed() async throws {
+    let harness = try makeHarness(scripts: [.response(valid)], autoAnalysisEnabled: true)
+    defer { harness.cleanup() }
+
+    try harness.viewModel.prepareImageData(imageData())
+    await waitForAutomaticAnalysis(harness.viewModel)
+
+    let draft = try XCTUnwrap(harness.viewModel.currentDraftURL)
+    XCTAssertTrue(FileManager.default.fileExists(atPath: draft.path))
+    XCTAssertNotNil(harness.viewModel.reviewedObservation)
+    XCTAssertEqual(harness.viewModel.outstandingReviewCount, ReviewField.allCases.count)
+    XCTAssertFalse(harness.viewModel.canSave, "A model-proposed entry must not save until each field is reviewed.")
+    guard case .reviewing(_, let review) = harness.viewModel.flowState else {
+      return XCTFail("Automatic attach should advance into the review state.")
+    }
+    XCTAssertEqual(review.outstandingCount, ReviewField.allCases.count)
+    XCTAssertTrue(ReviewField.allCases.allSatisfy { review.state(for: $0) == .suggested })
+  }
+
+  func testReviewConfirmationAndEditStatesControlSaveAndKeepSymptomsHumanEntered() async throws {
+    let harness = try makeHarness(scripts: [.response(valid)], autoAnalysisEnabled: true)
+    defer { harness.cleanup() }
+    harness.viewModel.redBlood = .yes
+    harness.viewModel.dizziness = .unsure
+    harness.viewModel.note = "User-entered context"
+
+    try harness.viewModel.prepareImageData(imageData())
+    await waitForAutomaticAnalysis(harness.viewModel)
+
+    harness.viewModel.confirmReviewField(.bristolType)
+    XCTAssertEqual(harness.viewModel.reviewState(for: .bristolType), .confirmed)
+    XCTAssertFalse(harness.viewModel.canSave)
+
+    harness.viewModel.updateReview(field: .apparentColor) {
+      VisualObservation(
+        imageUsable: $0.imageUsable,
+        qualityIssue: $0.qualityIssue,
+        apparentBristolType: $0.apparentBristolType,
+        apparentColor: "green",
+        form: $0.form,
+        redAppearingMaterial: $0.redAppearingMaterial,
+        blackTarryAppearance: $0.blackTarryAppearance
+      )
+    }
+    XCTAssertEqual(harness.viewModel.reviewState(for: .apparentColor), .edited)
+    for field in [ReviewField.form, .visibleFeatures, .imageQuality] {
+      harness.viewModel.confirmReviewField(field)
+    }
+
+    XCTAssertEqual(harness.viewModel.outstandingReviewCount, 0)
+    XCTAssertTrue(harness.viewModel.canSave)
+    XCTAssertEqual(harness.viewModel.redBlood, .yes)
+    XCTAssertNil(harness.viewModel.blackTarry)
+    XCTAssertEqual(harness.viewModel.dizziness, .unsure)
+    XCTAssertNil(harness.viewModel.severePain)
+    XCTAssertEqual(harness.viewModel.note, "User-entered context")
+
+    harness.viewModel.save()
+    let saved = try XCTUnwrap(harness.store.records.first)
+    XCTAssertEqual(saved.provenance, EntryProvenance.ai_edited.rawValue)
+    XCTAssertEqual(saved.redBlood, SymptomFlag.yes.rawValue)
+    XCTAssertEqual(saved.dizziness, SymptomFlag.unsure.rawValue)
+  }
+
+  func testAutomaticFailureAndCancelKeepDraftUsableWithoutAllowingStaleResult() async throws {
+    let failure = try makeHarness(
+      scripts: [.malformed("not json"), .malformed("still not json"), .response(valid)],
+      autoAnalysisEnabled: true
+    )
+    defer { failure.cleanup() }
+    try failure.viewModel.prepareImageData(imageData())
+    await waitForAutomaticAnalysis(failure.viewModel)
+    let retainedDraft = try XCTUnwrap(failure.viewModel.currentDraftURL)
+    XCTAssertTrue(FileManager.default.fileExists(atPath: retainedDraft.path))
+    XCTAssertNil(failure.viewModel.reviewedObservation)
+    guard case .failed = failure.viewModel.flowState else {
+      return XCTFail("A failed automatic read must leave a retryable failure state.")
+    }
+
+    failure.viewModel.retryAnalysis()
+    await waitForReview(failure.viewModel)
+    XCTAssertNotNil(failure.viewModel.reviewedObservation)
+    XCTAssertEqual(failure.viewModel.currentDraftURL, retainedDraft)
+
+    let cancellation = try makeHarness(scripts: [.slow(valid, nanoseconds: 300_000_000)], autoAnalysisEnabled: true)
+    defer { cancellation.cleanup() }
+    try cancellation.viewModel.prepareImageData(imageData(color: .green))
+    let cancelledDraft = try XCTUnwrap(cancellation.viewModel.currentDraftURL)
+    await waitForReading(cancellation.viewModel)
+    cancellation.viewModel.cancelReading()
+    try await Task.sleep(for: .milliseconds(400))
+    XCTAssertFalse(cancellation.viewModel.isBusy)
+    XCTAssertNil(cancellation.viewModel.reviewedObservation, "A cancelled response must never replace the retained draft.")
+    XCTAssertEqual(cancellation.viewModel.currentDraftURL, cancelledDraft)
+    XCTAssertTrue(FileManager.default.fileExists(atPath: cancelledDraft.path))
+    guard case .failed(let failedDraftID, _) = cancellation.viewModel.flowState else {
+      return XCTFail("Cancellation should retain a usable, retryable failure state.")
+    }
+    XCTAssertNotNil(failedDraftID)
+  }
+
   func testExclusiveInferenceGateRejectsOverlapAndStaleRelease() throws {
     var gate = ExclusiveInferenceGate()
     let structured = try gate.beginStructured(draftPath: "/synthetic/draft-a.jpg")
@@ -643,6 +824,35 @@ import XCTest
     XCTAssertFalse(viewModel.isBusy, "analysis did not complete within the test window")
   }
 
+  private func waitForAutomaticAnalysis(_ viewModel: NewEntryViewModel) async {
+    for _ in 0..<240 {
+      switch viewModel.flowState {
+      case .reviewing, .failed:
+        XCTAssertFalse(viewModel.isBusy, "automatic analysis reached a terminal state while still locked")
+        return
+      default:
+        try? await Task.sleep(for: .milliseconds(10))
+      }
+    }
+    XCTFail("automatic analysis did not reach review or retryable failure within the test window")
+  }
+
+  private func waitForReview(_ viewModel: NewEntryViewModel) async {
+    for _ in 0..<240 {
+      if case .reviewing = viewModel.flowState { return }
+      try? await Task.sleep(for: .milliseconds(10))
+    }
+    XCTFail("automatic retry did not reach review within the test window")
+  }
+
+  private func waitForReading(_ viewModel: NewEntryViewModel) async {
+    for _ in 0..<80 {
+      if case .reading = viewModel.flowState, viewModel.isBusy { return }
+      try? await Task.sleep(for: .milliseconds(5))
+    }
+    XCTFail("automatic analysis did not begin reading within the test window")
+  }
+
   private func imageData(color: UIColor = .brown, size: CGSize = CGSize(width: 640, height: 480)) -> Data {
     let format = UIGraphicsImageRendererFormat.default(); format.scale = 1
     return UIGraphicsImageRenderer(size: size, format: format).image { context in color.setFill(); context.fill(CGRect(origin: .zero, size: size)) }.jpegData(compressionQuality: 0.9)!
@@ -680,7 +890,8 @@ import XCTest
     analysisTimeout: Duration = .seconds(30),
     descriptor: ModelDescriptor? = .galleryGemma3nE2B,
     configuration: InferenceConfiguration = .deterministicBaseline,
-    executionLocation: InferenceExecutionLocation = .currentAppLocal
+    executionLocation: InferenceExecutionLocation = .currentAppLocal,
+    autoAnalysisEnabled: Bool = false
   ) throws -> Harness {
     let root = temporaryRoot()
     let imageStore = ImageStore(draftsDirectory: root.appendingPathComponent("Drafts"), imagesDirectory: root.appendingPathComponent("Images"))
@@ -694,7 +905,8 @@ import XCTest
       engineReady: modelReady && !failPrepare,
       configuration: configuration,
       executionLocation: executionLocation,
-      analysisTimeout: analysisTimeout
+      analysisTimeout: analysisTimeout,
+      autoAnalysisEnabled: autoAnalysisEnabled
     )
     return Harness(root: root, imageStore: imageStore, store: store, viewModel: viewModel)
   }

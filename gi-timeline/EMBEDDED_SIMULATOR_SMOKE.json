@@ -1,0 +1,110 @@
+{
+  "brownGreenControlPassed" : true,
+  "configuration" : {
+    "engineBackend" : "cpu",
+    "id" : "simulator-cpu-v1",
+    "imageMessageForm" : "Message(contents:[Content.imageFile(path),Content.text(prompt)])",
+    "maxNumTokens" : 2048,
+    "promptVersion" : "gi-observation-v1",
+    "seed" : 0,
+    "temperature" : 0,
+    "topK" : 1,
+    "topP" : 1,
+    "visionBackend" : "cpu"
+  },
+  "descriptor" : {
+    "artifactFilename" : "gemma-4-E4B-it.litertlm",
+    "cacheNamespace" : "litert-gemma-4-e4b-28299f30",
+    "expectedBytes" : 3659530240,
+    "expectedSHA256" : "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+    "family" : "Gemma 4 E4B",
+    "id" : "litert-gemma-4-e4b-28299f30",
+    "modelID" : "litert-community\/gemma-4-E4B-it-litert-lm",
+    "sourceRevision" : "28299f30ee4d43294517a4ac93abd6163412f07f",
+    "sourceURL" : "https:\/\/huggingface.co\/litert-community\/gemma-4-E4B-it-litert-lm\/tree\/28299f30ee4d43294517a4ac93abd6163412f07f"
+  },
+  "engineWasReadyBeforeRun" : false,
+  "executionLocation" : "SIMULATOR_LOCAL",
+  "finishedAt" : "2026-08-01T18:26:01Z",
+  "outcome" : "PASS",
+  "preparationSeconds" : 6.178242042,
+  "receipt" : {
+    "appBuildIdentity" : {
+      "buildNumber" : "1",
+      "bundleIdentifier" : "com.omairmkhan.GITimeline.debug",
+      "shortVersion" : "1.0"
+    },
+    "artifactFilename" : "gemma-4-E4B-it.litertlm",
+    "descriptorID" : "litert-gemma-4-e4b-28299f30",
+    "importedBytes" : 3659530240,
+    "importedSHA256" : "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+    "locationKind" : "applicationBundle",
+    "modelID" : "litert-community\/gemma-4-E4B-it-litert-lm",
+    "sourceRevision" : "28299f30ee4d43294517a4ac93abd6163412f07f",
+    "verifiedAt" : "2026-08-01T18:25:15Z"
+  },
+  "runs" : [
+    {
+      "dominantColor" : "BROWN",
+      "dominantColorRaw" : "BROWN",
+      "dominantColorSeconds" : 6.289289,
+      "fixture" : "brown",
+      "outcome" : "PASS",
+      "repairUsed" : false,
+      "sanitizedImageSHA256" : "637a7dd50e4adc9385c999a3ea1e269a4e25e3b78f4a783151f28b4c83540d73",
+      "structuredObservation" : {
+        "apparent_bristol_type" : 4,
+        "apparent_color" : "brown",
+        "black_tarry_appearance" : "not_observed",
+        "form" : "smooth_formed",
+        "image_usable" : true,
+        "quality_issue" : "none",
+        "red_appearing_material" : "not_observed"
+      },
+      "structuredRaw" : "{\"image_usable\": true, \"quality_issue\": \"none\", \"apparent_bristol_type\": 4, \"apparent_color\": \"brown\", \"form\": \"smooth_formed\", \"red_appearing_material\": \"not_observed\", \"black_tarry_appearance\": \"not_observed\"}",
+      "structuredSeconds" : 7.937323166
+    },
+    {
+      "dominantColor" : "GREEN",
+      "dominantColorRaw" : "GREEN",
+      "dominantColorSeconds" : 5.538046958,
+      "fixture" : "green",
+      "outcome" : "PASS",
+      "repairUsed" : false,
+      "sanitizedImageSHA256" : "5bc2acdfb2ada84f03a904f1eba8da37b500557ecbdce6ea88018dba59f3da90",
+      "structuredObservation" : {
+        "apparent_bristol_type" : 4,
+        "apparent_color" : "green",
+        "black_tarry_appearance" : "not_observed",
+        "form" : "smooth_formed",
+        "image_usable" : true,
+        "quality_issue" : "none",
+        "red_appearing_material" : "not_observed"
+      },
+      "structuredRaw" : "{\"image_usable\": true, \"quality_issue\": \"none\", \"apparent_bristol_type\": 4, \"apparent_color\": \"green\", \"form\": \"smooth_formed\", \"red_appearing_material\": \"not_observed\", \"black_tarry_appearance\": \"not_observed\"}",
+      "structuredSeconds" : 7.884747709
+    },
+    {
+      "dominantColor" : "OTHER",
+      "dominantColorRaw" : "OTHER",
+      "dominantColorSeconds" : 5.566586333,
+      "fixture" : "control",
+      "outcome" : "PASS",
+      "repairUsed" : false,
+      "sanitizedImageSHA256" : "6d6ab9a6dd5d692bbc53c4a76c71faaa4b32c767c23101a207cf508dfccd1d1d",
+      "structuredObservation" : {
+        "apparent_bristol_type" : null,
+        "apparent_color" : "unable_to_assess",
+        "black_tarry_appearance" : "unable_to_assess",
+        "form" : "unable_to_assess",
+        "image_usable" : false,
+        "quality_issue" : "not_target_image",
+        "red_appearing_material" : "unable_to_assess"
+      },
+      "structuredRaw" : "{\"image_usable\": false, \"quality_issue\": \"not_target_image\", \"apparent_bristol_type\": null, \"apparent_color\": \"unable_to_assess\", \"form\": \"unable_to_assess\", \"red_appearing_material\": \"unable_to_assess\", \"black_tarry_appearance\": \"unable_to_assess\"}",
+      "structuredSeconds" : 8.609796
+    }
+  ],
+  "startedAt" : "2026-08-01T18:25:13Z",
+  "structuredPassCount" : 3
+}

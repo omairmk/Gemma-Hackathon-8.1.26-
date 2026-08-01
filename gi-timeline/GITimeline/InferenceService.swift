@@ -119,7 +119,7 @@ actor LiteRTLMEngineSessionAdapter {
       let engineBackend: Backend
       switch config.engineBackend {
       case "gpu": engineBackend = .gpu
-      #if DEBUG
+      #if DEBUG || HACKATHON_EMBEDDED_GEMMA
       case "cpu": engineBackend = .cpu()
       #endif
       default: throw GITimelineError.operationInProgress
@@ -166,7 +166,7 @@ actor LiteRTLMEngineSessionAdapter {
     }
   }
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   func sendProbeImage(path: String, prompt: String) async throws -> String {
     let token: UUID
     do { token = try inferenceGate.beginProbe() }
@@ -255,13 +255,13 @@ actor InferenceService: TimelineInferenceServing {
     await adapter.discardRepairContext(path: draftURL.path)
   }
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   func dominantColorProbe(draftURL: URL) async throws -> String {
     try await adapter.sendProbeImage(path: draftURL.path, prompt: Self.dominantColorPrompt)
   }
   #endif
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   static let dominantColorPrompt = "Inspect the image pixels. Return exactly one token: BROWN, GREEN, or OTHER. Return no other text."
   #endif
 
@@ -279,6 +279,7 @@ actor InferenceService: TimelineInferenceServing {
   """
 }
 
+#if DEBUG
 actor MockInferenceService: TimelineInferenceServing {
   enum Script { case response(String), malformed(String), slow(String, nanoseconds: UInt64) }
   var scripts: [Script]
@@ -317,6 +318,7 @@ actor MockInferenceService: TimelineInferenceServing {
   func repair(draftURL: URL, errors: String) async throws -> String { try await analyze(draftURL: draftURL) }
   func discardRepairContext(draftURL: URL) {}
 }
+#endif
 
 actor UnavailableInferenceService: TimelineInferenceServing {
   func prepare() throws -> EnginePreparationResult { throw GITimelineError.missingModelDescriptor }

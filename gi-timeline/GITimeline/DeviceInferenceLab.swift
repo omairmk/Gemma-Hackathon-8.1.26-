@@ -24,9 +24,10 @@ enum LabDeviceFacts {
 }
 
 enum LabBuildFacts {
-  // Phase 2 is intentionally uncommitted until its physical-device build gate
-  // passes. This exact base commit plus dirty marker identifies these builds.
-  static let sourceState = "base_commit=7cdf22329b1c4ea7d6a2e3daf94f6c97e0af8f5f; dirty=true; milestone=phase-2-pre-device"
+  // Physical next-step experiments are intentionally kept dirty until their
+  // gates pass. This identifies the exact committed base and milestone without
+  // exposing signing or device identifiers.
+  static let sourceState = "base_commit=b399ef59eea71ea47f44cec7cca12de6dfc0f2c5; dirty=true; milestone=physical-next-steps"
 }
 
 enum LabModelState: String, Codable, CaseIterable, Sendable {
@@ -333,7 +334,8 @@ final class OvernightNormalFlowRunner {
       configuration: configuration,
       executionLocation: .currentAppLocal,
       modelImportOperation: { selected in try await self.runtime.importModel(selected) },
-      analysisTimeout: .seconds(60)
+      analysisTimeout: .seconds(60),
+      autoAnalysisEnabled: true
     )
     if !initiallyReady { await viewModel.prepareModel() }
     guard viewModel.isEngineReady else {
@@ -342,12 +344,22 @@ final class OvernightNormalFlowRunner {
 
     let fixture = SyntheticFixture.brown
     viewModel.prepareDemoFixture(fixture)
-    guard viewModel.canAnalyze, viewModel.currentDraftURL != nil else {
-      throw OvernightPOCError.failed("The verified model and synthetic image did not enable Analyze.")
+    guard viewModel.currentDraftURL != nil else {
+      throw OvernightPOCError.failed("The verified model and synthetic image did not create a draft.")
     }
-    viewModel.analyze()
-    for _ in 0..<900 where viewModel.isBusy { try await Task.sleep(for: .milliseconds(100)) }
-    guard !viewModel.isBusy, let original = viewModel.reviewedObservation else {
+    for _ in 0..<900 {
+      switch viewModel.flowState {
+      case .reviewing, .failed: break
+      default:
+        try await Task.sleep(for: .milliseconds(100))
+        continue
+      }
+      break
+    }
+    guard case .reviewing = viewModel.flowState,
+      !viewModel.isBusy,
+      let original = viewModel.reviewedObservation
+    else {
       throw OvernightPOCError.failed("The normal-flow real Gemma analysis did not finish with a review result.")
     }
 
@@ -1034,6 +1046,524 @@ struct DeviceInferenceLabView: View {
       }
       .navigationTitle("Device Inference Lab")
     }
+  }
+}
+#endif
+
+#if HACKATHON_EMBEDDED_GEMMA
+import CryptoKit
+import Foundation
+import GITimelineCore
+import SwiftData
+import UIKit
+
+/// Synthetic fixtures available to the non-UI Hackathon acceptance harness.
+/// This intentionally does not expose the DEBUG lab, model importer, model
+/// picker, or fake provider in the committed Hackathon configuration.
+enum EmbeddedGemmaHarnessFixture: String, CaseIterable, Codable, Sendable {
+  case brown
+  case green
+  case control
+
+  var resourceName: String {
+    switch self {
+    case .brown: return "synthetic-brown-clay.svg"
+    case .green: return "synthetic-green-clay.svg"
+    case .control: return "synthetic-control-geometric.svg"
+    }
+  }
+
+  var expectedDominantColor: DominantColorResult {
+    switch self {
+    case .brown: return .brown
+    case .green: return .green
+    case .control: return .other
+    }
+  }
+
+  var bundledSHA256: String {
+    switch self {
+    case .brown: return "fd8a75195b33e5faaf1e13aae801c97485be5a3a65b40c28c34920b2b8a0ee18"
+    case .green: return "d9e82709870c9c18b8e48c5c1477ca4db525447828799d3b0b612f74140a6911"
+    case .control: return "9cb76c4d0bc72096e3dc08db468000d1db6a792542d6f1f5a2ec3ad940897fc7"
+    }
+  }
+
+  func verifiedBundledData(bundle: Bundle = .main) throws -> Data {
+    guard let url = bundle.url(forResource: resourceName, withExtension: "png") else {
+      throw GITimelineError.syntheticFixtureIntegrity
+    }
+    let data = try Data(contentsOf: url)
+    let hash = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+    guard hash == bundledSHA256 else { throw GITimelineError.syntheticFixtureIntegrity }
+    return data
+  }
+}
+
+struct EmbeddedGemmaHarnessResult: Sendable {
+  let evidenceURL: URL
+  let consoleSummary: String
+}
+
+struct EmbeddedGemmaSmokeRun: Codable, Sendable {
+  let fixture: EmbeddedGemmaHarnessFixture
+  let sanitizedImageSHA256: String?
+  let dominantColorRaw: String?
+  let dominantColor: DominantColorResult?
+  let dominantColorSeconds: Double?
+  let structuredRaw: String?
+  let structuredObservation: VisualObservation?
+  let structuredSeconds: Double?
+  let repairUsed: Bool
+  let failureStage: InferenceErrorStage?
+  let outcome: String
+}
+
+struct EmbeddedGemmaSmokeSummary: Codable, Sendable {
+  let startedAt: Date
+  let finishedAt: Date
+  let descriptor: ModelDescriptor
+  let configuration: InferenceConfiguration
+  let executionLocation: InferenceExecutionLocation
+  let receipt: ModelVerificationReceipt
+  let preparationSeconds: Double
+  let engineWasReadyBeforeRun: Bool
+  let runs: [EmbeddedGemmaSmokeRun]
+  let brownGreenControlPassed: Bool
+  let structuredPassCount: Int
+  let outcome: String
+}
+
+struct EmbeddedGemmaNormalFlowSummary: Codable, Sendable {
+  let runID: UUID
+  let startedAt: Date
+  let finishedAt: Date
+  let descriptor: ModelDescriptor
+  let configuration: InferenceConfiguration
+  let executionLocation: InferenceExecutionLocation
+  let fixture: EmbeddedGemmaHarnessFixture
+  let automaticAnalysisReachedReview: Bool
+  let originalObservation: VisualObservation
+  let reviewedObservation: VisualObservation
+  let editedField: String
+  let outstandingSuggestionsAtSave: Int
+  let savePassed: Bool
+  let historyEntryFound: Bool
+  let imageExists: Bool
+  let provenance: String
+  let savedModelID: String?
+  let savedConfiguration: InferenceConfiguration?
+  let savedExecutionLocation: InferenceExecutionLocation?
+  let outcome: String
+}
+
+struct EmbeddedGemmaNormalFlowRelaunchSummary: Codable, Sendable {
+  let verifiedAt: Date
+  let runID: UUID
+  let entryFoundAfterRelaunch: Bool
+  let reviewedObservationReopened: Bool
+  let humanEditPersisted: Bool
+  let modelProvenancePersisted: Bool
+  let imageReopened: Bool
+  let outcome: String
+}
+
+enum EmbeddedGemmaHarnessError: LocalizedError {
+  case failed(String)
+
+  var errorDescription: String? {
+    switch self {
+    case .failed(let message): return message
+    }
+  }
+}
+
+/// Launch-argument-only acceptance surface for the signed embedded-model app.
+/// It shares the exact app-scoped coordinator, image sanitizer, parser,
+/// NewEntryViewModel, EntryStore, and SwiftData container used by normal UI.
+/// No view or navigation route exposes this type.
+@MainActor
+final class EmbeddedGemmaCompletionHarness {
+  static let smokeLaunchArgument = "--run-embedded-gemma-smoke"
+  static let normalFlowLaunchArgument = "--run-embedded-gemma-normal-flow"
+  static let relaunchVerifyArgument = "--verify-embedded-gemma-normal-flow"
+  static let defaultsRunIDKey = "EmbeddedGemmaNormalFlowRunID"
+
+  private let runtime: ModelRuntimeCoordinator
+  private let context: ModelContext
+
+  init(runtime: ModelRuntimeCoordinator, context: ModelContext) {
+    self.runtime = runtime
+    self.context = context
+  }
+
+  func runSmoke() async throws -> EmbeddedGemmaHarnessResult {
+    let startedAt = Date()
+    let descriptor = try exactDescriptor()
+    let configuration = await runtime.configurationSnapshot()
+    try requireExpectedBackends(configuration)
+    let engineWasReady = await runtime.engineState(descriptor) == .ready
+    let clock = ContinuousClock()
+    let preparationStart = clock.now
+    let readiness = await runtime.prepareLocalAnalysis()
+    let preparationSeconds = preparationStart.duration(to: clock.now).secondsDouble
+    guard readiness == .ready else {
+      throw EmbeddedGemmaHarnessError.failed("Embedded model verification or engine preparation did not reach ready.")
+    }
+    guard let receipt = try await runtime.receipt(for: descriptor),
+      receipt.matches(descriptor),
+      receipt.locationKind == .applicationBundle
+    else {
+      throw EmbeddedGemmaHarnessError.failed("The exact bundled-model receipt was not available.")
+    }
+
+    var runs: [EmbeddedGemmaSmokeRun] = []
+    for fixture in EmbeddedGemmaHarnessFixture.allCases {
+      runs.append(await runSmokeFixture(fixture, descriptor: descriptor))
+    }
+
+    let colors = Dictionary(uniqueKeysWithValues: runs.compactMap { run in
+      run.dominantColor.map { (run.fixture, $0) }
+    })
+    let colorPassed = colors[.brown] == .brown
+      && colors[.green] == .green
+      && colors[.control] == .other
+    let structuredPassCount = runs.filter { $0.structuredObservation != nil }.count
+    let allPassed = colorPassed
+      && structuredPassCount == EmbeddedGemmaHarnessFixture.allCases.count
+      && runs.allSatisfy { $0.outcome == "PASS" }
+    let summary = EmbeddedGemmaSmokeSummary(
+      startedAt: startedAt,
+      finishedAt: Date(),
+      descriptor: descriptor,
+      configuration: configuration,
+      executionLocation: .currentAppLocal,
+      receipt: receipt,
+      preparationSeconds: preparationSeconds,
+      engineWasReadyBeforeRun: engineWasReady,
+      runs: runs,
+      brownGreenControlPassed: colorPassed,
+      structuredPassCount: structuredPassCount,
+      outcome: allPassed ? "PASS" : "FAIL"
+    )
+    let evidenceURL = try save(summary, stem: "embedded-gemma-smoke")
+    guard allPassed else {
+      throw EmbeddedGemmaHarnessError.failed("One or more real image-plus-text smoke checks failed; local evidence was saved.")
+    }
+    return EmbeddedGemmaHarnessResult(
+      evidenceURL: evidenceURL,
+      consoleSummary: "brown=BROWN green=GREEN control=OTHER structured=\(structuredPassCount)/3 backend=\(configuration.engineBackend)/vision-\(configuration.visionBackend)"
+    )
+  }
+
+  func runNormalFlow() async throws -> EmbeddedGemmaHarnessResult {
+    let startedAt = Date()
+    let runID = UUID()
+    let priorRunID = UserDefaults.standard.string(forKey: Self.defaultsRunIDKey)
+      .flatMap(UUID.init(uuidString:))
+    let descriptor = try exactDescriptor()
+    let configuration = await runtime.configurationSnapshot()
+    try requireExpectedBackends(configuration)
+    guard await runtime.prepareLocalAnalysis() == .ready else {
+      throw EmbeddedGemmaHarnessError.failed("The embedded runtime was not ready for normal-flow acceptance.")
+    }
+    let viewModel = NewEntryViewModel(
+      imageStore: ImageStore(),
+      store: EntryStore(context: context),
+      inference: CoordinatedInferenceService(runtime: runtime, descriptor: descriptor),
+      descriptor: descriptor,
+      modelVerified: true,
+      engineReady: true,
+      configuration: configuration,
+      executionLocation: .currentAppLocal,
+      analysisTimeout: .seconds(120),
+      autoAnalysisEnabled: true
+    )
+    let fixture = EmbeddedGemmaHarnessFixture.brown
+    try viewModel.prepareImageData(fixture.verifiedBundledData())
+
+    for _ in 0..<1_800 {
+      switch viewModel.flowState {
+      case .reviewing, .failed:
+        break
+      default:
+        try await Task.sleep(for: .milliseconds(100))
+        continue
+      }
+      break
+    }
+    guard case .reviewing = viewModel.flowState,
+      let original = viewModel.reviewedObservation
+    else {
+      throw EmbeddedGemmaHarnessError.failed("Automatic photo attachment did not reach editable review.")
+    }
+
+    let editedField: ReviewField
+    if original.imageUsable {
+      editedField = .form
+      let replacement = original.form == "mushy" ? "smooth_formed" : "mushy"
+      viewModel.updateReview(field: .form) {
+        VisualObservation(
+          imageUsable: $0.imageUsable,
+          qualityIssue: $0.qualityIssue,
+          apparentBristolType: $0.apparentBristolType,
+          apparentColor: $0.apparentColor,
+          form: replacement,
+          redAppearingMaterial: $0.redAppearingMaterial,
+          blackTarryAppearance: $0.blackTarryAppearance
+        )
+      }
+    } else {
+      editedField = .imageQuality
+      let replacement = original.qualityIssue == "too_dark" ? "blurred" : "too_dark"
+      viewModel.updateReview(field: .imageQuality) { _ in
+        VisualObservation(
+          imageUsable: false,
+          qualityIssue: replacement,
+          apparentBristolType: nil,
+          apparentColor: "unable_to_assess",
+          form: "unable_to_assess",
+          redAppearingMaterial: "unable_to_assess",
+          blackTarryAppearance: "unable_to_assess"
+        )
+      }
+    }
+    for field in ReviewField.allCases where field != editedField {
+      viewModel.confirmReviewField(field)
+    }
+    let reviewed = try requireReviewedObservation(viewModel)
+    let outstandingAtSave = viewModel.outstandingReviewCount
+    guard outstandingAtSave == 0, viewModel.canSave else {
+      throw EmbeddedGemmaHarnessError.failed("Review suggestions were not fully resolved before save.")
+    }
+    let note = "\(DemoDataPolicy.notePrefix) · embedded acceptance · \(runID.uuidString)"
+    viewModel.note = note
+    viewModel.save()
+
+    guard let entryID = viewModel.savedEntryID else {
+      throw EmbeddedGemmaHarnessError.failed("The reviewed entry did not complete its transaction.")
+    }
+    let entries = try context.fetch(FetchDescriptor<EntryRecord>())
+    guard let entry = entries.first(where: { $0.id == entryID && $0.note == note }) else {
+      throw EmbeddedGemmaHarnessError.failed("The saved entry did not appear in the History data source.")
+    }
+    let provenance = try decodeProvenance(entry.modelProvenanceJSON)
+    let imageExists = entry.imageFilename
+      .flatMap { ImageStore().imageURL(filename: $0) }
+      .map { FileManager.default.fileExists(atPath: $0.path) } ?? false
+    let allPassed = entry.observation == reviewed
+      && entry.provenance == EntryProvenance.ai_edited.rawValue
+      && entry.modelID == descriptor.modelID
+      && provenance?.configuration == configuration
+      && provenance?.executionLocation == .currentAppLocal
+      && imageExists
+    let summary = EmbeddedGemmaNormalFlowSummary(
+      runID: runID,
+      startedAt: startedAt,
+      finishedAt: Date(),
+      descriptor: descriptor,
+      configuration: configuration,
+      executionLocation: .currentAppLocal,
+      fixture: fixture,
+      automaticAnalysisReachedReview: true,
+      originalObservation: original,
+      reviewedObservation: reviewed,
+      editedField: editedField.rawValue,
+      outstandingSuggestionsAtSave: outstandingAtSave,
+      savePassed: viewModel.savedEntryID == entryID,
+      historyEntryFound: true,
+      imageExists: imageExists,
+      provenance: entry.provenance,
+      savedModelID: entry.modelID,
+      savedConfiguration: provenance?.configuration,
+      savedExecutionLocation: provenance?.executionLocation,
+      outcome: allPassed ? "PASS" : "FAIL"
+    )
+    let evidenceURL = try save(summary, stem: "embedded-gemma-normal-flow")
+    guard allPassed else {
+      throw EmbeddedGemmaHarnessError.failed("One or more automatic review/save/history checks failed; local evidence was saved.")
+    }
+    if let priorRunID, priorRunID != runID {
+      let priorNote = "\(DemoDataPolicy.notePrefix) · embedded acceptance · \(priorRunID.uuidString)"
+      if let priorEntry = entries.first(where: { $0.note == priorNote }) {
+        try? EntryStore(context: context).delete(priorEntry, imageStore: ImageStore())
+      }
+    }
+    UserDefaults.standard.set(runID.uuidString, forKey: Self.defaultsRunIDKey)
+    return EmbeddedGemmaHarnessResult(
+      evidenceURL: evidenceURL,
+      consoleSummary: "auto_analysis=PASS review=PASS edit=\(editedField.rawValue) save=PASS history=PASS"
+    )
+  }
+
+  func verifyNormalFlowAfterRelaunch() throws -> EmbeddedGemmaHarnessResult {
+    let descriptor = try exactDescriptor()
+    guard let stored = UserDefaults.standard.string(forKey: Self.defaultsRunIDKey),
+      let runID = UUID(uuidString: stored)
+    else {
+      throw EmbeddedGemmaHarnessError.failed("No prior embedded normal-flow marker was found.")
+    }
+    let note = "\(DemoDataPolicy.notePrefix) · embedded acceptance · \(runID.uuidString)"
+    let entries = try context.fetch(FetchDescriptor<EntryRecord>())
+    guard let entry = entries.first(where: { $0.note == note }) else {
+      throw EmbeddedGemmaHarnessError.failed("The embedded acceptance entry was not found after relaunch.")
+    }
+    let provenance = try decodeProvenance(entry.modelProvenanceJSON)
+    let reviewedReopened = entry.observation != nil
+    let editPersisted = entry.originalAIJSON != nil
+      && entry.reviewedJSON != nil
+      && entry.originalAIJSON != entry.reviewedJSON
+      && entry.provenance == EntryProvenance.ai_edited.rawValue
+    let provenancePersisted = entry.modelID == descriptor.modelID
+      && provenance?.configuration == .runtimeDefault
+      && provenance?.executionLocation == .currentAppLocal
+    let imageReopened = entry.imageFilename
+      .flatMap { ImageStore().imageURL(filename: $0) }
+      .map { FileManager.default.fileExists(atPath: $0.path) } ?? false
+    let allPassed = reviewedReopened && editPersisted && provenancePersisted && imageReopened
+    let summary = EmbeddedGemmaNormalFlowRelaunchSummary(
+      verifiedAt: Date(),
+      runID: runID,
+      entryFoundAfterRelaunch: true,
+      reviewedObservationReopened: reviewedReopened,
+      humanEditPersisted: editPersisted,
+      modelProvenancePersisted: provenancePersisted,
+      imageReopened: imageReopened,
+      outcome: allPassed ? "PASS" : "FAIL"
+    )
+    let evidenceURL = try save(summary, stem: "embedded-gemma-normal-flow-relaunch")
+    guard allPassed else {
+      throw EmbeddedGemmaHarnessError.failed("One or more relaunch persistence checks failed; local evidence was saved.")
+    }
+    return EmbeddedGemmaHarnessResult(
+      evidenceURL: evidenceURL,
+      consoleSummary: "relaunch=PASS reviewed=PASS edit=PASS provenance=PASS image=PASS"
+    )
+  }
+
+  private func runSmokeFixture(
+    _ fixture: EmbeddedGemmaHarnessFixture,
+    descriptor: ModelDescriptor
+  ) async -> EmbeddedGemmaSmokeRun {
+    let imageStore = ImageStore()
+    var prepared: PreparedDraft?
+    var colorRaw: String?
+    var color: DominantColorResult?
+    var colorSeconds: Double?
+    var structuredRaw: String?
+    var observation: VisualObservation?
+    var structuredSeconds: Double?
+    var repairUsed = false
+    var failureStage: InferenceErrorStage?
+
+    do {
+      prepared = try imageStore.prepare(fixture.verifiedBundledData())
+    } catch {
+      failureStage = .imageEncoding
+    }
+
+    if let prepared {
+      do {
+        let clock = ContinuousClock()
+        let colorStart = clock.now
+        let raw = try await runtime.dominantColorProbe(descriptor, draftURL: prepared.url)
+        colorSeconds = colorStart.duration(to: clock.now).secondsDouble
+        colorRaw = raw
+        color = try DominantColorResult.parse(raw)
+      } catch {
+        failureStage = (error as? StagedInferenceError)?.stage ?? .parsing
+      }
+    }
+
+    if let prepared {
+      let clock = ContinuousClock()
+      let structuredStart = clock.now
+      do {
+        let initial = try await runtime.analyze(descriptor, draftURL: prepared.url)
+        structuredRaw = initial
+        do {
+          observation = try ObservationParser.parse(initial)
+          await runtime.discardRepairContext(descriptor, draftURL: prepared.url)
+        } catch {
+          repairUsed = true
+          let repaired = try await runtime.repair(
+            descriptor,
+            draftURL: prepared.url,
+            errors: error.localizedDescription
+          )
+          structuredRaw = "INITIAL\n\(initial)\n\nREPAIR\n\(repaired)"
+          observation = try ObservationParser.parse(repaired)
+        }
+      } catch {
+        await runtime.discardRepairContext(descriptor, draftURL: prepared.url)
+        failureStage = failureStage ?? (error as? StagedInferenceError)?.stage ?? .parsing
+      }
+      structuredSeconds = structuredStart.duration(to: clock.now).secondsDouble
+    }
+
+    if let prepared { imageStore.deleteBestEffort(prepared.url) }
+    let passed = color == fixture.expectedDominantColor && observation != nil && failureStage == nil
+    return EmbeddedGemmaSmokeRun(
+      fixture: fixture,
+      sanitizedImageSHA256: prepared?.reference.sha256,
+      dominantColorRaw: colorRaw,
+      dominantColor: color,
+      dominantColorSeconds: colorSeconds,
+      structuredRaw: structuredRaw,
+      structuredObservation: observation,
+      structuredSeconds: structuredSeconds,
+      repairUsed: repairUsed,
+      failureStage: failureStage,
+      outcome: passed ? "PASS" : "FAIL"
+    )
+  }
+
+  private func exactDescriptor() throws -> ModelDescriptor {
+    guard let descriptor = ModelCatalog.normalFlowSelection,
+      descriptor == .liteRTGemma4E4B
+    else {
+      throw EmbeddedGemmaHarnessError.failed("The Hackathon build did not select the exact embedded E4B descriptor.")
+    }
+    return descriptor
+  }
+
+  private func requireExpectedBackends(_ configuration: InferenceConfiguration) throws {
+    #if targetEnvironment(simulator)
+    let expectedMain = "cpu"
+    #else
+    let expectedMain = "gpu"
+    #endif
+    guard configuration.engineBackend == expectedMain,
+      configuration.visionBackend == "cpu"
+    else {
+      throw EmbeddedGemmaHarnessError.failed("The configured main/vision backends did not match this platform's pinned acceptance configuration.")
+    }
+  }
+
+  private func requireReviewedObservation(_ viewModel: NewEntryViewModel) throws -> VisualObservation {
+    guard let reviewed = viewModel.reviewedObservation else {
+      throw EmbeddedGemmaHarnessError.failed("The reviewed observation disappeared before save.")
+    }
+    return reviewed
+  }
+
+  private func decodeProvenance(_ json: String?) throws -> InferenceProvenanceSnapshot? {
+    guard let data = json?.data(using: .utf8) else { return nil }
+    return try JSONDecoder().decode(InferenceProvenanceSnapshot.self, from: data)
+  }
+
+  private func save<T: Encodable>(_ value: T, stem: String) throws -> URL {
+    let directory = try AppFolders.applicationSupport()
+      .appendingPathComponent("CompletionEvidence", isDirectory: true)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    try AppFolders.protect(directory)
+    let url = directory.appendingPathComponent("\(stem)-\(UUID().uuidString.lowercased()).json")
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+    encoder.dateEncodingStrategy = .iso8601
+    try encoder.encode(value).write(to: url, options: .atomic)
+    try AppFolders.protect(url)
+    return url
   }
 }
 #endif
