@@ -4,10 +4,7 @@ This file records only prompt-independent host facts. It is not a runtime prefli
 
 - Recorded: 2026-07-31, America/New_York
 - CPU architecture: `arm64`
-- macOS: 26.6 (25G72)
-- Xcode: 26.6 (17F113)
-- System Python: `/usr/bin/python3` — 3.9.6 (not compliant with Prompt A)
-- Available disk at workspace mount: 270 GiB
+- Host-specific OS, Xcode build, disk capacity, and system Python details are intentionally omitted from the public team branch. Re-run the documented precheck on each contributor's Mac.
 
 ## Workspace-local compliant runtime
 

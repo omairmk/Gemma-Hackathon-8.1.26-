@@ -425,6 +425,21 @@ import XCTest
     XCTAssertEqual(baseline.imageMessageForm, fallback.imageMessageForm)
   }
 
+  func testPhysicalGPUVisionChangesOnlyVisionBackendAndIsExplicitlyNamed() {
+    let baseline = InferenceConfiguration.deterministicBaseline
+    let experiment = InferenceConfiguration.physicalGPUVision
+    XCTAssertEqual(experiment.id, "physical-gpu-vision-v1")
+    XCTAssertEqual(experiment.engineBackend, baseline.engineBackend)
+    XCTAssertEqual(experiment.visionBackend, "gpu")
+    XCTAssertEqual(experiment.maxNumTokens, baseline.maxNumTokens)
+    XCTAssertEqual(experiment.topK, baseline.topK)
+    XCTAssertEqual(experiment.topP, baseline.topP)
+    XCTAssertEqual(experiment.temperature, baseline.temperature)
+    XCTAssertEqual(experiment.seed, baseline.seed)
+    XCTAssertEqual(experiment.promptVersion, baseline.promptVersion)
+    XCTAssertEqual(experiment.imageMessageForm, baseline.imageMessageForm)
+  }
+
   func testModelImportReceiptRoundTripRetainsSource() throws {
     let root = temporaryRoot()
     defer { try? FileManager.default.removeItem(at: root) }

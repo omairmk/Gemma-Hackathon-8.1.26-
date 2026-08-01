@@ -18,7 +18,7 @@ loopback-only proxy. This prompt ENDS in exactly one of two committed terminal
 states: PRECHECK.md `STATUS: GO`, or an honest `STATUS: NO-GO` with diagnosis.
 -->
 
-You are a senior engineer preparing an Apple Silicon MacBook Pro (48 GB RAM, macOS, Python 3.11+) for a one-day healthcare hackathon build tomorrow. Tonight's sole objective: a verified, committed, offline-capable local model runtime plus the project skeleton the Saturday prompt assumes. Do not build product features.
+You are a senior engineer preparing an Apple Silicon Mac (macOS, Python 3.11+) for a one-day healthcare hackathon build tomorrow. Tonight's sole objective: a verified, committed, offline-capable local model runtime plus the project skeleton the Saturday prompt assumes. Do not build product features.
 
 **This repo contains `GI_Journal_Build_Prompt_v3_2_1.md` (the Saturday prompt). Read its Appendix A (analysis schema) and Appendix B (image system prompt) — tasks below depend on them. If the file is missing, stop and ask for it.**
 

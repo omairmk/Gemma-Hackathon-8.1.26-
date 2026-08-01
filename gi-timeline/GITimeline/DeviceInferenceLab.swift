@@ -1528,14 +1528,7 @@ final class EmbeddedGemmaCompletionHarness {
   }
 
   private func requireExpectedBackends(_ configuration: InferenceConfiguration) throws {
-    #if targetEnvironment(simulator)
-    let expectedMain = "cpu"
-    #else
-    let expectedMain = "gpu"
-    #endif
-    guard configuration.engineBackend == expectedMain,
-      configuration.visionBackend == "cpu"
-    else {
+    guard configuration == .runtimeDefault else {
       throw EmbeddedGemmaHarnessError.failed("The configured main/vision backends did not match this platform's pinned acceptance configuration.")
     }
   }

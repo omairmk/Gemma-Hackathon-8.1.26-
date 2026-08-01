@@ -73,7 +73,7 @@ struct ModelDescriptor: Codable, Equatable, Identifiable, Sendable {
 
   var shortSHA256: String { String(expectedSHA256.prefix(12)) }
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   static let galleryGemma3nE2B = try! ModelDescriptor(
     id: "gallery-gemma-3n-e2b-73b019b6",
     family: "Gemma 3n E2B",
@@ -148,6 +148,40 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
   )
 
   #if DEBUG || HACKATHON_EMBEDDED_GEMMA
+  /// Physical-iPhone experiment that moves only the vision executor away from
+  /// the CPU/XNNPACK path that failed to allocate its Gemma 4 image tensors.
+  /// Model identity, main backend, context, sampler, prompt, and message shape
+  /// remain identical to `deterministicBaseline`.
+  static let physicalGPUVision = InferenceConfiguration(
+    id: "physical-gpu-vision-v1",
+    engineBackend: "gpu",
+    visionBackend: "gpu",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
+
+  /// Current-model-only physical experiment: keep the Gemma vision encoder on
+  /// Metal while moving the much larger text engine to CPU to free GPU memory.
+  static let physicalCPUGPUVision = InferenceConfiguration(
+    id: "physical-cpu-gpu-vision-v1",
+    engineBackend: "cpu",
+    visionBackend: "gpu",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
+  #endif
+
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   /// One-variable simulator experiment after the GPU path failed in Metal
   /// kernel compilation. Model, vision backend, context, sampler, and prompt
   /// remain identical to `deterministicBaseline`.
@@ -165,7 +199,7 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
   )
   #endif
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   /// Explicit, opt-in physical-device experiment. GPU remains the normal
   /// physical Debug default; this configuration is selected only when the
   /// build defines `PHYSICAL_CPU_ENGINE_FALLBACK` after a recorded GPU failure.
@@ -185,6 +219,8 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
 
   #if HACKATHON_EMBEDDED_GEMMA && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
+  #elseif HACKATHON_EMBEDDED_GEMMA
+  static let runtimeDefault = physicalCPUGPUVision
   #elseif DEBUG && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
   #elseif DEBUG && PHYSICAL_CPU_ENGINE_FALLBACK

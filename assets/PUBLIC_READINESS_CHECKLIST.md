@@ -9,7 +9,7 @@ Verified against the `codex/physical-gemma-prep` publication snapshot on 2026-08
 - [x] All retained screenshots and fixtures are synthetic, sanitized, and free of identifying metadata.
 - [x] The six stale pre-native screenshots were removed; `native-*` captures match the current review-first flow.
 - [x] `git diff --check` passes.
-- [x] The clean public-source Simulator suite passes 38/38 tests.
+- [x] The clean public-source Simulator suite passes 39/39 tests.
 - [x] The clean Hackathon arm64 Simulator build succeeds with the exact pinned model embedded.
 - [x] Current documentation distinguishes real-Gemma Simulator evidence from deterministic UI mocks and from unproved physical-iPhone/offline claims.
 - [x] The team-package archive passes integrity testing, strict ad-hoc code-signature verification, exact model SHA-256 verification, and split/reassembly checksum verification.

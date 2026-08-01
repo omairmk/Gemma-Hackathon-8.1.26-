@@ -124,11 +124,18 @@ actor LiteRTLMEngineSessionAdapter {
       #endif
       default: throw GITimelineError.operationInProgress
       }
-      guard config.visionBackend == "cpu" else { throw GITimelineError.operationInProgress }
+      let visionBackend: Backend
+      switch config.visionBackend {
+      case "cpu": visionBackend = .cpu()
+      #if DEBUG || HACKATHON_EMBEDDED_GEMMA
+      case "gpu": visionBackend = .gpu
+      #endif
+      default: throw GITimelineError.operationInProgress
+      }
       let engineConfig = try EngineConfig(
         modelPath: model.modelURL.path,
         backend: engineBackend,
-        visionBackend: .cpu(),
+        visionBackend: visionBackend,
         maxNumTokens: config.maxNumTokens,
         cacheDir: cache.path
       )

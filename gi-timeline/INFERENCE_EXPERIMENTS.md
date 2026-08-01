@@ -103,8 +103,8 @@ Append-only. Supporting build experiments do not count as physical image-inferen
 - Hypothesis: after the owner completes the cable/unlock/Trust checkpoint, CoreDevice and Xcode can identify the intended phone and determine the next physical-build boundary without mutating it.
 - Intended variable: read-only physical-device discovery only; no signing setting, app, model, phone setting, or device data changed.
 - Git state: dirty Phase-2 implementation based on full commit `7cdf22329b1c4ea7d6a2e3daf94f6c97e0af8f5f`; no model artifact or physical-build commit exists.
-- Environment: Xcode 26.6 (17F113); device identifier and user-provided name redacted.
-- Sanitized device result: exactly one wired, paired, booted iOS device with connected CoreDevice tunnel; product type `iPhone18,2`; iOS `26.5.2 (23F84)`; arm64e. The installed Xcode device-trait database maps this product type to iPhone 17 Pro Max and `DevicePerformanceMemoryClass=12`; runtime available/peak memory is not measured.
+- Environment: Xcode toolchain; device identifier, user-provided name, exact OS build, product type, and hardware-capacity details are omitted from the public branch.
+- Sanitized device result: exactly one wired, paired, booted physical iOS device was visible through CoreDevice. Runtime available/peak memory was not measured.
 - Xcode destination result: the project lists one available physical `platform:iOS, arch:arm64` destination with name and identifier redacted and no destination-eligibility error.
 - Installed-app safety check: exact queries for `com.omairmkhan.GITimeline` and `com.omairmkhan.GITimeline.debug` both stopped before results with `CoreDeviceError 10005`: Developer Mode disabled. Their installed states remain UNKNOWN; empty result counts were discarded as non-evidence.
 - Model/image/request/configuration: not exercised; no model is present or downloaded.
