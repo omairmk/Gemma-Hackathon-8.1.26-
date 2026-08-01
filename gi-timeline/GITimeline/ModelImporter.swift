@@ -6,17 +6,24 @@ struct ModelImporter: Sendable {
   private let customModelsDirectory: URL?
   private let customEmbeddedModelsDirectory: URL?
   private let appBuildIdentity: ModelAppBuildIdentity
+  private let trustBundledBuildReceipt: Bool
 
   init(
     importDirectory: URL? = nil,
     modelsDirectory: URL? = nil,
     embeddedModelsDirectory: URL? = nil,
-    appBuildIdentity: ModelAppBuildIdentity = .current
+    appBuildIdentity: ModelAppBuildIdentity = .current,
+    trustBundledBuildReceipt: Bool? = nil
   ) {
     customImportDirectory = importDirectory
     customModelsDirectory = modelsDirectory
     customEmbeddedModelsDirectory = embeddedModelsDirectory
     self.appBuildIdentity = appBuildIdentity
+    #if HACKATHON_EMBEDDED_GEMMA
+    self.trustBundledBuildReceipt = trustBundledBuildReceipt ?? true
+    #else
+    self.trustBundledBuildReceipt = trustBundledBuildReceipt ?? false
+    #endif
   }
 
   func importModel(_ descriptor: ModelDescriptor) throws -> ModelImportResult {
@@ -179,6 +186,31 @@ struct ModelImporter: Sendable {
       )
     }
 
+    // The Hackathon embed phase hashes the exact destination artifact and writes
+    // this receipt before Xcode seals both files into the signed, read-only app
+    // bundle. Trusting that signed receipt avoids streaming 3.66 GB through the
+    // phone again on first use. Imported and ordinary builds retain full hashing.
+    if try bundledBuildReceiptMatches(descriptor, location: location) {
+      let receipt = ModelVerificationReceipt(
+        descriptorID: descriptor.id,
+        modelID: descriptor.modelID,
+        sourceRevision: descriptor.sourceRevision,
+        artifactFilename: descriptor.artifactFilename,
+        importedBytes: descriptor.expectedBytes,
+        importedSHA256: descriptor.expectedSHA256.lowercased(),
+        verifiedAt: Date(),
+        locationKind: .applicationBundle,
+        appBuildIdentity: appBuildIdentity
+      )
+      try writeReceipt(receipt, for: descriptor, locationKind: .applicationBundle)
+      return try VerifiedModel(
+        validating: descriptor,
+        location: location,
+        receipt: receipt,
+        appBuildIdentity: appBuildIdentity
+      )
+    }
+
     let actualHash = try sha256(of: location.url)
     guard actualHash.caseInsensitiveCompare(descriptor.expectedSHA256) == .orderedSame else {
       throw GITimelineError.modelHashMismatch
@@ -201,6 +233,32 @@ struct ModelImporter: Sendable {
       receipt: receipt,
       appBuildIdentity: appBuildIdentity
     )
+  }
+
+  private func bundledBuildReceiptMatches(
+    _ descriptor: ModelDescriptor,
+    location: ModelLocation
+  ) throws -> Bool {
+    guard trustBundledBuildReceipt else { return false }
+    let receiptURL = location.url.deletingPathExtension().appendingPathExtension("receipt")
+    guard FileManager.default.fileExists(atPath: receiptURL.path) else { return false }
+    let receiptBytes = try fileSize(receiptURL)
+    guard receiptBytes > 0, receiptBytes <= 16 * 1_024 else { return false }
+
+    let raw = try String(contentsOf: receiptURL, encoding: .utf8)
+    var fields: [String: String] = [:]
+    for line in raw.split(whereSeparator: \.isNewline) {
+      let pair = line.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
+      guard pair.count == 2 else { return false }
+      let key = String(pair[0])
+      guard fields.updateValue(String(pair[1]), forKey: key) == nil else { return false }
+    }
+
+    return fields["status"] == "verified"
+      && fields["model_id"] == descriptor.modelID
+      && fields["source_revision"] == descriptor.sourceRevision
+      && Int64(fields["bytes"] ?? "") == descriptor.expectedBytes
+      && fields["sha256"]?.caseInsensitiveCompare(descriptor.expectedSHA256) == .orderedSame
   }
 
   private func importDirectory() throws -> URL {

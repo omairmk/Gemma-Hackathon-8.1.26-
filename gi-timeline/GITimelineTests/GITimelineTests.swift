@@ -484,6 +484,47 @@ import XCTest
     XCTAssertFalse(FileManager.default.fileExists(atPath: try importer.modelURL(for: descriptor).path))
   }
 
+  func testTrustedBundledBuildReceiptAvoidsRuntimeRehash() throws {
+    let root = temporaryRoot()
+    defer { try? FileManager.default.removeItem(at: root) }
+    let embedded = root.appendingPathComponent("EmbeddedModels", isDirectory: true)
+    let models = root.appendingPathComponent("Models", isDirectory: true)
+    try FileManager.default.createDirectory(at: embedded, withIntermediateDirectories: true)
+    let expected = Data("expected same length".utf8)
+    let tampered = Data("tampered same length".utf8)
+    XCTAssertEqual(expected.count, tampered.count)
+    let descriptor = try tinyDescriptor(data: expected)
+    let artifact = embedded.appendingPathComponent(descriptor.artifactFilename)
+    try tampered.write(to: artifact)
+    let buildReceipt = [
+      "status=verified",
+      "model_id=\(descriptor.modelID)",
+      "source_revision=\(descriptor.sourceRevision)",
+      "bytes=\(descriptor.expectedBytes)",
+      "sha256=\(descriptor.expectedSHA256)"
+    ].joined(separator: "\n") + "\n"
+    try Data(buildReceipt.utf8).write(
+      to: artifact.deletingPathExtension().appendingPathExtension("receipt")
+    )
+    let build = ModelAppBuildIdentity(
+      bundleIdentifier: "com.example.GITimeline.hackathon",
+      shortVersion: "1.0",
+      buildNumber: "43"
+    )
+    let importer = ModelImporter(
+      modelsDirectory: models,
+      embeddedModelsDirectory: embedded,
+      appBuildIdentity: build,
+      trustBundledBuildReceipt: true
+    )
+
+    let verified = try importer.verifiedBundledModel(for: descriptor)
+
+    XCTAssertEqual(verified.modelURL, artifact)
+    XCTAssertEqual(verified.receipt.importedSHA256, descriptor.expectedSHA256)
+    XCTAssertEqual(verified.receipt.appBuildIdentity, build)
+  }
+
   func testBundledReceiptInvalidatesForNewAppBuild() throws {
     let root = temporaryRoot()
     defer { try? FileManager.default.removeItem(at: root) }
