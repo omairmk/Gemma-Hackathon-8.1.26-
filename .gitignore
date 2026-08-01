@@ -3,6 +3,7 @@
 **/xcuserdata/
 **/*.xcuserstate
 DerivedData/
+**/DerivedData*/
 .swiftpm/
 .build/
 build/
@@ -23,6 +24,7 @@ build/
 .hf_cache/
 .devdata/
 .devdata_*/
+**/.devdata_inference/
 
 # Models, private journal data, generated media, and secrets
 **/Models/

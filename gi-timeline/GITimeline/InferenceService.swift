@@ -3,61 +3,267 @@ import Foundation
 import GITimelineCore
 
 protocol TimelineInferenceServing: Sendable {
-  func prepare() async throws
+  func prepare() async throws -> EnginePreparationResult
+  func engineState() async -> EngineProcessState
   func analyze(draftURL: URL) async throws -> String
   func repair(draftURL: URL, errors: String) async throws -> String
   func discardRepairContext(draftURL: URL) async
 }
 
-actor InferenceService: TimelineInferenceServing {
-  static let modelID = "litert-community/gemma-4-E4B-it-litert-lm"
-  private var engine: Engine?
-  private var pendingRepair: (draftPath: String, conversation: Conversation)?
-  private let modelURL: URL
+/// Lightweight product-facing facade over the app-scoped runtime registry.
+/// It never owns an engine and therefore cannot create a parallel session.
+struct CoordinatedInferenceService: TimelineInferenceServing {
+  let runtime: ModelRuntimeCoordinator
+  let descriptor: ModelDescriptor
+
+  func prepare() async throws -> EnginePreparationResult { try await runtime.prepare(descriptor) }
+  func engineState() async -> EngineProcessState { await runtime.engineState(descriptor) }
+  func analyze(draftURL: URL) async throws -> String { try await runtime.analyze(descriptor, draftURL: draftURL) }
+  func repair(draftURL: URL, errors: String) async throws -> String {
+    try await runtime.repair(descriptor, draftURL: draftURL, errors: errors)
+  }
+  func discardRepairContext(draftURL: URL) async {
+    await runtime.discardRepairContext(descriptor, draftURL: draftURL)
+  }
+}
+
+/// Keeps image inference exclusive across the normal flow and DEBUG lab while
+/// an initial structured response may still need its same-conversation repair.
+/// A mismatched/stale completion cannot release a newer run.
+struct ExclusiveInferenceGate: Sendable {
+  private var activeToken: UUID?
+  private var structuredDraftPath: String?
+
+  var isIdle: Bool { activeToken == nil }
+
+  mutating func beginStructured(draftPath: String) throws -> UUID {
+    guard activeToken == nil else { throw GITimelineError.operationInProgress }
+    let token = UUID()
+    activeToken = token
+    structuredDraftPath = draftPath
+    return token
+  }
+
+  mutating func beginProbe() throws -> UUID {
+    guard activeToken == nil else { throw GITimelineError.operationInProgress }
+    let token = UUID()
+    activeToken = token
+    structuredDraftPath = nil
+    return token
+  }
+
+  func ownsStructured(token: UUID, draftPath: String) -> Bool {
+    activeToken == token && structuredDraftPath == draftPath
+  }
+
+  mutating func finish(_ token: UUID) {
+    guard activeToken == token else { return }
+    activeToken = nil
+    structuredDraftPath = nil
+  }
+}
+
+/// The only owner of a LiteRT-LM Engine and its conversations. Production
+/// structured analysis and DEBUG probes both pass through this adapter.
+actor LiteRTLMEngineSessionAdapter {
+  private let verifiedModel: VerifiedModel
   private let cacheURL: URL
+  private let configuration: InferenceConfiguration
+  private var engine: Engine?
+  private var initializationTask: Task<(Engine, Double), Error>?
+  private var processState: EngineProcessState = .uninitialized
+  private var inferenceGate = ExclusiveInferenceGate()
+  private var pendingRepair: (draftPath: String, conversation: Conversation, token: UUID)?
 
-  init(modelURL: URL, cacheURL: URL) { self.modelURL = modelURL; self.cacheURL = cacheURL }
+  init(verifiedModel: VerifiedModel, cacheURL: URL, configuration: InferenceConfiguration) {
+    self.verifiedModel = verifiedModel
+    self.cacheURL = cacheURL
+    self.configuration = configuration
+  }
 
-  func prepare() async throws { _ = try await initializedEngine() }
+  func state() -> EngineProcessState { processState }
 
-  func analyze(draftURL: URL) async throws -> String {
-    let engine = try await initializedEngine()
-    let conversation = try await makeConversation(engine: engine)
-    pendingRepair = (draftURL.path, conversation)
+  func canReleaseForModelChange() -> Bool {
+    initializationTask == nil && processState != .initializing && inferenceGate.isIdle
+  }
+
+  func prepare() async throws -> EnginePreparationResult {
+    if engine != nil, processState == .ready {
+      return EnginePreparationResult(seconds: 0, reusedCurrentProcessEngine: true)
+    }
+    if let initializationTask {
+      do {
+        let (initialized, seconds) = try await initializationTask.value
+        engine = initialized
+        processState = .ready
+        self.initializationTask = nil
+        return EnginePreparationResult(seconds: seconds, reusedCurrentProcessEngine: true)
+      } catch {
+        self.initializationTask = nil
+        let staged = StagedInferenceError(stage: .engineInitialization, underlying: error)
+        processState = .failed(staged.localizedDescription)
+        throw staged
+      }
+    }
+
+    processState = .initializing
+    let model = verifiedModel
+    let config = configuration
+    let cache = cacheURL
+    let task = Task<(Engine, Double), Error> {
+      let clock = ContinuousClock()
+      let start = clock.now
+      guard model.receipt.matches(model.descriptor),
+        FileManager.default.fileExists(atPath: model.modelURL.path)
+      else { throw GITimelineError.modelNotVerified }
+      let engineBackend: Backend
+      switch config.engineBackend {
+      case "gpu": engineBackend = .gpu
+      #if DEBUG
+      case "cpu": engineBackend = .cpu()
+      #endif
+      default: throw GITimelineError.operationInProgress
+      }
+      guard config.visionBackend == "cpu" else { throw GITimelineError.operationInProgress }
+      let engineConfig = try EngineConfig(
+        modelPath: model.modelURL.path,
+        backend: engineBackend,
+        visionBackend: .cpu(),
+        maxNumTokens: config.maxNumTokens,
+        cacheDir: cache.path
+      )
+      let initialized = Engine(engineConfig: engineConfig)
+      try await initialized.initialize()
+      return (initialized, start.duration(to: clock.now).secondsDouble)
+    }
+    initializationTask = task
     do {
-      let response = try await conversation.sendMessage(Message(of: .imageFile(draftURL.path), .text(Self.prompt)))
-      return response.toString
+      let (initialized, seconds) = try await task.value
+      engine = initialized
+      processState = .ready
+      initializationTask = nil
+      return EnginePreparationResult(seconds: seconds, reusedCurrentProcessEngine: false)
+    } catch {
+      initializationTask = nil
+      let staged = StagedInferenceError(stage: .engineInitialization, underlying: error)
+      processState = .failed(staged.localizedDescription)
+      throw staged
+    }
+  }
+
+  func sendStructuredImage(path: String, prompt: String) async throws -> String {
+    let token: UUID
+    do { token = try inferenceGate.beginStructured(draftPath: path) }
+    catch { throw StagedInferenceError(stage: .generation, underlying: error) }
+    do {
+      let conversation = try await makeConversation()
+      pendingRepair = (path, conversation, token)
+      return try await sendImage(path: path, prompt: prompt, conversation: conversation)
     } catch {
       pendingRepair = nil
+      inferenceGate.finish(token)
       throw error
     }
   }
 
-  func repair(draftURL: URL, errors: String) async throws -> String {
-    guard let pendingRepair, pendingRepair.draftPath == draftURL.path else { throw GITimelineError.missingRepairContext }
+  #if DEBUG
+  func sendProbeImage(path: String, prompt: String) async throws -> String {
+    let token: UUID
+    do { token = try inferenceGate.beginProbe() }
+    catch { throw StagedInferenceError(stage: .generation, underlying: error) }
+    defer { inferenceGate.finish(token) }
+    let conversation = try await makeConversation()
+    return try await sendImage(path: path, prompt: prompt, conversation: conversation)
+  }
+  #endif
+
+  func repair(path: String, errors: String) async throws -> String {
+    guard let pendingRepair, pendingRepair.draftPath == path,
+      inferenceGate.ownsStructured(token: pendingRepair.token, draftPath: path)
+    else {
+      throw GITimelineError.missingRepairContext
+    }
     self.pendingRepair = nil
+    defer { inferenceGate.finish(pendingRepair.token) }
     let prompt = "Your previous reply was not valid JSON with exactly the required keys, allowed values, and consistency rules. Errors: \(errors). Return only the corrected JSON."
-    return try await pendingRepair.conversation.sendMessage(Message(prompt)).toString
+    do {
+      return try await pendingRepair.conversation.sendMessage(Message(prompt)).toString
+    } catch {
+      throw StagedInferenceError(stage: .repair, underlying: error)
+    }
   }
 
-  func discardRepairContext(draftURL: URL) {
-    if pendingRepair?.draftPath == draftURL.path { pendingRepair = nil }
+  func discardRepairContext(path: String) {
+    guard let pendingRepair, pendingRepair.draftPath == path else { return }
+    self.pendingRepair = nil
+    inferenceGate.finish(pendingRepair.token)
   }
 
-  private func makeConversation(engine: Engine) async throws -> Conversation {
-    // Each analysis gets a fresh conversation; its one optional repair stays in that conversation.
-    let sampler = try SamplerConfig(topK: 1, topP: 1, temperature: 0, seed: 0)
-    return try await engine.createConversation(with: ConversationConfig(samplerConfig: sampler))
+  private func makeConversation() async throws -> Conversation {
+    guard processState == .ready, let engine else { throw GITimelineError.modelNotVerified }
+    do {
+      let sampler = try SamplerConfig(
+        topK: configuration.topK,
+        topP: configuration.topP,
+        temperature: configuration.temperature,
+        seed: configuration.seed
+      )
+      return try await engine.createConversation(with: ConversationConfig(samplerConfig: sampler))
+    } catch {
+      throw StagedInferenceError(stage: .conversationCreation, underlying: error)
+    }
   }
 
-  private func initializedEngine() async throws -> Engine {
-    if let engine { return engine }
-    let config = try EngineConfig(modelPath: modelURL.path, backend: .gpu, visionBackend: .cpu(), maxNumTokens: 2048, cacheDir: cacheURL.path)
-    let newEngine = Engine(engineConfig: config)
-    try await newEngine.initialize()
-    engine = newEngine
-    return newEngine
+  private func sendImage(path: String, prompt: String, conversation: Conversation) async throws -> String {
+    do {
+      let message = Message(contents: [.imageFile(path), .text(prompt)])
+      return try await conversation.sendMessage(message).toString
+    } catch {
+      throw StagedInferenceError(stage: .imageRequest, underlying: error)
+    }
   }
+}
+
+actor InferenceService: TimelineInferenceServing {
+  let descriptor: ModelDescriptor
+  let configuration: InferenceConfiguration
+  private let adapter: LiteRTLMEngineSessionAdapter
+
+  init(
+    verifiedModel: VerifiedModel,
+    configuration: InferenceConfiguration = .deterministicBaseline,
+    cacheURL: URL
+  ) {
+    descriptor = verifiedModel.descriptor
+    self.configuration = configuration
+    adapter = LiteRTLMEngineSessionAdapter(verifiedModel: verifiedModel, cacheURL: cacheURL, configuration: configuration)
+  }
+
+  func prepare() async throws -> EnginePreparationResult { try await adapter.prepare() }
+  func engineState() async -> EngineProcessState { await adapter.state() }
+  func canReleaseForModelChange() async -> Bool { await adapter.canReleaseForModelChange() }
+
+  func analyze(draftURL: URL) async throws -> String {
+    try await adapter.sendStructuredImage(path: draftURL.path, prompt: Self.prompt)
+  }
+
+  func repair(draftURL: URL, errors: String) async throws -> String {
+    try await adapter.repair(path: draftURL.path, errors: errors)
+  }
+
+  func discardRepairContext(draftURL: URL) async {
+    await adapter.discardRepairContext(path: draftURL.path)
+  }
+
+  #if DEBUG
+  func dominantColorProbe(draftURL: URL) async throws -> String {
+    try await adapter.sendProbeImage(path: draftURL.path, prompt: Self.dominantColorPrompt)
+  }
+  #endif
+
+  #if DEBUG
+  static let dominantColorPrompt = "Inspect the image pixels. Return exactly one token: BROWN, GREEN, or OTHER. Return no other text."
+  #endif
 
   static let prompt = """
   You are the visual documentation component of a private gastrointestinal journal. Classify this bowel-movement photograph into neutral, structured visual observations. The user will review your output before saving. You are not diagnosing, determining causes, giving advice, or judging safety.
@@ -77,12 +283,45 @@ actor MockInferenceService: TimelineInferenceServing {
   enum Script { case response(String), malformed(String), slow(String, nanoseconds: UInt64) }
   var scripts: [Script]
   private let failPrepare: Bool
-  init(scripts: [Script], failPrepare: Bool = false) { self.scripts = scripts; self.failPrepare = failPrepare }
-  func prepare() throws { if failPrepare { throw CocoaError(.fileReadCorruptFile) } }
+  private let prepareDelayNanoseconds: UInt64
+  private var state: EngineProcessState
+
+  init(scripts: [Script], failPrepare: Bool = false, initiallyReady: Bool = true, prepareDelayNanoseconds: UInt64 = 0) {
+    self.scripts = scripts
+    self.failPrepare = failPrepare
+    self.prepareDelayNanoseconds = prepareDelayNanoseconds
+    state = initiallyReady ? .ready : .uninitialized
+  }
+
+  func prepare() async throws -> EnginePreparationResult {
+    if prepareDelayNanoseconds > 0 { try await Task.sleep(nanoseconds: prepareDelayNanoseconds) }
+    if failPrepare {
+      state = .failed("mock prepare failure")
+      throw CocoaError(.fileReadCorruptFile)
+    }
+    let reused = state == .ready
+    state = .ready
+    return EnginePreparationResult(seconds: 0, reusedCurrentProcessEngine: reused)
+  }
+
+  func engineState() -> EngineProcessState { state }
+
   func analyze(draftURL: URL) async throws -> String {
     guard !scripts.isEmpty else { throw CocoaError(.fileNoSuchFile) }
-    switch scripts.removeFirst() { case .response(let value), .malformed(let value): return value; case .slow(let value, let delay): try await Task.sleep(nanoseconds: delay); return value }
+    switch scripts.removeFirst() {
+    case .response(let value), .malformed(let value): return value
+    case .slow(let value, let delay): try await Task.sleep(nanoseconds: delay); return value
+    }
   }
+
   func repair(draftURL: URL, errors: String) async throws -> String { try await analyze(draftURL: draftURL) }
+  func discardRepairContext(draftURL: URL) {}
+}
+
+actor UnavailableInferenceService: TimelineInferenceServing {
+  func prepare() throws -> EnginePreparationResult { throw GITimelineError.missingModelDescriptor }
+  func engineState() -> EngineProcessState { .uninitialized }
+  func analyze(draftURL: URL) throws -> String { throw GITimelineError.missingModelDescriptor }
+  func repair(draftURL: URL, errors: String) throws -> String { throw GITimelineError.missingModelDescriptor }
   func discardRepairContext(draftURL: URL) {}
 }

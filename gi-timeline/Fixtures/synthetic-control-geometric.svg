@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#f2f4f7"/>
+  <rect x="96" y="96" width="832" height="832" rx="72" fill="#ffffff" stroke="#15294b" stroke-width="24"/>
+  <circle cx="512" cy="420" r="190" fill="#2f80ed" stroke="#15294b" stroke-width="20"/>
+  <path d="M280 720 L512 540 L744 720 Z" fill="#f2c94c" stroke="#15294b" stroke-width="20" stroke-linejoin="round"/>
+  <text x="512" y="850" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="54" font-weight="700" fill="#15294b">SYNTHETIC CONTROL</text>
+</svg>

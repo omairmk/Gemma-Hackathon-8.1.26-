@@ -23,6 +23,23 @@ public struct VisualObservation: Codable, Equatable, Sendable {
     self.blackTarryAppearance = blackTarryAppearance
   }
 
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(imageUsable, forKey: .imageUsable)
+    try container.encode(qualityIssue, forKey: .qualityIssue)
+    if let apparentBristolType {
+      try container.encode(apparentBristolType, forKey: .apparentBristolType)
+    } else {
+      // The strict parser requires every schema key. Synthesized Codable omits
+      // nil optionals, which made an edited unusable result fail to reopen.
+      try container.encodeNil(forKey: .apparentBristolType)
+    }
+    try container.encode(apparentColor, forKey: .apparentColor)
+    try container.encode(form, forKey: .form)
+    try container.encode(redAppearingMaterial, forKey: .redAppearingMaterial)
+    try container.encode(blackTarryAppearance, forKey: .blackTarryAppearance)
+  }
+
   enum CodingKeys: String, CodingKey {
     case imageUsable = "image_usable", qualityIssue = "quality_issue", apparentBristolType = "apparent_bristol_type"
     case apparentColor = "apparent_color", form, redAppearingMaterial = "red_appearing_material", blackTarryAppearance = "black_tarry_appearance"

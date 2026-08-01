@@ -21,6 +21,10 @@ import GITimelineCore
   var originalAIJSON: String?
   var reviewedJSON: String?
   var modelID: String?
+  var modelProvenanceJSON: String?
+  /// Immutable app-authored marker for bundled DEBUG fixtures. User-editable
+  /// notes are never used to decide what Reset Demo may delete.
+  var demoKind: String?
   var imageUnavailable: Bool
   var createdAt: Date
   var updatedAt: Date
@@ -28,11 +32,25 @@ import GITimelineCore
   init(input: EntryInput) {
     id = input.id; capturedAt = input.capturedAt; imageFilename = input.imageFilename; imageSHA256 = input.imageSHA256
     redBlood = input.redBlood?.rawValue; blackTarry = input.blackTarry?.rawValue; dizziness = input.dizziness?.rawValue; severePain = input.severePain?.rawValue
-    note = input.note; provenance = input.provenance.rawValue; reviewedAt = input.reviewedAt; originalAIJSON = input.originalAIJSON; reviewedJSON = input.reviewedJSON; modelID = input.modelID
+    note = input.note; provenance = input.provenance.rawValue; reviewedAt = input.reviewedAt; originalAIJSON = input.originalAIJSON; reviewedJSON = input.reviewedJSON; modelID = input.modelID; modelProvenanceJSON = input.modelProvenanceJSON; demoKind = input.demoKind
     imageUnavailable = false; createdAt = Date(); updatedAt = Date()
   }
 
   var observation: VisualObservation? { reviewedJSON.flatMap { try? ObservationParser.parse($0) } }
+  var inferenceProvenance: InferenceProvenanceSnapshot? {
+    modelProvenanceJSON?.data(using: .utf8).flatMap { try? JSONDecoder().decode(InferenceProvenanceSnapshot.self, from: $0) }
+  }
+  var isUIDemoProvider: Bool {
+    provenance != EntryProvenance.manual.rawValue && modelID == nil
+  }
+  var savedRuntimeLabel: String? {
+    if isUIDemoProvider { return "UI demo · Gemma not connected" }
+    guard let inferenceProvenance else { return modelID }
+    if let location = inferenceProvenance.executionLocation {
+      return "\(inferenceProvenance.family) · \(location.displayName)"
+    }
+    return inferenceProvenance.family
+  }
   var flagSummary: String {
     let flags = [("Red blood", redBlood), ("Black/tarry", blackTarry), ("Dizziness", dizziness), ("Severe pain", severePain)]
     return flags.compactMap { label, value in value.map { "\(label): \($0)" } }.joined(separator: " · ")
@@ -56,5 +74,7 @@ struct EntryInput {
   let originalAIJSON: String?
   let reviewedJSON: String?
   let modelID: String?
+  let modelProvenanceJSON: String?
+  let demoKind: String?
   let imageFilename: String
 }

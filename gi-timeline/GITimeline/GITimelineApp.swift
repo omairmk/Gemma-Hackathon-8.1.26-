@@ -9,6 +9,7 @@ enum AppRuntime {
 
 @main struct GITimelineApp: App {
   let modelContainer: ModelContainer
+  let inferenceRuntime = ModelRuntimeCoordinator()
   init() {
     do {
       let schema = Schema([EntryRecord.self])
@@ -24,15 +25,73 @@ enum AppRuntime {
     }
     catch { fatalError("SwiftData container could not be created: \(error)") }
   }
-  var body: some Scene { WindowGroup { AppRootView() }.modelContainer(modelContainer) }
+  var body: some Scene {
+    WindowGroup {
+      AppRootView(inferenceRuntime: inferenceRuntime)
+        #if DEBUG
+        .task {
+          let arguments = ProcessInfo.processInfo.arguments
+          if arguments.contains("--run-overnight-gemma-smoke") {
+            do {
+              let lab = DeviceInferenceLabViewModel(runtime: inferenceRuntime)
+              let evidenceURL = try await lab.runOvernightSmoke()
+              print("OVERNIGHT_GEMMA_SMOKE_PASS \(evidenceURL.lastPathComponent)")
+            } catch {
+              print("OVERNIGHT_GEMMA_SMOKE_FAIL \(error.localizedDescription)")
+            }
+          } else if arguments.contains(OvernightNormalFlowRunner.launchRunArgument) {
+            do {
+              let runner = OvernightNormalFlowRunner(
+                runtime: inferenceRuntime,
+                context: ModelContext(modelContainer)
+              )
+              let evidenceURL = try await runner.run()
+              print("OVERNIGHT_NORMAL_FLOW_PASS \(evidenceURL.lastPathComponent)")
+            } catch {
+              print("OVERNIGHT_NORMAL_FLOW_FAIL \(error.localizedDescription)")
+            }
+          } else if arguments.contains(OvernightNormalFlowRunner.launchVerifyArgument) {
+            do {
+              let runner = OvernightNormalFlowRunner(
+                runtime: inferenceRuntime,
+                context: ModelContext(modelContainer)
+              )
+              let evidenceURL = try runner.verifyAfterRelaunch()
+              print("OVERNIGHT_NORMAL_FLOW_RELAUNCH_PASS \(evidenceURL.lastPathComponent)")
+            } catch {
+              print("OVERNIGHT_NORMAL_FLOW_RELAUNCH_FAIL \(error.localizedDescription)")
+            }
+          }
+        }
+        #endif
+    }
+    .modelContainer(modelContainer)
+  }
 }
 
 struct AppRootView: View {
   @Environment(\.modelContext) private var context
+  let inferenceRuntime: ModelRuntimeCoordinator
+  @State private var selectedTab: AppTab
+
+  enum AppTab: Hashable { case newEntry, history }
+
+  init(inferenceRuntime: ModelRuntimeCoordinator) {
+    self.inferenceRuntime = inferenceRuntime
+    let arguments = ProcessInfo.processInfo.arguments
+    let showHistory = arguments.contains("--show-history")
+      || arguments.contains("--ui-preview-history-detail")
+    _selectedTab = State(initialValue: showHistory ? .history : .newEntry)
+  }
+
   var body: some View {
-    TabView {
-      NewEntryTab(store: EntryStore(context: context)).tabItem { Label("New Entry", systemImage: "plus.circle") }
-      HistoryView(store: EntryStore(context: context)).tabItem { Label("History", systemImage: "clock") }
+    TabView(selection: $selectedTab) {
+      NewEntryTab(store: EntryStore(context: context), runtime: inferenceRuntime)
+        .tabItem { Label("New Entry", systemImage: "plus.circle") }
+        .tag(AppTab.newEntry)
+      HistoryView(store: EntryStore(context: context))
+        .tabItem { Label("History", systemImage: "clock") }
+        .tag(AppTab.history)
     }
     .task {
       let images = ImageStore()

@@ -57,7 +57,13 @@ final class GITimelineCoreTests: XCTestCase {
     XCTAssertNil(state.draft); XCTAssertNil(state.preparationID); XCTAssertNil(state.activeAttemptID); XCTAssertNil(state.engineAttemptID); XCTAssertFalse(state.isLocked); XCTAssertFalse(state.canSave)
   }
   func testCanonicalJSONRoundTrips() throws {
-    let observation = try ObservationParser.parse(valid)
-    XCTAssertEqual(try ObservationParser.parse(ObservationParser.canonicalJSON(observation)), observation)
+    for source in [valid, unusable] {
+      let observation = try ObservationParser.parse(source)
+      let canonical = try ObservationParser.canonicalJSON(observation)
+      XCTAssertEqual(try ObservationParser.parse(canonical), observation)
+      let object = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(canonical.utf8)) as? [String: Any])
+      XCTAssertEqual(Set(object.keys), ObservationParser.expectedKeys)
+    }
+    XCTAssertTrue(try ObservationParser.canonicalJSON(ObservationParser.parse(unusable)).contains("\"apparent_bristol_type\":null"))
   }
 }
