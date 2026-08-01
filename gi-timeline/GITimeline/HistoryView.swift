@@ -3,7 +3,8 @@ import SwiftData
 
 enum HistoryPresentation {
   static let manualAnalysisText = "No AI analysis was saved."
-  static func reportedValue(_ value: String?) -> String { value ?? "Not recorded" }
+  static func reportedValue(_ value: String?) -> String { value.map(humanReadableHistoryValue) ?? "Not recorded" }
+  static func entryCount(_ count: Int) -> String { "\(count) \(count == 1 ? "entry" : "entries") · stored locally" }
 }
 
 @MainActor final class HistoryDeletionCoordinator: ObservableObject {
@@ -12,15 +13,26 @@ enum HistoryPresentation {
   private let store: EntryStoring
   private let imageStore: ImageStore
 
-  init(store: EntryStoring, imageStore: ImageStore) { self.store = store; self.imageStore = imageStore }
+  init(store: EntryStoring, imageStore: ImageStore) {
+    self.store = store
+    self.imageStore = imageStore
+  }
+
   func request(_ entry: EntryRecord) { pendingDelete = entry }
   func setConfirmationPresented(_ presented: Bool) { if !presented { pendingDelete = nil } }
   func setAlertPresented(_ presented: Bool) { if !presented { errorMessage = nil } }
+
   func confirm() {
     guard let pendingDelete else { return }
-    do { try store.delete(pendingDelete, imageStore: imageStore); self.pendingDelete = nil }
-    catch { errorMessage = error.localizedDescription; self.pendingDelete = nil }
+    do {
+      try store.delete(pendingDelete, imageStore: imageStore)
+      self.pendingDelete = nil
+    } catch {
+      errorMessage = error.localizedDescription
+      self.pendingDelete = nil
+    }
   }
+
   func resetSyntheticDemoEntries(_ entries: [EntryRecord]) {
     do {
       for entry in entries where DemoDataPolicy.isSyntheticDemo(entry) {
@@ -35,66 +47,100 @@ struct HistoryView: View {
   @StateObject private var deletion: HistoryDeletionCoordinator
   @State private var showResetDemoConfirmation = false
   @State private var path: [UUID] = []
-  @MainActor init(store: EntryStoring) { _deletion = StateObject(wrappedValue: HistoryDeletionCoordinator(store: store, imageStore: ImageStore())) }
+  @Binding private var requestedEntryID: UUID?
+
+  @MainActor init(store: EntryStoring, requestedEntryID: Binding<UUID?> = .constant(nil)) {
+    _deletion = StateObject(wrappedValue: HistoryDeletionCoordinator(store: store, imageStore: ImageStore()))
+    _requestedEntryID = requestedEntryID
+  }
+
+  private var developerToolsVisible: Bool {
+    #if DEBUG
+    ProcessInfo.processInfo.arguments.contains("--show-developer-tools")
+    #else
+    false
+    #endif
+  }
+
   var body: some View {
     NavigationStack(path: $path) {
-      List {
-        ProductBadges()
-        if entries.isEmpty {
-          ContentUnavailableView(
-            "No entries yet",
-            systemImage: "clock",
-            description: Text("Analyze a demo image or save a manual entry to begin your timeline.")
-          )
-          .accessibilityIdentifier("historyEmptyState")
-        }
-        ForEach(entries) { entry in
-          NavigationLink(value: entry.id) {
-            HStack(spacing: 12) {
-              historyThumbnail(entry)
-              VStack(alignment: .leading, spacing: 4) {
-                Text(entry.capturedAt, format: .dateTime.month(.abbreviated).day().hour().minute()).font(.headline)
-                if let observation = entry.observation {
-                  Text("Bristol \(observation.apparentBristolType.map(String.init) ?? "none") · \(observation.apparentColor.replacingOccurrences(of: "_", with: " "))")
-                    .font(.subheadline)
-                } else { Text("Manual entry").font(.subheadline) }
-                if DemoDataPolicy.isSyntheticDemo(entry) {
-                  Text("Synthetic demo").font(.caption).foregroundStyle(.secondary)
-                } else if !entry.flagSummary.isEmpty {
-                  Text(entry.flagSummary).font(.caption).foregroundStyle(.secondary)
+      ScrollView {
+        VStack(alignment: .leading, spacing: 20) {
+          Text("History")
+            .font(.largeTitle.bold())
+            .accessibilityAddTraits(.isHeader)
+
+          if entries.isEmpty {
+            ContentUnavailableView(
+              "No entries yet",
+              systemImage: "clock",
+              description: Text("Attach a photo from New Entry to begin your timeline.")
+            )
+            .frame(maxWidth: .infinity, minHeight: 360)
+            .accessibilityIdentifier("historyEmptyState")
+          } else {
+            VStack(spacing: 0) {
+              ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
+                NavigationLink(value: entry.id) {
+                  HistoryRow(entry: entry)
                 }
-                if let runtime = entry.savedRuntimeLabel {
-                  Text(runtime).font(.caption2).foregroundStyle(entry.isUIDemoProvider ? Color.orange : Color.secondary)
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("historyEntry")
+                .contextMenu {
+                  Button("Delete", role: .destructive) { deletion.request(entry) }
                 }
-                if entry.imageUnavailable { Text("Image unavailable").foregroundStyle(.secondary).font(.caption) }
+                if index < entries.count - 1 { Divider().padding(.leading, 86) }
               }
             }
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+
+            Text(HistoryPresentation.entryCount(entries.count))
+              .font(.footnote)
+              .foregroundStyle(.secondary)
+              .frame(maxWidth: .infinity)
           }
-          .accessibilityIdentifier("historyEntry")
-          .swipeActions { Button("Delete", role: .destructive) { deletion.request(entry) } }
+
+          Text("Prototype — not medical advice")
+            .font(.footnote).foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
         }
+        .padding(20)
+        .padding(.bottom, 24)
       }
-      .navigationTitle("History")
+      .background(Color(.systemGroupedBackground))
+      .navigationBarTitleDisplayMode(.inline)
       .navigationDestination(for: UUID.self) { entryID in
         if let entry = entries.first(where: { $0.id == entryID }) {
-          EntryDetailView(entry: entry)
+          EntryDetailView(entry: entry, deletion: deletion)
         } else {
           ContentUnavailableView("Entry unavailable", systemImage: "exclamationmark.triangle")
         }
       }
       .task {
-        guard ProcessInfo.processInfo.arguments.contains("--ui-preview-history-detail"),
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--ui-preview-history-detail"),
           path.isEmpty, let entry = entries.first
-        else { return }
-        path = [entry.id]
+        {
+          path = [entry.id]
+        }
+        #endif
+        openRequestedEntryIfAvailable()
+      }
+      .onChange(of: requestedEntryID) { _, _ in
+        openRequestedEntryIfAvailable()
+      }
+      .onChange(of: entries.map(\.id)) { _, _ in
+        openRequestedEntryIfAvailable()
       }
       .toolbar {
-        if entries.contains(where: DemoDataPolicy.isSyntheticDemo) {
+        #if DEBUG
+        if developerToolsVisible, entries.contains(where: DemoDataPolicy.isSyntheticDemo) {
           ToolbarItem(placement: .topBarTrailing) {
             Button("Reset Demo") { showResetDemoConfirmation = true }
               .accessibilityIdentifier("resetDemo")
           }
         }
+        #endif
       }
       .confirmationDialog("Remove synthetic demo entries?", isPresented: $showResetDemoConfirmation, titleVisibility: .visible) {
         Button("Reset Demo", role: .destructive) { deletion.resetSyntheticDemoEntries(entries) }
@@ -102,19 +148,112 @@ struct HistoryView: View {
       } message: { Text("Only bundled synthetic demo entries will be removed.") }
       .confirmationDialog("Delete this entry?", isPresented: Binding(get: { deletion.pendingDelete != nil }, set: deletion.setConfirmationPresented), titleVisibility: .visible) {
         Button("Delete", role: .destructive) { deletion.confirm() }
-      }
-      .alert("Could not delete entry", isPresented: Binding(get: { deletion.errorMessage != nil }, set: deletion.setAlertPresented)) { Button("OK", role: .cancel) {} } message: { Text(deletion.errorMessage ?? "") }
+        Button("Cancel", role: .cancel) {}
+      } message: { Text("This removes the entry and its stored photo.") }
+      .alert("Could not delete entry", isPresented: Binding(get: { deletion.errorMessage != nil }, set: deletion.setAlertPresented)) {
+        Button("OK", role: .cancel) {}
+      } message: { Text(deletion.errorMessage ?? "") }
     }
   }
-  @ViewBuilder private func historyThumbnail(_ entry: EntryRecord) -> some View {
+
+  private func openRequestedEntryIfAvailable() {
+    guard let entryID = requestedEntryID,
+      entries.contains(where: { $0.id == entryID })
+    else { return }
+    path = [entryID]
+    requestedEntryID = nil
+  }
+}
+
+private struct HistoryRow: View {
+  let entry: EntryRecord
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+  var body: some View {
+    Group {
+      if dynamicTypeSize.isAccessibilitySize {
+        VStack(alignment: .leading, spacing: 12) {
+          HStack(alignment: .top, spacing: 14) {
+            historyThumbnail
+            dateAndTime
+            Spacer(minLength: 8)
+            chevron
+          }
+          summary
+        }
+      } else {
+        HStack(spacing: 14) {
+          historyThumbnail
+          VStack(alignment: .leading, spacing: 5) {
+            dateAndTime
+            summary
+          }
+          Spacer(minLength: 8)
+          chevron
+        }
+      }
+    }
+    .padding(12)
+    .contentShape(Rectangle())
+  }
+
+  private var dateAndTime: some View {
+    VStack(alignment: .leading, spacing: 3) {
+      Text(entry.capturedAt, format: .dateTime.month(.abbreviated).day().year())
+        .font(.headline)
+      Text(entry.capturedAt, format: .dateTime.hour().minute())
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+    }
+  }
+
+  private var summary: some View {
+    VStack(alignment: .leading, spacing: 4) {
+      Text(primarySummary)
+        .font(.subheadline.weight(.medium))
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityIdentifier("historyEntrySummary")
+      if let secondarySummary {
+        Text(secondarySummary)
+          .font(.caption)
+          .foregroundStyle(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
+          .accessibilityIdentifier("historyEntrySecondarySummary")
+      }
+    }
+  }
+
+  private var chevron: some View {
+    Image(systemName: "chevron.right")
+      .font(.caption.bold())
+      .foregroundStyle(.tertiary)
+  }
+
+  private var primarySummary: String {
+    guard let observation = entry.observation else { return "Photo entry" }
+    let type = observation.apparentBristolType.map(String.init) ?? "—"
+    return "Type \(type) · \(humanReadableHistoryValue(observation.apparentColor).lowercased())"
+  }
+
+  private var secondarySummary: String? {
+    if !entry.flagSummary.isEmpty { return entry.flagSummary }
+    guard let form = entry.observation?.form, form != "unable_to_assess" else { return nil }
+    return humanReadableHistoryValue(form)
+  }
+
+  @ViewBuilder private var historyThumbnail: some View {
     if let filename = entry.imageFilename,
       let url = ImageStore().imageURL(filename: filename),
       let image = UIImage(contentsOfFile: url.path)
     {
-      Image(uiImage: image).resizable().scaledToFill()
-        .frame(width: 64, height: 64).clipShape(RoundedRectangle(cornerRadius: 12))
+      Image(uiImage: image)
+        .resizable()
+        .scaledToFill()
+        .frame(width: 64, height: 64)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     } else {
-      RoundedRectangle(cornerRadius: 12).fill(.quaternary)
+      RoundedRectangle(cornerRadius: 12, style: .continuous)
+        .fill(.quaternary)
         .frame(width: 64, height: 64)
         .overlay(Image(systemName: "photo").foregroundStyle(.secondary))
     }
@@ -123,28 +262,146 @@ struct HistoryView: View {
 
 struct EntryDetailView: View {
   let entry: EntryRecord
+  @ObservedObject var deletion: HistoryDeletionCoordinator
+  @Environment(\.dismiss) private var dismiss
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+  @State private var showDeleteConfirmation = false
+
   var body: some View {
-    List {
-      if let url = ImageStore().imageURL(filename: entry.imageFilename), let image = UIImage(contentsOfFile: url.path) { Image(uiImage: image).resizable().scaledToFit().frame(maxHeight: 280) }
-      else { Text("Image unavailable").foregroundStyle(.secondary) }
-      Section("You reported") {
-        report("Red blood", entry.redBlood); report("Black or tarry stool", entry.blackTarry); report("Dizziness or fainting", entry.dizziness); report("Severe or worsening pain", entry.severePain)
-        report("Note", DemoDataPolicy.presentedNote(for: entry))
-      }
-      if entry.provenance == EntryProvenance.manual.rawValue { Section { Text(HistoryPresentation.manualAnalysisText) } }
-      else if let observation = entry.observation {
-        Section(entry.isUIDemoProvider ? "UI demo observation, reviewed by you" : "AI-assisted observation, reviewed by you") {
-          if entry.provenance == EntryProvenance.ai_edited.rawValue { Text("(edited)").font(.caption) }
-          if !observation.imageUsable { row("Image quality", "\(observation.qualityIssue) — assessment not possible") }
-          else { row("Bristol type", observation.apparentBristolType.map(String.init) ?? "none"); row("Apparent color", observation.apparentColor); row("Form", observation.form); row("Red-appearing material", observation.redAppearingMaterial); row("Black/tarry appearance", observation.blackTarryAppearance) }
+    ScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Text(entry.capturedAt, format: .dateTime.month(.wide).day().year())
+          .font(.largeTitle.bold())
+          .accessibilityAddTraits(.isHeader)
+        Text(entry.capturedAt, format: .dateTime.hour().minute())
+          .font(.headline)
+          .foregroundStyle(.secondary)
+
+        photo
+
+        if entry.provenance == EntryProvenance.manual.rawValue {
+          Text(HistoryPresentation.manualAnalysisText)
+            .foregroundStyle(.secondary)
+            .detailCard()
+        } else if let observation = entry.observation {
+          VStack(alignment: .leading, spacing: 14) {
+            HStack {
+              Text("Observations").font(.title3.bold())
+              Spacer()
+              Label("Reviewed", systemImage: "checkmark.circle.fill")
+                .font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+            }
+            if entry.provenance == EntryProvenance.ai_edited.rawValue {
+              Text("Edited during review").font(.caption).foregroundStyle(.secondary)
+            }
+            if observation.imageUsable {
+              detailRow("Bristol type", observation.apparentBristolType.map { "Type \($0)" } ?? "Not recorded")
+              detailRow("Apparent color", humanReadableHistoryValue(observation.apparentColor))
+              detailRow("Form", humanReadableHistoryValue(observation.form))
+              detailRow("Red-appearing material", humanReadableHistoryValue(observation.redAppearingMaterial))
+              detailRow("Black or tarry appearance", humanReadableHistoryValue(observation.blackTarryAppearance))
+              detailRow("Image quality", "Usable")
+            } else {
+              detailRow("Image quality", humanReadableHistoryValue(observation.qualityIssue))
+            }
+          }
+          .detailCard()
         }
-        if let runtime = entry.savedRuntimeLabel {
-          Text(runtime).font(.footnote).foregroundStyle(entry.isUIDemoProvider ? Color.orange : Color.secondary)
+
+        VStack(alignment: .leading, spacing: 14) {
+          Text("Symptoms and context").font(.title3.bold())
+          detailRow("Red blood", HistoryPresentation.reportedValue(entry.redBlood))
+          detailRow("Black or tarry stool", HistoryPresentation.reportedValue(entry.blackTarry))
+          detailRow("Dizziness or fainting", HistoryPresentation.reportedValue(entry.dizziness))
+          detailRow("Severe or worsening pain", HistoryPresentation.reportedValue(entry.severePain))
+          detailRow("Note", HistoryPresentation.reportedValue(DemoDataPolicy.presentedNote(for: entry)))
         }
-        if let model = entry.modelID { Text(model).font(.caption2).foregroundStyle(.secondary) }
+        .detailCard()
+
+        Text("Prototype — not medical advice")
+          .font(.footnote).foregroundStyle(.secondary)
+          .frame(maxWidth: .infinity)
       }
-    }.navigationTitle("Entry").accessibilityIdentifier("entryDetail")
+      .padding(20)
+      .padding(.bottom, 28)
+    }
+    .background(Color(.systemGroupedBackground))
+    .navigationTitle("Entry detail")
+    .navigationBarTitleDisplayMode(.inline)
+    .accessibilityIdentifier("entryDetail")
+    .toolbar {
+      ToolbarItem(placement: .topBarTrailing) {
+        Button("Delete entry", systemImage: "trash", role: .destructive) {
+          showDeleteConfirmation = true
+        }
+        .accessibilityIdentifier("deleteEntry")
+      }
+    }
+    .confirmationDialog("Delete this entry?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+      Button("Delete", role: .destructive) {
+        deletion.request(entry)
+        deletion.confirm()
+        if deletion.errorMessage == nil { dismiss() }
+      }
+      Button("Cancel", role: .cancel) {}
+    } message: { Text("This removes the entry and its stored photo.") }
   }
-  @ViewBuilder private func report(_ label: String, _ value: String?) -> some View { LabeledContent(label, value: HistoryPresentation.reportedValue(value)) }
-  @ViewBuilder private func row(_ label: String, _ value: String) -> some View { LabeledContent(label, value: value.replacingOccurrences(of: "_", with: " ")) }
+
+  @ViewBuilder private var photo: some View {
+    if let url = ImageStore().imageURL(filename: entry.imageFilename),
+      let image = UIImage(contentsOfFile: url.path)
+    {
+      Image(uiImage: image)
+        .resizable()
+        .scaledToFit()
+        .frame(maxWidth: .infinity, maxHeight: 380)
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+    } else {
+      ContentUnavailableView("Image unavailable", systemImage: "photo")
+        .frame(maxWidth: .infinity, minHeight: 220)
+        .detailCard()
+    }
+  }
+
+  private func detailRow(_ label: String, _ value: String) -> some View {
+    Group {
+      if dynamicTypeSize.isAccessibilitySize {
+        VStack(alignment: .leading, spacing: 4) {
+          Text(label)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.secondary)
+          Text(value)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("detailValue.\(label)")
+        }
+      } else {
+        LabeledContent {
+          Text(value)
+            .multilineTextAlignment(.trailing)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("detailValue.\(label)")
+        } label: {
+          Text(label)
+        }
+      }
+    }
+  }
+}
+
+private struct DetailCardModifier: ViewModifier {
+  func body(content: Content) -> some View {
+    content
+      .padding(16)
+      .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+  }
+}
+
+private extension View {
+  func detailCard() -> some View { modifier(DetailCardModifier()) }
+}
+
+private func humanReadableHistoryValue(_ value: String) -> String {
+  value.replacingOccurrences(of: "_", with: " ").capitalized
 }

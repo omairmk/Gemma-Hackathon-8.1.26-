@@ -1,168 +1,121 @@
 # GI Timeline demo runbook
 
-Updated: 2026-08-01 00:30 EDT (America/New_York)
+Updated: 2026-08-01 14:36 EDT (America/New_York)
 
-## Under-three-minute live demo
+## Current truth
 
-This path uses the already-installed, already-verified E4B model in the isolated Debug Simulator app. Do not restage or reimport the 3.66 GB model for the normal demo.
+`GITimeline Hackathon` embeds the exact verified Gemma 4 E4B model. The ordinary Debug and Release apps remain model-free. The optimized signed arm64 Hackathon artifact passes signature, bundle-identity, model-integrity, receipt, and production-surface checks. Fresh current-source arm64 Simulator evidence passes real brown/green/control image inference, automatic review/edit/save/History, and terminate/relaunch persistence.
 
-1. Unlock the Mac. Confirm an iPhone Simulator is booted:
+The physical iPhone is not currently visible to Xcode, so the optimized artifact has not been installed or launched on that phone. Physical image inference and Airplane Mode remain blocked. Simulator and deterministic UI-test evidence never upgrades those physical gates.
 
-   ```sh
-   xcrun simctl list devices booted
-   ```
+## 60-second product demo
 
-2. Replace `<SIMULATOR_UDID>` with the booted Simulator identifier and launch the isolated app:
+1. Open **GI Timeline** and tap **Continue** if the first-run explanation appears.
+2. On **New Entry**, tap **Choose a photo** or **Take a photo**. Attaching the photo immediately opens **Reading photo**; there is no model picker, Import, Prepare, or Analyze control.
+3. On **Review entry**, open each Suggested row, confirm or edit it, then tap **Save reviewed entry**. Save stays disabled until all five observations are reviewed.
+4. Tap **View entry**, then **History**, and open the saved entry. The reviewed values and thumbnail remain after terminate/relaunch.
 
-   ```sh
-   xcrun simctl launch --terminate-running-process '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug
-   ```
+Use only the bundled synthetic fixtures for engineering acceptance. The screenshots in `outputs/demo-screens/` show the seven native states and the recoverable error state. They use the deterministic UI provider and prove interface behavior only.
 
-3. On **New Entry**, verify the badge says **Gemma 4 E4B · iPhone Simulator** and the label says **Prototype — not medical advice**.
-4. Under **Try a demo image**, tap **Brown**. If shown, tap **Prepare local model**; cached preparation was 0.43 seconds in the evidence run.
-5. Tap **Analyze with Gemma**. The proven warm structured response took about 8 seconds.
-6. In **AI-assisted observation**, change **Form** from `smooth formed` to `mushy`, then tap **Save Reviewed Entry**.
-7. Open **History**, tap the new synthetic entry, and show the thumbnail, reviewed fields, `(edited)` attribution, and model ID.
-8. To prove relaunch persistence, terminate and launch again, then reopen **History**:
+## Build the embedded Hackathon app
 
-   ```sh
-   xcrun simctl terminate '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug
-   xcrun simctl launch '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug --show-history
-   ```
-
-9. When finished, use **Reset Demo** in History. It removes only entries marked as bundled synthetic demo data.
-
-Say this exactly if asked where inference ran: **“Gemma 4 E4B ran locally in the iPhone Simulator on this Mac. Physical-iPhone inference is not yet proven.”**
-
-The six visually inspected reference screens are in `outputs/demo-screens/`, ordered from empty New Entry through the dark/accessibility error state. Screenshots illustrate the demo; `GEMMA_SMOKE_RESULTS.json` remains the real-inference authority.
-
-## Safe build and install commands
-
-Run from:
-
-```text
-/Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/gi-timeline
-```
-
-Discover an available arm64 iPhone Simulator and use its identifier in place of `<SIMULATOR_UDID>`:
+Run from the `gi-timeline` directory. On a new checkout, select the local Apple development team in Xcode; signing values are intentionally not committed.
 
 ```sh
-xcrun simctl list devices available
-```
+GI_DERIVED_DATA="${TMPDIR%/}/GITimeline-Embedded-Signed-Optimized"
 
-Build Debug:
-
-```sh
 xcodebuild build \
   -project GITimeline.xcodeproj \
-  -scheme GITimeline \
-  -configuration Debug \
-  -destination 'platform=iOS Simulator,id=<SIMULATOR_UDID>' \
-  -derivedDataPath DerivedData \
+  -scheme 'GITimeline Hackathon' \
+  -configuration Hackathon \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath "$GI_DERIVED_DATA"
+
+GI_APP="$GI_DERIVED_DATA/Build/Products/Hackathon-iphoneos/GITimeline.app"
+```
+
+The build must fail if `../work/models/gemma-4-E4B-it.litertlm` is missing or does not match the pinned size and SHA-256. Never commit or upload that file.
+
+Verify the resulting artifact:
+
+```sh
+plutil -extract CFBundleIdentifier raw "$GI_APP/Info.plist"
+codesign --verify --deep --strict "$GI_APP"
+lipo -archs "$GI_APP/GITimeline"
+find "$GI_APP" -type f -name '*.litertlm'
+stat -f '%z' "$GI_APP/EmbeddedModels/gemma-4-E4B-it.litertlm"
+shasum -a 256 "$GI_APP/EmbeddedModels/gemma-4-E4B-it.litertlm"
+```
+
+Expected values:
+
+- Bundle ID: `com.omairmkhan.GITimeline.debug`
+- Architecture: `arm64`
+- Exactly one model file
+- Bytes: `3659530240`
+- SHA-256: `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`
+
+## Physical iPhone acceptance
+
+First reconnect the iPhone by cable, unlock it, and leave it awake on the Home Screen. Resolve the live device identifier locally and never paste it into documentation, logs, or Git.
+
+Install without uninstalling or deleting existing app data:
+
+```sh
+GI_DEVICE_ID='<resolved locally>'
+xcrun devicectl device install app --device "$GI_DEVICE_ID" "$GI_APP"
+```
+
+Run the bounded synthetic-only acceptance harness one stage at a time:
+
+```sh
+xcrun devicectl device process launch --terminate-existing --console \
+  --device "$GI_DEVICE_ID" com.omairmkhan.GITimeline.debug \
+  --run-embedded-gemma-smoke
+
+xcrun devicectl device process launch --terminate-existing --console \
+  --device "$GI_DEVICE_ID" com.omairmkhan.GITimeline.debug \
+  --run-embedded-gemma-normal-flow
+
+xcrun devicectl device process launch --terminate-existing --console \
+  --device "$GI_DEVICE_ID" com.omairmkhan.GITimeline.debug \
+  --verify-embedded-gemma-normal-flow
+```
+
+Required markers:
+
+- `EMBEDDED_GEMMA_SMOKE_PASS`
+- `EMBEDDED_GEMMA_NORMAL_FLOW_PASS`
+- `EMBEDDED_GEMMA_RELAUNCH_PASS`
+
+Any `EMBEDDED_GEMMA_COMPLETION_FAIL` is a failure. Smoke qualifies only when real image pixels yield brown=`BROWN`, green=`GREEN`, control=`OTHER`, and all strict structured responses validate. The normal-flow marker must also record a human edit, save, History presence, and exact model/backend provenance; the relaunch marker must reopen that saved record.
+
+## Simulator acceptance
+
+The same embedded artifact can be built for the arm64 Simulator using the documented CPU-engine/CPU-vision exception:
+
+```sh
+GI_SIM_DERIVED_DATA="${TMPDIR%/}/GITimeline-Embedded-Simulator-Current"
+
+xcodebuild build \
+  -project GITimeline.xcodeproj \
+  -scheme 'GITimeline Hackathon' \
+  -configuration Hackathon \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5' \
+  -derivedDataPath "$GI_SIM_DERIVED_DATA" \
   -skipPackageUpdates \
-  CODE_SIGNING_ALLOWED=NO \
-  ARCHS=arm64 \
-  ONLY_ACTIVE_ARCH=YES
+  CODE_SIGNING_ALLOWED=NO ARCHS=arm64 ONLY_ACTIVE_ARCH=YES
 ```
 
-Install only the isolated Debug bundle:
+Install the app on the selected Simulator and launch the same three arguments above with `xcrun simctl launch --terminate-running-process --console-pty`. Use a locally resolved Simulator identifier and do not record it. The real-Gemma JSON outputs belong in Application Support under `CompletionEvidence`; only sanitized synthetic results may be copied into this repository.
 
-```sh
-xcrun simctl install '<SIMULATOR_UDID>' DerivedData/Build/Products/Debug-iphonesimulator/GITimeline.app
-```
+## Airplane Mode proof
 
-Confirm the installed identity before staging a model:
+Only after the online physical sequence passes:
 
-```sh
-plutil -extract CFBundleIdentifier raw DerivedData/Build/Products/Debug-iphonesimulator/GITimeline.app/Info.plist
-plutil -extract CFBundleDisplayName raw DerivedData/Build/Products/Debug-iphonesimulator/GITimeline.app/Info.plist
-```
+1. Ask the owner to enable **Airplane Mode**, confirm Wi-Fi is off, and leave the iPhone unlocked.
+2. Force-quit and cold-launch the same installed app.
+3. Analyze a fresh synthetic fixture, review every field, edit one, save, open History, terminate/relaunch, and reopen it.
+4. Record `OFFLINE_IPHONE: PASS` only after that complete physical sequence is observed.
 
-Expected values are `com.omairmkhan.GITimeline.debug` and `GI Timeline Lab`.
-
-## Model integrity and first-time Simulator staging
-
-The source must remain at:
-
-```text
-/Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/work/models/gemma-4-E4B-it.litertlm
-```
-
-Verify it without modifying it:
-
-```sh
-stat -f '%z' /Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/work/models/gemma-4-E4B-it.litertlm
-shasum -a 256 /Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/work/models/gemma-4-E4B-it.litertlm
-```
-
-Expected bytes: `3659530240`. Expected SHA-256: `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`.
-
-Resolve the changing Debug data-container path; do not save or publish the returned identifier:
-
-```sh
-xcrun simctl get_app_container '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug data
-```
-
-Substitute that returned path for `<DEBUG_DATA_CONTAINER>`, then stage a retained copy without overwriting an existing file:
-
-```sh
-mkdir -p '<DEBUG_DATA_CONTAINER>/Documents/Import'
-cp -n /Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/work/models/gemma-4-E4B-it.litertlm '<DEBUG_DATA_CONTAINER>/Documents/Import/gemma-4-E4B-it.litertlm'
-stat -f '%z' '<DEBUG_DATA_CONTAINER>/Documents/Import/gemma-4-E4B-it.litertlm'
-shasum -a 256 '<DEBUG_DATA_CONTAINER>/Documents/Import/gemma-4-E4B-it.litertlm'
-```
-
-Launch the app, tap **Import model**, then **Verify and import**. The app checks the staged size/hash, copies to a temporary destination, checks the installed copy again, promotes it atomically, writes a descriptor-bound receipt, and preserves the staged source. Never embed the model in the app bundle or Git.
-
-## Re-run the real evidence harness
-
-These DEBUG launch arguments use the same real coordinator as the app, not the UI-test fake. Each command writes sanitized JSON inside the Debug app's `Documents/.devdata_inference` directory. With `--console-pty`, stop the terminal attachment with Control-C only after the printed PASS marker appears; this does not delete app data.
-
-```sh
-xcrun simctl launch --terminate-running-process --console-pty '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug --run-overnight-gemma-smoke
-xcrun simctl launch --terminate-running-process --console-pty '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug --run-overnight-normal-flow
-xcrun simctl launch --terminate-running-process --console-pty '<SIMULATOR_UDID>' com.omairmkhan.GITimeline.debug --verify-overnight-normal-flow
-```
-
-The deterministic UI provider is enabled only by the explicit `--ui-test-fake-gemma` argument. Never use that argument for a real-Gemma demonstration or evidence run.
-
-## Physical iPhone build/install after owner signing
-
-Do not attempt this section until the owner selects the Debug development team in Xcode. Confirm cable transport, an unlocked/trusted phone, and roughly 12 GB free space first. Discover the device without copying its identifier into documentation:
-
-```sh
-xcrun devicectl list devices
-```
-
-Substitute the selected value for `<PHYSICAL_DEVICE_ID>` and build the isolated signed Debug app using the team already selected by the owner:
-
-```sh
-xcodebuild build \
-  -project GITimeline.xcodeproj \
-  -scheme GITimeline \
-  -configuration Debug \
-  -destination 'platform=iOS,id=<PHYSICAL_DEVICE_ID>' \
-  -derivedDataPath /private/tmp/gi-timeline-device-derived-data \
-  -skipPackageUpdates
-```
-
-Verify the built bundle ID is exactly the isolated Debug ID, then install and launch only that app:
-
-```sh
-plutil -extract CFBundleIdentifier raw /private/tmp/gi-timeline-device-derived-data/Build/Products/Debug-iphoneos/GITimeline.app/Info.plist
-xcrun devicectl device install app --device '<PHYSICAL_DEVICE_ID>' /private/tmp/gi-timeline-device-derived-data/Build/Products/Debug-iphoneos/GITimeline.app
-xcrun devicectl device process launch --terminate-existing --device '<PHYSICAL_DEVICE_ID>' com.omairmkhan.GITimeline.debug
-```
-
-Expected bundle ID: `com.omairmkhan.GITimeline.debug`. The first launch creates the app's shared Documents folders. Preserve the source model and transfer the exact artifact into the isolated app container:
-
-```sh
-xcrun devicectl device copy to \
-  --device '<PHYSICAL_DEVICE_ID>' \
-  --source /Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/work/models/gemma-4-E4B-it.litertlm \
-  --destination 'Documents/Import/gemma-4-E4B-it.litertlm' \
-  --domain-type appDataContainer \
-  --domain-identifier com.omairmkhan.GITimeline.debug
-```
-
-Alternatively, because file sharing is enabled, use Finder's Files pane to copy the same artifact into the GI Timeline Lab `Import` folder. In the app, tap **Import model** then **Verify and import**; do not bypass the size/hash receipt. Run only the bounded synthetic sequence. Never enter credentials through Codex, expose identifiers, delete another app/container, or call a Simulator result on-device. `OFFLINE_IPHONE` remains `NOT_RUN` unless Airplane Mode and a cold physical launch are actually observed.
+An embedded model, a Simulator run, or a successful online launch cannot establish offline operation.
