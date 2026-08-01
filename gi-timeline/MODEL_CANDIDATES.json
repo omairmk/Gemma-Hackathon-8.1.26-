@@ -1,0 +1,257 @@
+[
+  {
+    "candidateKey": "google/gemma-3n-E2B-it-litert-lm@73b019b63436d346f68dd9c1dbfd117eb264d888:gemma-3n-E2B-it-int4.litertlm",
+    "recordedAt": "2026-07-31T19:03:00Z",
+    "family": "Gemma 3n E2B",
+    "modelId": "google/gemma-3n-E2B-it-litert-lm",
+    "artifact": {
+      "filename": "gemma-3n-E2B-it-int4.litertlm",
+      "sourceRevision": "73b019b63436d346f68dd9c1dbfd117eb264d888",
+      "sourceUrl": "https://huggingface.co/google/gemma-3n-E2B-it-litert-lm/tree/73b019b63436d346f68dd9c1dbfd117eb264d888",
+      "expectedBytes": 3388604416,
+      "expectedSha256": "6c5f6d8f727e3f4327dbe38731c92c47094a95fccee9c15484465e7d9e01e4d5",
+      "hashAuthority": "hugging_face_lfs_at_immutable_revision"
+    },
+    "sourceClaims": {
+      "checkedAt": "2026-07-31T19:03:00Z",
+      "license": "Gemma",
+      "licenseId": "gemma",
+      "licenseUrl": "https://ai.google.dev/gemma/terms",
+      "gatedAtCheck": true,
+      "gatingMode": "manual",
+      "termsAcceptanceRequired": true,
+      "imageCapable": true,
+      "iosGalleryAllowlisted": true,
+      "minimumMemoryGB": 6,
+      "galleryRevision": "87822fdabe82cf63e7cd369be55538de5dcc38ae",
+      "iosAllowlistSha256": "9e6f3526040a5fa66fe97e24c931606caa20b0248da08169abb040e6a691ed91"
+    },
+    "plannedConfiguration": {
+      "liteRTLMRevision": "f73637c57f0940b53da184e0d5adfc52a4e55eef",
+      "backend": "gpu",
+      "visionBackend": "cpu",
+      "maxNumTokens": 2048,
+      "topK": 1,
+      "topP": 1.0,
+      "temperature": 0.0,
+      "seed": 0,
+      "promptVersion": "gi-observation-v1",
+      "imageMessageForm": "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+    },
+    "baselinePriority": 1,
+    "initialState": {
+      "observedDownloadBytes": null,
+      "observedDownloadSha256": null,
+      "observedImportBytes": null,
+      "observedImportSha256": null,
+      "attemptOutcome": "NOT_RUN",
+      "ownerAcceptanceState": "NOT_REQUESTED"
+    },
+    "attempts": [],
+    "ownerDecisions": []
+  },
+  {
+    "candidateKey": "google/gemma-3n-E4B-it-litert-lm@3d0179a0648381585ab337e170b7517aae8e0ce4:gemma-3n-E4B-it-int4.litertlm",
+    "recordedAt": "2026-07-31T19:03:00Z",
+    "family": "Gemma 3n E4B",
+    "modelId": "google/gemma-3n-E4B-it-litert-lm",
+    "artifact": {
+      "filename": "gemma-3n-E4B-it-int4.litertlm",
+      "sourceRevision": "3d0179a0648381585ab337e170b7517aae8e0ce4",
+      "sourceUrl": "https://huggingface.co/google/gemma-3n-E4B-it-litert-lm/tree/3d0179a0648381585ab337e170b7517aae8e0ce4",
+      "expectedBytes": 4652318720,
+      "expectedSha256": "510f7db80143308f788ded208784b6c8addabe4d465ca32fd5bd80fd43ed4dcb",
+      "hashAuthority": "hugging_face_lfs_at_immutable_revision"
+    },
+    "sourceClaims": {
+      "checkedAt": "2026-07-31T19:03:00Z",
+      "license": "Gemma",
+      "licenseId": "gemma",
+      "licenseUrl": "https://ai.google.dev/gemma/terms",
+      "gatedAtCheck": true,
+      "gatingMode": "manual",
+      "termsAcceptanceRequired": true,
+      "imageCapable": true,
+      "iosGalleryAllowlisted": true,
+      "minimumMemoryGB": 8,
+      "galleryRevision": "87822fdabe82cf63e7cd369be55538de5dcc38ae",
+      "iosAllowlistSha256": "9e6f3526040a5fa66fe97e24c931606caa20b0248da08169abb040e6a691ed91"
+    },
+    "plannedConfiguration": {
+      "liteRTLMRevision": "f73637c57f0940b53da184e0d5adfc52a4e55eef",
+      "backend": "gpu",
+      "visionBackend": "cpu",
+      "maxNumTokens": 2048,
+      "topK": 1,
+      "topP": 1.0,
+      "temperature": 0.0,
+      "seed": 0,
+      "promptVersion": "gi-observation-v1",
+      "imageMessageForm": "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+    },
+    "baselinePriority": 2,
+    "initialState": {
+      "observedDownloadBytes": null,
+      "observedDownloadSha256": null,
+      "observedImportBytes": null,
+      "observedImportSha256": null,
+      "attemptOutcome": "NOT_RUN",
+      "ownerAcceptanceState": "NOT_REQUESTED"
+    },
+    "attempts": [],
+    "ownerDecisions": []
+  },
+  {
+    "candidateKey": "litert-community/gemma-4-E2B-it-litert-lm@6e5c4f1e395deb959c494953478fa5cec4b8008f:gemma-4-E2B-it.litertlm",
+    "recordedAt": "2026-07-31T19:03:00Z",
+    "family": "Gemma 4 E2B",
+    "modelId": "litert-community/gemma-4-E2B-it-litert-lm",
+    "artifact": {
+      "filename": "gemma-4-E2B-it.litertlm",
+      "sourceRevision": "6e5c4f1e395deb959c494953478fa5cec4b8008f",
+      "repoHeadAtCheck": "9262660a1676eed6d0c477ab1a86344430854664",
+      "sourceUrl": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/tree/6e5c4f1e395deb959c494953478fa5cec4b8008f",
+      "expectedBytes": 2588147712,
+      "expectedSha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "hashAuthority": "hugging_face_lfs_at_immutable_revision"
+    },
+    "sourceClaims": {
+      "checkedAt": "2026-07-31T19:03:00Z",
+      "license": "Apache-2.0",
+      "licenseId": "apache-2.0",
+      "licenseUrl": "https://ai.google.dev/gemma/docs/gemma_4_license",
+      "gatedAtCheck": false,
+      "gatingMode": "none",
+      "termsAcceptanceRequired": false,
+      "imageCapable": true,
+      "androidGalleryAllowlisted": true,
+      "iosGalleryAllowlisted": false,
+      "androidMinimumMemoryGBNotApplicableToIOS": 8,
+      "galleryRevision": "87822fdabe82cf63e7cd369be55538de5dcc38ae",
+      "androidAllowlistSha256": "10c3694e2e114afafc1ac8ca8d50496c6798a207fc7fbe77ab99df1a853490f9",
+      "iosAllowlistSha256": "9e6f3526040a5fa66fe97e24c931606caa20b0248da08169abb040e6a691ed91"
+    },
+    "plannedConfiguration": null,
+    "baselinePriority": null,
+    "initialState": {
+      "observedDownloadBytes": null,
+      "observedDownloadSha256": null,
+      "observedImportBytes": null,
+      "observedImportSha256": null,
+      "attemptOutcome": "NOT_RUN",
+      "ownerAcceptanceState": "NOT_REQUESTED"
+    },
+    "attempts": [],
+    "ownerDecisions": []
+  },
+  {
+    "candidateKey": "litert-community/gemma-4-E4B-it-litert-lm@28299f30ee4d43294517a4ac93abd6163412f07f:gemma-4-E4B-it.litertlm",
+    "recordedAt": "2026-07-31T19:03:00Z",
+    "family": "Gemma 4 E4B",
+    "modelId": "litert-community/gemma-4-E4B-it-litert-lm",
+    "artifact": {
+      "filename": "gemma-4-E4B-it.litertlm",
+      "sourceRevision": "28299f30ee4d43294517a4ac93abd6163412f07f",
+      "repoHeadAtCheck": "f7ad3343bd6ebc9607f4dc3bc4f2398bd5749bc5",
+      "sourceUrl": "https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm/tree/28299f30ee4d43294517a4ac93abd6163412f07f",
+      "expectedBytes": 3659530240,
+      "expectedSha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+      "hashAuthority": "hugging_face_lfs_at_immutable_revision"
+    },
+    "sourceClaims": {
+      "checkedAt": "2026-07-31T19:03:00Z",
+      "license": "Apache-2.0",
+      "licenseId": "apache-2.0",
+      "licenseUrl": "https://ai.google.dev/gemma/docs/gemma_4_license",
+      "gatedAtCheck": false,
+      "gatingMode": "none",
+      "termsAcceptanceRequired": false,
+      "imageCapable": true,
+      "androidGalleryAllowlisted": true,
+      "iosGalleryAllowlisted": false,
+      "androidMinimumMemoryGBNotApplicableToIOS": 12,
+      "galleryRevision": "87822fdabe82cf63e7cd369be55538de5dcc38ae",
+      "androidAllowlistSha256": "10c3694e2e114afafc1ac8ca8d50496c6798a207fc7fbe77ab99df1a853490f9",
+      "iosAllowlistSha256": "9e6f3526040a5fa66fe97e24c931606caa20b0248da08169abb040e6a691ed91"
+    },
+    "sourceVerificationHistory": [
+      {
+        "checkedAt": "2026-08-01T02:53:30Z",
+        "repoHead": "f7ad3343bd6ebc9607f4dc3bc4f2398bd5749bc5",
+        "headCarriesSameArtifactBytesAndSha256": true,
+        "modelCardClaimsIOSReady": true,
+        "modelCardIOSBenchmarkDevice": "iPhone 17 Pro",
+        "exactArtifactIOSGalleryAllowlisted": false,
+        "exactArtifactAndroidGalleryAllowlisted": false,
+        "iosAllowlistRevision": "8ebb28aa67c8d538b7d6c19c7949e25f7ae5f232",
+        "iosAllowlistSha256": "9e6f3526040a5fa66fe97e24c931606caa20b0248da08169abb040e6a691ed91",
+        "separateAndroidAllowlistArtifact": {
+          "sourceRevision": "9695417f248178c63a9f318c6e0c56cb917cb837",
+          "expectedBytes": 3654467584,
+          "expectedSha256": "f335f2bfd1b758dc6476db16c0f41854bd6237e2658d604cbe566bcefd00a7bc",
+          "minimumMemoryGBNotApplicableToIOS": 12
+        },
+        "compatibilityEvidenceStatus": "CONFLICTING_MODEL_CARD_AND_IOS_GALLERY_SIGNALS",
+        "publicIssueRiskEvidence": "https://github.com/google-ai-edge/gallery/issues/692"
+      }
+    ],
+    "plannedConfiguration": null,
+    "configurationHypotheses": [
+      {
+        "id": "baseline-v1",
+        "state": "NOT_RUN",
+        "liteRTLMRevision": "f73637c57f0940b53da184e0d5adfc52a4e55eef",
+        "backend": "gpu",
+        "visionBackend": "cpu",
+        "maxNumTokens": 2048,
+        "topK": 1,
+        "topP": 1.0,
+        "temperature": 0.0,
+        "seed": 0,
+        "promptVersion": "gi-observation-v1",
+        "imageMessageForm": "Message(contents:[Content.imageFile(path),Content.text(prompt)])",
+        "note": "One-variable DEBUG hypothesis inherited from the existing iOS baseline; not an official Gemma 4 iOS configuration claim."
+      }
+    ],
+    "baselinePriority": null,
+    "initialState": {
+      "observedDownloadBytes": null,
+      "observedDownloadSha256": null,
+      "observedImportBytes": null,
+      "observedImportSha256": null,
+      "attemptOutcome": "NOT_RUN",
+      "ownerAcceptanceState": "NOT_REQUESTED"
+    },
+    "currentState": {
+      "observedDownloadBytes": 3659530240,
+      "observedDownloadSha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+      "observedImportBytes": null,
+      "observedImportSha256": null,
+      "attemptOutcome": "DOWNLOAD_VERIFIED_IMPORT_NOT_RUN",
+      "ownerAcceptanceState": "TARGET_DOWNLOAD_APPROVED_ONLY"
+    },
+    "attempts": [
+      {
+        "recordedAt": "2026-08-01T02:53:30Z",
+        "stage": "download_integrity",
+        "sourceRevision": "28299f30ee4d43294517a4ac93abd6163412f07f",
+        "observedBytes": 3659530240,
+        "observedSha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+        "outcome": "PASS",
+        "inferenceAttempted": false
+      }
+    ],
+    "ownerDecisions": [
+      {
+        "recordedAt": "2026-08-01T02:53:30Z",
+        "decision": "GEMMA_4_E4B_TARGET_DOWNLOAD_APPROVED",
+        "scope": "Download, verify, and evaluate this exact DEBUG research candidate.",
+        "doesNotMean": [
+          "physical-device acceptance",
+          "Release selection",
+          "staged-source deletion approval"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "configuration" : {
+    "engineBackend" : "cpu",
+    "id" : "simulator-cpu-v1",
+    "imageMessageForm" : "Message(contents:[Content.imageFile(path),Content.text(prompt)])",
+    "maxNumTokens" : 2048,
+    "promptVersion" : "gi-observation-v1",
+    "seed" : 0,
+    "temperature" : 0,
+    "topK" : 1,
+    "topP" : 1,
+    "visionBackend" : "cpu"
+  },
+  "descriptor" : {
+    "artifactFilename" : "gemma-4-E4B-it.litertlm",
+    "cacheNamespace" : "litert-gemma-4-e4b-28299f30",
+    "expectedBytes" : 3659530240,
+    "expectedSHA256" : "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+    "family" : "Gemma 4 E4B",
+    "id" : "litert-gemma-4-e4b-28299f30",
+    "modelID" : "litert-community\/gemma-4-E4B-it-litert-lm",
+    "sourceRevision" : "28299f30ee4d43294517a4ac93abd6163412f07f",
+    "sourceURL" : "https:\/\/huggingface.co\/litert-community\/gemma-4-E4B-it-litert-lm\/tree\/28299f30ee4d43294517a4ac93abd6163412f07f"
+  },
+  "editPersisted" : true,
+  "editedObservation" : {
+    "apparent_bristol_type" : 4,
+    "apparent_color" : "brown",
+    "black_tarry_appearance" : "not_observed",
+    "form" : "mushy",
+    "image_usable" : true,
+    "quality_issue" : "none",
+    "red_appearing_material" : "not_observed"
+  },
+  "engineReady" : true,
+  "executionLocation" : "SIMULATOR_LOCAL",
+  "finishedAt" : "2026-08-01T04:08:43Z",
+  "historyEntryFoundImmediately" : true,
+  "imageCopyExists" : true,
+  "imagePrepared" : true,
+  "modelReceiptVerified" : true,
+  "originalObservation" : {
+    "apparent_bristol_type" : 4,
+    "apparent_color" : "brown",
+    "black_tarry_appearance" : "not_observed",
+    "form" : "smooth_formed",
+    "image_usable" : true,
+    "quality_issue" : "none",
+    "red_appearing_material" : "not_observed"
+  },
+  "realAnalysisPassed" : true,
+  "runID" : "FEF918A0-4244-4F73-AEF9-7CF9E4E4F42E",
+  "savePassed" : true,
+  "savedConfiguration" : {
+    "engineBackend" : "cpu",
+    "id" : "simulator-cpu-v1",
+    "imageMessageForm" : "Message(contents:[Content.imageFile(path),Content.text(prompt)])",
+    "maxNumTokens" : 2048,
+    "promptVersion" : "gi-observation-v1",
+    "seed" : 0,
+    "temperature" : 0,
+    "topK" : 1,
+    "topP" : 1,
+    "visionBackend" : "cpu"
+  },
+  "savedExecutionLocation" : "SIMULATOR_LOCAL",
+  "savedModelID" : "litert-community\/gemma-4-E4B-it-litert-lm",
+  "savedProvenance" : "ai_edited",
+  "selectedFixture" : "brown",
+  "startedAt" : "2026-08-01T04:08:30Z"
+}

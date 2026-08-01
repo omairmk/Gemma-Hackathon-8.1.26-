@@ -1,0 +1,112 @@
+{
+  "brownGreenContrastPassed" : true,
+  "configuration" : {
+    "engineBackend" : "cpu",
+    "id" : "simulator-cpu-v1",
+    "imageMessageForm" : "Message(contents:[Content.imageFile(path),Content.text(prompt)])",
+    "maxNumTokens" : 2048,
+    "promptVersion" : "gi-observation-v1",
+    "seed" : 0,
+    "temperature" : 0,
+    "topK" : 1,
+    "topP" : 1,
+    "visionBackend" : "cpu"
+  },
+  "descriptor" : {
+    "artifactFilename" : "gemma-4-E4B-it.litertlm",
+    "cacheNamespace" : "litert-gemma-4-e4b-28299f30",
+    "expectedBytes" : 3659530240,
+    "expectedSHA256" : "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+    "family" : "Gemma 4 E4B",
+    "id" : "litert-gemma-4-e4b-28299f30",
+    "modelID" : "litert-community\/gemma-4-E4B-it-litert-lm",
+    "sourceRevision" : "28299f30ee4d43294517a4ac93abd6163412f07f",
+    "sourceURL" : "https:\/\/huggingface.co\/litert-community\/gemma-4-E4B-it-litert-lm\/tree\/28299f30ee4d43294517a4ac93abd6163412f07f"
+  },
+  "engineInitializationSeconds" : 0.432993417,
+  "executionLocation" : "SIMULATOR_LOCAL",
+  "finishedAt" : "2026-08-01T03:29:45Z",
+  "nonTargetDistinctPassed" : true,
+  "runs" : [
+    {
+      "dominantColor" : "BROWN",
+      "fixture" : "brown",
+      "inferenceSeconds" : 6.101647458,
+      "outcome" : "PASS",
+      "parserResult" : "PASS_EXACT_TOKEN",
+      "repairResult" : "NOT_APPLICABLE",
+      "requestKind" : "dominant_color"
+    },
+    {
+      "dominantColor" : "GREEN",
+      "fixture" : "green",
+      "inferenceSeconds" : 5.6578831659999995,
+      "outcome" : "PASS",
+      "parserResult" : "PASS_EXACT_TOKEN",
+      "repairResult" : "NOT_APPLICABLE",
+      "requestKind" : "dominant_color"
+    },
+    {
+      "dominantColor" : "OTHER",
+      "fixture" : "control",
+      "inferenceSeconds" : 5.673247125,
+      "outcome" : "PASS",
+      "parserResult" : "PASS_EXACT_TOKEN",
+      "repairResult" : "NOT_APPLICABLE",
+      "requestKind" : "dominant_color"
+    },
+    {
+      "fixture" : "control",
+      "inferenceSeconds" : 9.099077208,
+      "outcome" : "PASS",
+      "parserResult" : "PASS_STRICT",
+      "repairResult" : "NOT_NEEDED",
+      "requestKind" : "structured_observation",
+      "structuredOutput" : {
+        "apparent_color" : "unable_to_assess",
+        "black_tarry_appearance" : "unable_to_assess",
+        "form" : "unable_to_assess",
+        "image_usable" : false,
+        "quality_issue" : "not_target_image",
+        "red_appearing_material" : "unable_to_assess"
+      }
+    },
+    {
+      "fixture" : "brown",
+      "inferenceSeconds" : 8.148457917,
+      "outcome" : "PASS",
+      "parserResult" : "PASS_STRICT",
+      "repairResult" : "NOT_NEEDED",
+      "requestKind" : "structured_observation",
+      "structuredOutput" : {
+        "apparent_bristol_type" : 4,
+        "apparent_color" : "brown",
+        "black_tarry_appearance" : "not_observed",
+        "form" : "smooth_formed",
+        "image_usable" : true,
+        "quality_issue" : "none",
+        "red_appearing_material" : "not_observed"
+      }
+    },
+    {
+      "fixture" : "green",
+      "inferenceSeconds" : 8.147436209,
+      "outcome" : "PASS",
+      "parserResult" : "PASS_STRICT",
+      "repairResult" : "NOT_NEEDED",
+      "requestKind" : "structured_observation",
+      "structuredOutput" : {
+        "apparent_bristol_type" : 4,
+        "apparent_color" : "green",
+        "black_tarry_appearance" : "not_observed",
+        "form" : "smooth_formed",
+        "image_usable" : true,
+        "quality_issue" : "none",
+        "red_appearing_material" : "not_observed"
+      }
+    }
+  ],
+  "startedAt" : "2026-08-01T03:29:01Z",
+  "structuredPassCount" : 3,
+  "threeConsecutiveStructuredRunsPassed" : true
+}
