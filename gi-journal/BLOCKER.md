@@ -12,7 +12,7 @@ Track B is explicitly governed by Prompt A. Its exact artifact names, pinned pac
 ## Bounded recovery searches completed
 
 1. Workspace inventory: neither filename is present in the supplied workspace; `gi-journal/` was empty.
-2. Local document search: searched `/Users/omairmkhan/Documents` for both exact names and related `GI_Journal*Prompt*v3*` / `GI*Journal*` filenames; no exact source file was found.
+2. Local document search: searched the workspace documents directory for both exact names and related `GI_Journal*Prompt*v3*` / `GI*Journal*` filenames; no exact source file was found.
 3. Codex memory registry and relevant Chronicle summaries: they confirm the two filenames and high-level Mac-fallback intent only. They do not contain either prompt verbatim.
 4. Recent-work screen history: showed the filenames in the orchestrator/Drive context but not a readable complete prompt body.
 5. Connected Google Drive: searched the exact preflight filename and the concise query `GI Journal Preflight Prompt` among files viewed by the user; both returned zero results.
