@@ -179,6 +179,22 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
     promptVersion: "gi-observation-v1",
     imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
   )
+
+  /// Current E4B model with the proven main/vision backend pair, but using
+  /// Gemma 4's supported smallest visual-token budget so LiteRT selects the
+  /// `vision_70` graph instead of the failing `vision_280` graph.
+  static let physicalGPUCPUVision70 = InferenceConfiguration(
+    id: "physical-gpu-cpu-vision70-ctx1024-v1",
+    engineBackend: "gpu",
+    visionBackend: "cpu",
+    maxNumTokens: 1_024,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
   #endif
 
   #if DEBUG || HACKATHON_EMBEDDED_GEMMA
@@ -220,7 +236,7 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
   #if HACKATHON_EMBEDDED_GEMMA && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
   #elseif HACKATHON_EMBEDDED_GEMMA
-  static let runtimeDefault = physicalCPUGPUVision
+  static let runtimeDefault = physicalGPUCPUVision70
   #elseif DEBUG && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
   #elseif DEBUG && PHYSICAL_CPU_ENGINE_FALLBACK

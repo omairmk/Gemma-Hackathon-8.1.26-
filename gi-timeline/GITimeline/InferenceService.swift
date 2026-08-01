@@ -79,6 +79,12 @@ actor LiteRTLMEngineSessionAdapter {
     self.verifiedModel = verifiedModel
     self.cacheURL = cacheURL
     self.configuration = configuration
+    #if DEBUG || HACKATHON_EMBEDDED_GEMMA
+    if configuration.id == InferenceConfiguration.physicalGPUCPUVision70.id {
+      ExperimentalFlags.optIntoExperimentalAPIs()
+      ExperimentalFlags.visualTokenBudget = 70
+    }
+    #endif
   }
 
   func state() -> EngineProcessState { processState }
