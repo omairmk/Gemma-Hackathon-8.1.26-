@@ -1,20 +1,15 @@
-# GI Timeline morning owner actions
+# GI Timeline owner action
 
-Updated: 2026-08-01 00:30 EDT (America/New_York)
+> **Historical snapshot:** This owner-action note predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
 
-The Simulator real-Gemma POC and UI acceptance are proven. The fresh physical-iPhone check passed through pre-signing discovery: the phone is booted, Developer Mode is enabled, it is paired and unlocked, developer services are ready, and Xcode sees it as an arm64 destination. The remaining signing step is owner-only; the agent will not enter a Mac password, iPhone passcode, Apple ID password, or other credential.
+Updated: 2026-08-01 14:24 EDT (America/New_York)
 
-## One owner action
+## One action
 
-Unlock the Mac locally if needed. In Xcode, select the GI Timeline **Debug** app target, open **Signing & Capabilities**, and choose your Apple development team. Resolve any Apple credential prompt yourself, then run the physical build/install steps in `DEMO_RUNBOOK.md`. Do not send a password, passcode, certificate, identity detail, or token to Codex.
+Reconnect the iPhone by cable, unlock it, and leave it awake on the Home Screen.
 
-Status: **CONFIRMED BLOCKER.** The Debug target's `DEVELOPMENT_TEAM` is blank; this is the sole current blocker to starting the physical Debug build.
+Visible success condition: the phone appears as an available iOS device in Xcode or Devices and Simulators without an Unlock, Trust, Developer Mode, or developer-profile prompt.
 
-## Follow-up checks before the model copy
+The exact signed `GITimeline Hackathon` app is already built, and an earlier embedded build was installed without deleting app data. The current optimized source build cannot be installed or launched because a fresh sanitized device check returned no physical iOS devices. Once the phone appears, Codex can install the current artifact and run the bounded synthetic brown/green/control, reviewed save, History, and relaunch sequence.
 
-- Connect the iPhone by cable, unlock it, tap **Trust** if asked, and leave it connected. The live transport currently reports `localNetwork`, so cable presence has not been confirmed.
-- In **Settings -> General -> iPhone Storage**, confirm roughly 12 GB remains available for the staged model, installed copy, and runtime cache. Available space has not yet been confirmed.
-
-These are follow-up readiness checks, not substitutes for selecting the development team.
-
-No license acceptance, purchase, account creation, TestFlight/App Store submission, security weakening, or access to personal health photos is requested.
+Airplane Mode will be requested only after the online physical sequence passes. Do not send Codex a passcode, Apple credential, certificate, signing value, token, or device identifier.

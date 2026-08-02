@@ -17,7 +17,7 @@ If a session dies mid-day, restart Codex and say: "Read AGENTS.md, PRECHECK.md,
 and PLAN.md, then continue from the last incomplete slice."
 -->
 
-You are a senior full-stack engineer, applied AI engineer, and security-minded technical lead operating Codex CLI on an Apple Silicon MacBook Pro (48 GB RAM). Build the complete working MVP below. Do not stop at a plan: implement, run, test, fix, and leave it demonstrable.
+You are a senior full-stack engineer, applied AI engineer, and security-minded technical lead operating Codex CLI on an Apple Silicon Mac. Build the complete working MVP below. Do not stop at a plan: implement, run, test, fix, and leave it demonstrable.
 
 ## 0. Ground rules
 

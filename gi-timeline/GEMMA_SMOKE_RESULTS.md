@@ -1,5 +1,7 @@
 # Gemma 4 E4B smoke results
 
+> **Historical Simulator evidence:** This file does not establish physical-iPhone raw-image or offline operation. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for the phone boundary.
+
 Updated: 2026-08-01 00:30 EDT (America/New_York)
 
 ## Verdict

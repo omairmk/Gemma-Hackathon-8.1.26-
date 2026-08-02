@@ -40,13 +40,13 @@ All serving is configured to use these local paths. The downloads are recorded i
 E4B qualifying attempt:
 
 ```text
-MODEL_PATH=/Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/gi-journal/.hf_cache/models--mlx-community--gemma-4-e4b-it-4bit/snapshots/475b9088d29754a3379866cf5aeb6b41acd313c2 PORT=8080 scripts/start_model.sh
+MODEL_PATH="$PWD/.hf_cache/models--mlx-community--gemma-4-e4b-it-4bit/snapshots/475b9088d29754a3379866cf5aeb6b41acd313c2" PORT=8080 scripts/start_model.sh
 ```
 
 This launches:
 
 ```text
-/Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/gi-journal/.venv/bin/mlx_vlm.server --model /Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/gi-journal/.hf_cache/models--mlx-community--gemma-4-e4b-it-4bit/snapshots/475b9088d29754a3379866cf5aeb6b41acd313c2 --host 127.0.0.1 --port 8080
+"$PWD/.venv/bin/mlx_vlm.server" --model "$PWD/.hf_cache/models--mlx-community--gemma-4-e4b-it-4bit/snapshots/475b9088d29754a3379866cf5aeb6b41acd313c2" --host 127.0.0.1 --port 8080
 ```
 
 PID `3671` terminated with the Metal error above. `lsof -nP -a -p 3671 -iTCP -sTCP:LISTEN` returned no listener.
@@ -54,7 +54,7 @@ PID `3671` terminated with the Metal error above. `lsof -nP -a -p 3671 -iTCP -sT
 E2B diagnostic attempt — **non-qualifying** because it used port 8081 rather than the required qualifying port 8080:
 
 ```text
-MODEL_PATH=/Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/gi-journal/.hf_cache/models--mlx-community--gemma-4-e2b-it-4bit/snapshots/238767527555cb75a05732a84dff5d6ba0dd6809 PORT=8081 scripts/start_model.sh
+MODEL_PATH="$PWD/.hf_cache/models--mlx-community--gemma-4-e2b-it-4bit/snapshots/238767527555cb75a05732a84dff5d6ba0dd6809" PORT=8081 scripts/start_model.sh
 ```
 
 PID `3698` terminated with the same Metal error. `lsof -nP -a -p 3698 -iTCP -sTCP:LISTEN` returned no listener.

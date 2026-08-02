@@ -1,30 +1,28 @@
 # Operator iPhone checkpoint
 
-`DEVICE_INFERENCE_STATUS: BLOCKED`
+> **Historical snapshot:** This checkpoint predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
 
-The physical iPhone is now visible, paired, and listed by Xcode. CoreDevice stopped the exact installed-app check with error `10005` because Developer Mode is disabled, so no signed build, model download, model import, engine initialization, image request, or physical acceptance gate has run.
+```text
+DEVICE_INFERENCE_STATUS: BLOCKED
+APP_END_TO_END_STATUS: NOT_RUN
+```
 
 ## One action now
 
-- [ ] On the iPhone, open **Settings → Privacy & Security → Developer Mode**, turn it on, tap **Restart**, then after restart swipe up, tap **Enable** in the confirmation, and enter the device passcode only on the iPhone. Leave it unlocked on the Home Screen, then stop.
+- [ ] Reconnect the iPhone by cable, unlock it, and leave it awake on the Home Screen.
 
-Expected result: Developer Mode shows on and the phone is unlocked on the Home Screen. If the option or confirmation is missing, stop and return the exact visible text or a screenshot with personal notifications hidden.
+Expected result: the phone appears as an available iOS destination in Xcode without an Unlock, Trust, Developer Mode, or developer-profile prompt.
 
-This action authorizes only a repeat of read-only readiness and exact installed-bundle discovery. It does **not** authorize signing changes, app installation, model-terms acceptance, a multi-gigabyte download, model import, inference, Airplane Mode, or deletion.
+Do not send Codex a passcode, Apple credential, certificate, signing value, token, or device identifier.
 
-## State waiting behind this checkpoint
+## Ready behind this checkpoint
 
-| Item | Current state |
-|---|---|
-| Physical destination | Visible: wired, paired, booted iPhone 17 Pro Max on iOS 26.5.2; Xcode lists an arm64 destination. Build remains `BLOCKED` on Developer Mode. |
-| Existing GI Timeline installation | UNKNOWN — exact production/debug bundle queries were refused before results because Developer Mode is disabled |
-| Supporting tests | PASS: 14/14 host-core at 15:38 ET and 23/23 current-source arm64 iPhone 17 Pro simulator tests at 15:37 ET on 2026-07-31; neither is physical evidence |
-| Isolated Debug bundle | Simulator-built only: `com.omairmkhan.GITimeline.debug`, display name `GI Timeline Lab`; contains the DEBUG-only lab, three synthetic fixtures, and probe path |
-| Release bundle | Simulator-built only: `com.omairmkhan.GITimeline`, display name `GI Timeline`; fresh built-Release inspection found no lab fixtures, lab title, probe prompt, evidence-directory string, or DEBUG candidate descriptor strings |
-| Planned first baseline | Descriptor only: `google/gemma-3n-E2B-it-litert-lm` at `73b019b63436d346f68dd9c1dbfd117eb264d888`; `gemma-3n-E2B-it-int4.litertlm`; 3,388,604,416 bytes; SHA-256 `6c5f6d8f727e3f4327dbe38731c92c47094a95fccee9c15484465e7d9e01e4d5`; absent, not downloaded, not owner-accepted, and not physically selected |
-| Compiled configuration | LiteRT-LM `f73637c57f0940b53da184e0d5adfc52a4e55eef`; `.gpu`; vision `.cpu()`; `maxNumTokens=2048`; `topK=1`; `topP=1`; temperature `0`; seed `0`; prompt `gi-observation-v1`; image plus text; never physically run |
-| Selection record | `SELECTED_MODEL.json` intentionally absent |
-| Physical inference | `NOT_RUN` |
-| Normal-app end to end | `NOT_RUN` |
+- Current optimized signed `GITimeline Hackathon` app: **PASS**.
+- Exact embedded Gemma 4 E4B identity and receipt: **PASS**.
+- Current-source real-Gemma arm64 Simulator smoke, normal flow, and relaunch: **PASS**.
+- Host 14/14, app 37/37, final UI 3/3, Release isolation: **PASS**.
+- Current optimized physical install/launch: **BLOCKED** because the phone is absent.
+- Physical brown/green/control inference, review/save/History/relaunch: **BLOCKED**.
+- Airplane Mode: **BLOCKED** until the online physical sequence passes.
 
-After the single action above, Codex will repeat read-only readiness and exact installed-bundle discovery and report what the Mac sees before requesting any separate authorization.
+Once the phone appears, install the current verified app without uninstalling or deleting app data, then run the three synthetic-only commands in `DEMO_RUNBOOK.md`. Airplane Mode is a separate owner action requested only after the online physical sequence passes.

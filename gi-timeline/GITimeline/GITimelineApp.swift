@@ -3,7 +3,13 @@ import SwiftData
 
 enum AppRuntime {
   static var isUnitTesting: Bool {
-    ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    let environment = ProcessInfo.processInfo.environment
+    return environment["XCTestConfigurationFilePath"] != nil
+      || environment["XCTestBundlePath"] != nil
+      || environment["XCInjectBundleInto"] != nil
+      || environment["XCInjectBundle"] != nil
+      || NSClassFromString("XCTest.XCTestCase") != nil
+      || NSClassFromString("XCTestCase") != nil
   }
 }
 
@@ -64,6 +70,29 @@ enum AppRuntime {
           }
         }
         #endif
+        #if HACKATHON_EMBEDDED_GEMMA
+        .task {
+          let arguments = ProcessInfo.processInfo.arguments
+          do {
+            let harness = EmbeddedGemmaCompletionHarness(
+              runtime: inferenceRuntime,
+              context: ModelContext(modelContainer)
+            )
+            if arguments.contains(EmbeddedGemmaCompletionHarness.smokeLaunchArgument) {
+              let result = try await harness.runSmoke()
+              print("EMBEDDED_GEMMA_SMOKE_PASS \(result.consoleSummary) \(result.evidenceURL.lastPathComponent)")
+            } else if arguments.contains(EmbeddedGemmaCompletionHarness.normalFlowLaunchArgument) {
+              let result = try await harness.runNormalFlow()
+              print("EMBEDDED_GEMMA_NORMAL_FLOW_PASS \(result.consoleSummary) \(result.evidenceURL.lastPathComponent)")
+            } else if arguments.contains(EmbeddedGemmaCompletionHarness.relaunchVerifyArgument) {
+              let result = try harness.verifyNormalFlowAfterRelaunch()
+              print("EMBEDDED_GEMMA_RELAUNCH_PASS \(result.consoleSummary) \(result.evidenceURL.lastPathComponent)")
+            }
+          } catch {
+            print("EMBEDDED_GEMMA_COMPLETION_FAIL \(error.localizedDescription)")
+          }
+        }
+        #endif
     }
     .modelContainer(modelContainer)
   }
@@ -73,15 +102,21 @@ struct AppRootView: View {
   @Environment(\.modelContext) private var context
   let inferenceRuntime: ModelRuntimeCoordinator
   @State private var selectedTab: AppTab
+  @State private var requestedHistoryEntryID: UUID?
 
   enum AppTab: Hashable { case newEntry, history }
 
   init(inferenceRuntime: ModelRuntimeCoordinator) {
     self.inferenceRuntime = inferenceRuntime
+    #if DEBUG
     let arguments = ProcessInfo.processInfo.arguments
     let showHistory = arguments.contains("--show-history")
       || arguments.contains("--ui-preview-history-detail")
     _selectedTab = State(initialValue: showHistory ? .history : .newEntry)
+    #else
+    _selectedTab = State(initialValue: .newEntry)
+    #endif
+    _requestedHistoryEntryID = State(initialValue: nil)
   }
 
   var body: some View {
@@ -89,7 +124,7 @@ struct AppRootView: View {
       NewEntryTab(store: EntryStore(context: context), runtime: inferenceRuntime)
         .tabItem { Label("New Entry", systemImage: "plus.circle") }
         .tag(AppTab.newEntry)
-      HistoryView(store: EntryStore(context: context))
+      HistoryView(store: EntryStore(context: context), requestedEntryID: $requestedHistoryEntryID)
         .tabItem { Label("History", systemImage: "clock") }
         .tag(AppTab.history)
     }
@@ -98,6 +133,10 @@ struct AppRootView: View {
       images.sweepDrafts(keeping: nil)
       try? EntryStore(context: context).reconcile(imageStore: images)
       if !AppRuntime.isUnitTesting { AppFolders.enforceStoreProtection() }
+    }
+    .onReceive(NotificationCenter.default.publisher(for: .giTimelineShowHistory)) { notification in
+      requestedHistoryEntryID = notification.object as? UUID
+      selectedTab = .history
     }
   }
 }

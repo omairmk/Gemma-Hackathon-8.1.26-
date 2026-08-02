@@ -1,82 +1,82 @@
-# GI Timeline morning handoff
+# GI Timeline completion handoff
 
-Updated: 2026-08-01 00:36 EDT (America/New_York)
+> **Historical snapshot:** This 14:40 EDT handoff predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current architecture and claims.
+
+Updated: 2026-08-01 14:40 EDT (America/New_York)
 
 ## 1. What works now
 
-The strongest proven result is `SIMULATOR_GEMMA_POC_GO`. Real Gemma image analysis runs locally in the arm64 iPhone Simulator app. Brown, green, and non-target synthetic pixels produce distinct outputs; three strict structured runs pass without a crash; and the same provider completes Analyze -> editable review -> Save -> History -> terminate/relaunch -> reopen persistence through the production view-model and persistence path. Deterministic tap-driven UI automation, dark/accessibility coverage, visual inspection, six screenshots, 14/14 host tests, 31/31 app tests, and the final Release build also pass within their stated boundaries.
+The exact Gemma 4 E4B model now arrives inside the dedicated `GITimeline Hackathon` app. The optimized arm64 iPhone artifact is signed and passes strict model, receipt, bundle, architecture, and production-surface checks. The native photo → Reading photo → editable review → review-gated save → History → Detail flow passes the current app and UI suites, including smaller-screen dark mode at Accessibility Extra Large. Ordinary Release stays model-free.
 
-## 2. What is real Gemma versus what uses a test mock
+Fresh current-source embedded Simulator evidence proves real E4B content dependence and the complete automatic review/edit/save/History/relaunch path. The optimized artifact has not been installed or launched on the physical iPhone because the phone is currently absent from Xcode's device list.
 
-`GEMMA_SMOKE_RESULTS.json`, `NORMAL_FLOW_REAL_GEMMA.json`, and `NORMAL_FLOW_RELAUNCH.json` are real-Gemma evidence. The two 1/1 UI runs use a deterministic fake provider available only behind the explicit `--ui-test-fake-gemma` launch argument; they prove UI behavior and persistence only. The fake did not produce the real image evidence and can never satisfy the real-Gemma gate. Persisted fake results remain labeled **UI demo · Gemma not connected**.
+## 2. What is real Gemma versus a test mock
 
-## 3. The exact Gemma model and where it ran
+The embedded acceptance harness uses the exact LiteRT-LM image-plus-text runtime, model descriptor, image sanitizer, strict parser, normal review view model, entry store, and SwiftData container. It does not use canned JSON or the UI-test provider.
 
-`litert-community/gemma-4-E4B-it-litert-lm`, artifact `gemma-4-E4B-it.litertlm`, immutable revision `28299f30ee4d43294517a4ac93abd6163412f07f`, 3,659,530,240 bytes, SHA-256 `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`. It ran as CPU/CPU locally inside the arm64 iPhone Simulator app: `SIMULATOR_LOCAL`.
+The UI screenshots and XCUITests use an explicit deterministic provider compiled only into Debug test surfaces. They prove the native journey, review rules, persistence, deletion, error recovery, and accessibility; they never satisfy a real-Gemma gate.
 
-## 4. Whether real image pixels affected the output
+## 3. Exact model and execution location
 
-Yes. Brown pixels returned `BROWN` and strict brown output, green pixels returned `GREEN` and strict green output, and the geometric control returned `OTHER` plus strict `not_target_image`. This was a real image-plus-text request to E4B, not text-only generation or canned JSON.
+- Model: `litert-community/gemma-4-E4B-it-litert-lm`
+- Revision: `28299f30ee4d43294517a4ac93abd6163412f07f`
+- Artifact: `gemma-4-E4B-it.litertlm`
+- Bytes: `3,659,530,240`
+- SHA-256: `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`
+- LiteRT-LM: `f73637c57f0940b53da184e0d5adfc52a4e55eef`
+- Physical policy: GPU engine / non-nil CPU vision, `vision_70` (`visualTokenBudget=70`), `maxNumTokens=1024`
+- Simulator exception: CPU engine / CPU vision
 
-## 5. Whether the physical iPhone build/install/test passed
+## 4. Whether real image pixels affected output
 
-No. The phone is visible, paired, unlocked, in Developer Mode, and ready through developer-service discovery, but `PHYSICAL_IPHONE_BUILD` is `BLOCKED` because the Debug target's `DEVELOPMENT_TEAM` is blank. Cable transport and roughly 12 GB free space are not confirmed. No physical install or inference result is claimed.
+Yes in the current embedded arm64 Simulator build. Brown pixels returned `BROWN`, green pixels returned `GREEN`, and the geometric control returned `OTHER`; all three strict structured observations validated without repair, and the control produced `not_target_image`. Preparation took 6.18 seconds and the six image calls took 5.54–8.61 seconds. No physical-iPhone pixel-dependent output is claimed.
 
-## 6. What the owner can test immediately in under three minutes
+## 5. Physical iPhone result
 
-After unlocking the Mac if needed, launch `GI Timeline Lab` in the already-prepared Simulator, choose the bundled Brown image, prepare Gemma if requested, analyze, edit Form to `mushy`, save, open History, terminate/relaunch, and reopen the entry. The exact commands and taps are in `DEMO_RUNBOOK.md`; the six inspected reference screens are under `outputs/demo-screens/`.
+The current optimized signed build passes. An earlier embedded build installed successfully without uninstalling, but the optimized current-source artifact has not been installed or launched because a fresh sanitized Xcode query returned no physical iOS devices. Physical Gemma image inference, reviewed persistence, and offline operation are blocked.
 
-## 7. The single next owner action if anything important remains blocked
+## 6. What can be tested immediately in under three minutes
 
-Unlock the Mac if needed, then open the GI Timeline Debug target's **Signing & Capabilities** pane in Xcode and select your Apple development team. Enter any Apple credential yourself, then run the documented physical build/install. This is the single highest-leverage owner action toward a physical-iPhone result.
+Open the already prepared iPhone Simulator and launch GI Timeline. Walk through First Run and New Entry, then use the retained synthetic UI journey/screenshots to show Reading photo, Review, Save, History, Detail, and error recovery. The deterministic UI path is a presentation demo only; the separate JSON acceptance files and PASS markers are the authority for real Gemma.
 
-## Honest status block
+For the physical build, select `GITimeline Hackathon` in Xcode, select the reconnected iPhone, and press Run. The 3.6 GB install may exceed three minutes and must not be described as instant.
+
+## 7. One owner action
+
+Reconnect the iPhone by cable, unlock it, and leave it awake on the Home Screen. Stop when it appears available in Xcode without an Unlock, Trust, Developer Mode, or developer-profile prompt.
+
+## Honest status
 
 ```text
 REAL_GEMMA_BACKEND: SIMULATOR_LOCAL
 REAL_GEMMA_E2E: PASS
-PHYSICAL_IPHONE_BUILD: BLOCKED
+PHYSICAL_IPHONE_BUILD: PASS
 NORMAL_APP_FLOW: PASS
 UI_ACCEPTANCE: PASS
-OFFLINE_IPHONE: NOT_RUN
+OFFLINE_IPHONE: BLOCKED
 MORNING_LABEL: SIMULATOR_GEMMA_POC_GO
+
+EMBEDDED_MODEL_BUILD: PASS
+PHYSICAL_IPHONE_INSTALL: BLOCKED
+PHYSICAL_GEMMA_IMAGE_INFERENCE: BLOCKED
+AUTO_ANALYSIS_NORMAL_FLOW: PASS
+NATIVE_REFERENCE_UI: PASS
+SAVE_RELAUNCH: PASS
+OFFLINE_IPHONE: BLOCKED
+HACKATHON_DEMO_READY: NO
 ```
 
-These are hackathon POC fields. Legacy `DEVICE_INFERENCE_STATUS` and `APP_END_TO_END_STATUS` remain unchanged and are not upgraded by Simulator evidence.
+The two nonphysical PASS values in the second block are current-source Simulator evidence. The physical install, inference, and offline rows remain blocked, so the full Hackathon device contract is not ready. Neither block upgrades the legacy physical `DEVICE_INFERENCE_STATUS` or `APP_END_TO_END_STATUS` fields.
 
 ## Key evidence
 
-- `GEMMA_SMOKE_RESULTS.json`: canonical six-run real image smoke record.
-- `GEMMA_SMOKE_RESULTS.md`: readable model, timing, output, and acceptance summary.
-- `NORMAL_FLOW_REAL_GEMMA.json`: real E4B analysis, human edit, save, image copy, History presence, and exact saved provenance.
-- `NORMAL_FLOW_RELAUNCH.json`: entry, edited observation, image, and provenance reopened after process termination/relaunch.
-- `TEST_RESULTS.md`: final 14/14 host, 31/31 arm64 app, two 1/1 smaller-device UI runs, and final Release build results.
-- `DEMO_RUNBOOK.md`: safe build, launch, model-staging, evidence, and under-three-minute demo commands with sanitized placeholders.
-- `outputs/demo-screens/01-new-entry.png`
-- `outputs/demo-screens/02-sample-selected.png`
-- `outputs/demo-screens/03-analyzing-real-gemma.png`
-- `outputs/demo-screens/04-editable-result.png`
-- `outputs/demo-screens/05-history-detail.png`
-- `outputs/demo-screens/06-error-dark-accessibility.png`
+- `EMBEDDED_GEMMA_RESULTS.md`
+- `EMBEDDED_SIMULATOR_SMOKE.json`
+- `EMBEDDED_SIMULATOR_NORMAL_FLOW.json`
+- `EMBEDDED_SIMULATOR_RELAUNCH.json`
+- `TEST_RESULTS.md`
+- `DEVICE_INFERENCE_REPORT.md`
+- `DEMO_RUNBOOK.md`
+- `outputs/demo-screens/README.md`
 
-No owner health photo was used. All inference evidence uses the bundled synthetic brown, green, and geometric control fixtures.
-
-## Production hardening completed
-
-- Explicit JSON `null` persistence for nil Bristol type.
-- Truthful fake-provider attribution after persistence and exact real runtime provenance for real saves.
-- Immutable synthetic-demo marker and reset safety.
-- Evidence runners now throw when acceptance fails.
-- New Entry refresh after inference-lab dismissal.
-- Truthful badge colors, auto-scroll, and corrected selected-image readiness copy.
-
-## Remaining boundaries
-
-The app is as complete as unattended automation allowed. Developer Mode is freshly enabled and the phone is available, but `PHYSICAL_IPHONE_BUILD` remains `BLOCKED` solely until the owner selects the Debug development team. Cable transport and roughly 12 GB free space are still unconfirmed. `OFFLINE_IPHONE` remains `NOT_RUN`; neither Simulator evidence nor the hackathon POC label upgrades the legacy device/end-to-end statuses.
-
-## Checkpoint commits
-
-- `3110d80fb8e964d76498f1ec8eedd3358ea715e0` — `feat: prove Gemma 4 E4B simulator image flow`. This is the last known-green code checkpoint: host 14/14, arm64 app 31/31, both UI configurations 1/1, and the current-source Release build all passed before it was created, with no source changes between those checks and the commit.
-- `docs: record simulator Gemma POC handoff` — the documentation/evidence checkpoint containing this file, the sanitized JSON evidence, and six screenshots.
-
-Model weights, DerivedData/xcresults, credentials, device identifiers, and private logs are excluded from both checkpoints.
+The app is as complete as unattended automation allowed. Model weights, signing values, device identifiers, result bundles, private logs, and personal images are excluded from Git.

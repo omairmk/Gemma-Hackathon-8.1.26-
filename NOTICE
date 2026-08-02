@@ -1,0 +1,19 @@
+GI Timeline
+Copyright 2026 GI Timeline contributors
+
+This product uses LiteRT-LM, developed by Google LLC and contributors:
+https://github.com/google-ai-edge/LiteRT-LM
+Pinned revision: f73637c57f0940b53da184e0d5adfc52a4e55eef
+LiteRT-LM is licensed under the Apache License, Version 2.0.
+
+The application is designed to run the Gemma 4 E4B model distributed as:
+litert-community/gemma-4-E4B-it-litert-lm
+https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm
+Pinned model revision: 28299f30ee4d43294517a4ac93abd6163412f07f
+Pinned artifact SHA-256: 0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0
+
+Model weights are not part of this Git repository. Obtain them from the
+official distribution and comply with the model's license and terms.
+
+Apple SwiftUI, SwiftData, PhotosUI, and related SDK components are provided by
+Apple's development tools and are not redistributed by this repository.

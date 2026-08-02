@@ -1,108 +1,91 @@
 # GI Timeline test results
 
-Updated: 2026-08-01 00:30 EDT (America/New_York)
+> **Historical evidence note:** Timings and device availability below are the 14:40 EDT snapshot. The current phone architecture and final claim boundary are in the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md`. Publication revalidation passed the host suite 14/14 and arm64 app suite 41/41 on 2026-08-01.
+
+Updated: 2026-08-01 14:40 EDT (America/New_York)
 
 ## Current verdict
 
-The final post-screenshot host and arm64 Simulator suites are green. Real Gemma smoke, the normal app path, deterministic UI automation, visual acceptance, and the current-source arm64 Release build all pass within their stated boundaries. The physical iPhone build remains blocked by signing-team selection, and offline iPhone proof was not run.
+Every unblocked build, regression, release-isolation, native-UI, and current-source Simulator real-Gemma gate in this snapshot is green. Later phone evidence passed the disclosed local pixel-facts → embedded Gemma text bridge through persistence. Physical raw-image Gemma and Airplane Mode remain blocked.
 
-| Check | Result | Evidence/time |
-|---|---|---|
-| Host SwiftPM suite | **PASS: 14/14**, 0 failures | 2026-08-01 00:24:25 EDT |
-| arm64 iPhone Simulator app suite | **PASS: 31/31**, 0 failures | 2026-08-01 00:24:41 EDT; qualifying result at `DerivedData/Logs/Test/Test-GITimeline-2026.08.01_00-24-36--0400.xcresult` |
-| Debug arm64 Simulator build/install/launch | **PASS** | The exact Debug bundle executed the real smoke and normal-flow runners. |
-| Real Gemma image smoke | **PASS** | `GEMMA_SMOKE_RESULTS.json`; summarized in `GEMMA_SMOKE_RESULTS.md` |
-| Real-provider normal flow | **PASS** | `NORMAL_FLOW_REAL_GEMMA.json` and `NORMAL_FLOW_RELAUNCH.json` |
-| Smaller-device deterministic UI baseline | **PASS: 1/1** in 50.854 s | Full-screen iPhone 17e Simulator, 390 x 844 points; 2026-08-01 00:06:02 EDT |
-| Smaller-device dark/accessibility UI | **PASS: 1/1** in 75.595 s | Same device, dark mode and Accessibility Extra Large; 2026-08-01 00:08:04 EDT |
-| Visual inspection and six screenshots | **PASS** | `01`-`05` are 1320 x 2868 px large-presentation captures; `06` is the 1170 x 2532 px / 390 x 844 pt smaller dark/accessibility capture. |
-| Current-source arm64 Release build | **PASS** | 2026-08-01 00:23:40 EDT; `** BUILD SUCCEEDED **`; Release remains model-free. |
-| Physical iPhone build/install | `BLOCKED` | Debug `DEVELOPMENT_TEAM` is blank. |
-| Physical Airplane-Mode cold launch | `NOT_RUN` | Never observed. |
+## Result matrix
 
-## Coverage represented by the 31 app tests
+| Check | Result |
+| --- | --- |
+| Host SwiftPM suite | **PASS: 14/14**, 0 failures at 14:24:30 EDT |
+| Arm64 app suite | **PASS: 41/41**, 0 failures or skips in publication revalidation |
+| Final exact-current UI suite | **PASS: 3/3** in 106.895 s |
+| Large iPhone Simulator UI journey | **PASS: 3/3** |
+| Smaller iPhone Simulator UI journey | **PASS: 3/3** |
+| Dark + Accessibility Extra Large History layout | **PASS: 1/1** in 57.863 s |
+| Dark + Accessibility Extra Large clean Detail capture | **PASS: 1/1** in 66.577 s |
+| Visual inspection | **PASS:** seven native states plus recoverable error retained under `outputs/demo-screens/` |
+| Optimized signed Hackathon build | **PASS:** full 45.56 s; post-cleanup incremental 14.87 s |
+| Signed artifact identity | **PASS:** `com.omairmkhan.GITimeline.debug`, arm64, strict signature |
+| Embedded model | **PASS:** exactly one file, exact bytes/SHA-256, matching receipt |
+| Optimized app size | **3,619,184 KiB** |
+| Hackathon production-surface audit | **PASS:** optimization on, testability/debug dylib off, no UI-test/mock/import/lab surface |
+| Model failure shields | **PASS:** missing source, wrong byte count, and wrong SHA-256 fail the build |
+| Incremental embed reuse | **PASS:** a verified unchanged destination is not recopied |
+| Ordinary Release build | **PASS:** `com.omairmkhan.GITimeline`, arm64, zero model files, no Hackathon/debug surface |
+| Current embedded Simulator build/install | **PASS:** build 43 s; install 4 s; CPU engine/CPU vision |
+| Current embedded Simulator real-Gemma smoke | **PASS:** brown=`BROWN`, green=`GREEN`, control=`OTHER`; structured 3/3 |
+| Current embedded Simulator normal flow | **PASS:** automatic review, edit, save, History, exact provenance |
+| Current embedded Simulator relaunch | **PASS:** entry, reviewed edit, image, and provenance reopened |
+| Current optimized physical install/launch | **BLOCKED:** fresh sanitized device list returned no physical iOS devices |
+| Physical Gemma image inference/save/relaunch | **BLOCKED** |
+| Physical Airplane Mode cold run | **BLOCKED** |
+| Worktree validation | **PASS:** `git diff --check` |
 
-The current app suite includes the exact Gemma 4 E4B descriptor and DEBUG-only selection, `nil` Release selection, CPU Simulator configuration, import/receipt integrity, strict token and structured parsers, one-repair success, double-parse-failure manual save, retry with the same preserved draft, timeout/stale-attempt locking, failed-save rollback, reviewed provenance, exact Simulator CPU/location provenance, explicit JSON `null` persistence for nil Bristol type, immutable synthetic-demo reset safety, truthful provider attribution, readiness labels, deletion/reconciliation, sanitized image handling, fixture integrity, evidence redaction, and exclusive runtime coordination.
+The UI tests use an explicit deterministic provider and establish UI behavior only. They do not contribute to real-Gemma acceptance.
 
-The 14 host tests cover the parser contract, canonical round-trip, unknown/missing/invalid fields, cross-field rules, the complete safety truth table, draft/save locking, retry/stale attempts, replacement ordering and failure preservation, and reset behavior.
+Fresh real-Gemma Simulator evidence is stored in `EMBEDDED_SIMULATOR_SMOKE.json`, `EMBEDDED_SIMULATOR_NORMAL_FLOW.json`, and `EMBEDDED_SIMULATOR_RELAUNCH.json`. Model preparation took 6.18 seconds; the six smoke image calls took 5.54–8.61 seconds. The normal-flow evidence itself completed in 8 seconds.
 
-## Production hardening verified in the final source
+## Coverage highlights
 
-- Nil Bristol type persists as an explicit JSON `null` instead of disappearing or becoming an invented value.
-- Fake-provider entries retain truthful UI-demo attribution after persistence; real entries retain the exact E4B CPU/Simulator runtime provenance.
-- Synthetic demo classification uses an immutable marker, so Reset Demo cannot broaden to ordinary entries after a note edit.
-- Automated evidence runners throw on failed acceptance instead of printing a misleading PASS marker.
-- New Entry refreshes model readiness after the inference lab is dismissed.
-- Runtime badges use truthful colors, long forms auto-scroll, and selected-image readiness copy reflects the actual gate.
+The app suite covers bundled-model resolution and receipt invalidation, strict identity checks, one runtime initialization path, readiness gating, non-nil vision configuration, automatic analysis after photo attachment, stale-result rejection, cancellation/failure recovery, Suggested/Confirmed/Edited review states, review-before-save, provenance, persistence rollback, single-row retry behavior, relaunch persistence, and safe deletion/reset behavior.
 
-## Exact commands
+The host suite covers the strict parser, canonical round-trip, missing/unknown/invalid fields, cross-field rules, safety rules, draft/save locking, stale work, retry, replacement failure preservation, and reset behavior.
 
-Run these from:
+The UI suite covers first run, New Entry, Reading photo, editable Review, review-gated Save, Saved, History, relaunch persistence, Entry Detail, delete/reset, and a recoverable error with the selected photo preserved. The final screenshots use dark mode and Accessibility Extra Large.
 
-```text
-/Users/omairmkhan/Documents/Codex/2026-07-31/files-mentioned-by-the-user-gi/gi-timeline
-```
+## Reproduction commands
 
-Host suite:
+Run from `gi-timeline/`.
+
+Host tests:
 
 ```sh
 swift test
 ```
 
-List available Simulator identifiers, then substitute only the selected arm64 iPhone Simulator identifier for `<SIMULATOR_UDID>`:
-
-```sh
-xcrun simctl list devices available
-```
-
-Current qualifying arm64 Simulator suite:
+Arm64 app tests:
 
 ```sh
 xcodebuild test \
   -project GITimeline.xcodeproj \
   -scheme GITimeline \
-  -destination 'platform=iOS Simulator,id=<SIMULATOR_UDID>' \
-  -derivedDataPath DerivedData \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5' \
+  -derivedDataPath "${TMPDIR%/}/GITimeline-App-Tests" \
   -skipPackageUpdates \
   -only-testing:GITimelineTests \
-  CODE_SIGNING_ALLOWED=NO \
-  ARCHS=arm64 \
-  ONLY_ACTIVE_ARCH=YES
+  CODE_SIGNING_ALLOWED=NO ARCHS=arm64 ONLY_ACTIVE_ARCH=YES
 ```
 
-Deterministic UI-only journey (the explicit fake provider never counts as real Gemma):
+UI tests:
 
 ```sh
 xcodebuild test \
   -project GITimeline.xcodeproj \
   -scheme GITimeline \
-  -destination 'platform=iOS Simulator,id=<SMALL_SIMULATOR_UDID>' \
-  -derivedDataPath DerivedData \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5' \
+  -derivedDataPath "${TMPDIR%/}/GITimeline-UI-Tests" \
   -skipPackageUpdates \
-  -only-testing:GITimelineUITests/GITimelineUITests/testDeterministicDemoReviewPersistsAndResets \
-  CODE_SIGNING_ALLOWED=NO \
-  ARCHS=arm64 \
-  ONLY_ACTIVE_ARCH=YES
+  -only-testing:GITimelineUITests \
+  CODE_SIGNING_ALLOWED=NO ARCHS=arm64 ONLY_ACTIVE_ARCH=YES
 ```
 
-The dark/Accessibility Extra Large result used the same test on the same smaller Simulator after applying those UI settings. The recorded result, not the fake provider, supports only `UI_ACCEPTANCE`.
-
-Debug Simulator build:
-
-```sh
-xcodebuild build \
-  -project GITimeline.xcodeproj \
-  -scheme GITimeline \
-  -configuration Debug \
-  -destination 'platform=iOS Simulator,id=<SIMULATOR_UDID>' \
-  -derivedDataPath DerivedData \
-  -skipPackageUpdates \
-  CODE_SIGNING_ALLOWED=NO \
-  ARCHS=arm64 \
-  ONLY_ACTIVE_ARCH=YES
-```
-
-Final Release regression command:
+Model-free Release regression:
 
 ```sh
 xcodebuild build \
@@ -110,20 +93,9 @@ xcodebuild build \
   -scheme GITimeline \
   -configuration Release \
   -destination 'generic/platform=iOS Simulator' \
-  -derivedDataPath DerivedData-Release \
+  -derivedDataPath "${TMPDIR%/}/GITimeline-Release" \
   -skipPackageUpdates \
-  CODE_SIGNING_ALLOWED=NO \
-  ARCHS=arm64 \
-  ONLY_ACTIVE_ARCH=YES
+  CODE_SIGNING_ALLOWED=NO ARCHS=arm64 ONLY_ACTIVE_ARCH=YES
 ```
 
-This final current-source run passed at 00:23:40 EDT.
-
-## Important non-qualifying and failed experiments
-
-- A generic Simulator test build attempted an x86_64 slice and failed against the arm64-only LiteRT-LM Simulator framework. It is not a current-source app regression; the qualifying command explicitly uses `ARCHS=arm64` and `ONLY_ACTIVE_ARCH=YES`.
-- The first Gemma 4 E4B main-`GPU`/vision-`CPU` initialization parsed the model but failed Metal kernel creation with `texture binding has argument index 31 that is greater than 30`. The corrected Simulator configuration uses CPU/CPU and passed; the failed GPU configuration was not repeated unchanged.
-
-## Git hygiene checkpoint
-
-At 00:29 EDT, `git diff --cached --name-only` was empty and the documentation diff passed `git diff --check`. The 3.66 GB model remains ignored under `work/` and must not be staged. The worktree remains intentionally dirty, and the qualifying `.xcresult` remains under DerivedData and must not be staged. No checkpoint commit is authorized by this update.
+Use `DEMO_RUNBOOK.md` for the embedded build and the synthetic real-Gemma harness. Model weights, signing values, device identifiers, result bundles, DerivedData, private logs, and personal images are not repository evidence and must not be committed.

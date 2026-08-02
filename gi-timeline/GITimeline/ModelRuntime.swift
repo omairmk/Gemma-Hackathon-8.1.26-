@@ -73,7 +73,7 @@ struct ModelDescriptor: Codable, Equatable, Identifiable, Sendable {
 
   var shortSHA256: String { String(expectedSHA256.prefix(12)) }
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   static let galleryGemma3nE2B = try! ModelDescriptor(
     id: "gallery-gemma-3n-e2b-73b019b6",
     family: "Gemma 3n E2B",
@@ -100,6 +100,10 @@ struct ModelDescriptor: Codable, Equatable, Identifiable, Sendable {
     minimumMemoryGB: 8
   )
 
+  #endif
+
+  /// The exact embedded Hackathon artifact. Unlike the exploratory gallery
+  /// candidates, this descriptor must also exist in non-Debug Hackathon builds.
   static let liteRTGemma4E4B = try! ModelDescriptor(
     id: "litert-gemma-4-e4b-28299f30",
     family: "Gemma 4 E4B",
@@ -112,7 +116,6 @@ struct ModelDescriptor: Codable, Equatable, Identifiable, Sendable {
     cacheNamespace: "litert-gemma-4-e4b-28299f30",
     minimumMemoryGB: nil
   )
-  #endif
 }
 
 struct InferenceConfiguration: Codable, Equatable, Sendable {
@@ -131,6 +134,11 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
     "\(id) · \(engineBackend)/vision-\(visionBackend) · ctx \(maxNumTokens) · topK \(topK) · temp \(temperature)"
   }
 
+  /// The physical-iPhone proof-of-concept avoids the currently failing Gemma
+  /// 4 vision executor. The exact embedded Gemma model receives bounded local
+  /// pixel facts as text; the configuration/provenance records that boundary.
+  var usesLocalPixelBridge: Bool { visionBackend == "disabled" }
+
   static let deterministicBaseline = InferenceConfiguration(
     id: "baseline-v1",
     engineBackend: "gpu",
@@ -144,7 +152,73 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
     imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
   )
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
+  /// Physical-iPhone experiment that moves only the vision executor away from
+  /// the CPU/XNNPACK path that failed to allocate its Gemma 4 image tensors.
+  /// Model identity, main backend, context, sampler, prompt, and message shape
+  /// remain identical to `deterministicBaseline`.
+  static let physicalGPUVision = InferenceConfiguration(
+    id: "physical-gpu-vision-v1",
+    engineBackend: "gpu",
+    visionBackend: "gpu",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
+
+  /// Current-model-only physical experiment: keep the Gemma vision encoder on
+  /// Metal while moving the much larger text engine to CPU to free GPU memory.
+  static let physicalCPUGPUVision = InferenceConfiguration(
+    id: "physical-cpu-gpu-vision-v1",
+    engineBackend: "cpu",
+    visionBackend: "gpu",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
+
+  /// Current E4B model with the proven main/vision backend pair, but using
+  /// Gemma 4's supported smallest visual-token budget so LiteRT selects the
+  /// `vision_70` graph instead of the failing `vision_280` graph.
+  static let physicalGPUCPUVision70 = InferenceConfiguration(
+    id: "physical-gpu-cpu-vision70-ctx1024-v1",
+    engineBackend: "gpu",
+    visionBackend: "cpu",
+    maxNumTokens: 1_024,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
+
+  /// Time-boxed physical-iPhone bridge for the exact E4B artifact. The phone
+  /// measures coarse image quality/color locally and Gemma produces a strict,
+  /// conservative review draft without invoking LiteRT's broken vision graph.
+  static let physicalCPUVisualBridge = InferenceConfiguration(
+    id: "physical-cpu-local-pixel-bridge-ctx2048-v1",
+    engineBackend: "cpu",
+    visionBackend: "disabled",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-local-pixel-bridge-v1",
+    imageMessageForm: "LocalPixelFacts(JSON) -> Message(text); raw image is not sent to Gemma"
+  )
+  #endif
+
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   /// One-variable simulator experiment after the GPU path failed in Metal
   /// kernel compilation. Model, vision backend, context, sampler, and prompt
   /// remain identical to `deterministicBaseline`.
@@ -162,8 +236,32 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
   )
   #endif
 
-  #if DEBUG && targetEnvironment(simulator)
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
+  /// Explicit, opt-in physical-device experiment. GPU remains the normal
+  /// physical Debug default; this configuration is selected only when the
+  /// build defines `PHYSICAL_CPU_ENGINE_FALLBACK` after a recorded GPU failure.
+  static let physicalCPUFallback = InferenceConfiguration(
+    id: "physical-cpu-engine-fallback-v1",
+    engineBackend: "cpu",
+    visionBackend: "cpu",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-observation-v1",
+    imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
+  )
+  #endif
+
+  #if HACKATHON_EMBEDDED_GEMMA && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
+  #elseif HACKATHON_EMBEDDED_GEMMA
+  static let runtimeDefault = physicalCPUVisualBridge
+  #elseif DEBUG && targetEnvironment(simulator)
+  static let runtimeDefault = simulatorCPUFallback
+  #elseif DEBUG && PHYSICAL_CPU_ENGINE_FALLBACK
+  static let runtimeDefault = physicalCPUFallback
   #else
   static let runtimeDefault = deterministicBaseline
   #endif
@@ -225,8 +323,48 @@ struct InferenceProvenanceSnapshot: Codable, Equatable, Sendable {
   }
 }
 
-/// Durable evidence that an imported file matched one immutable descriptor.
-/// Reading this receipt does not rehash a multi-gigabyte model on every view load.
+/// A model's storage semantics are part of its verified identity. Runtime code
+/// consumes this value instead of inferring mutability from a string path.
+struct ModelLocation: Codable, Equatable, Sendable {
+  enum Kind: String, Codable, Equatable, Sendable {
+    case applicationSupport
+    case applicationBundle
+  }
+
+  let kind: Kind
+  let url: URL
+
+  static func imported(_ url: URL) -> ModelLocation {
+    ModelLocation(kind: .applicationSupport, url: url)
+  }
+
+  static func bundled(_ url: URL) -> ModelLocation {
+    ModelLocation(kind: .applicationBundle, url: url)
+  }
+}
+
+/// A stable, non-secret build identity used to invalidate the bundled-model
+/// verification cache after installing a different app build.
+struct ModelAppBuildIdentity: Codable, Equatable, Sendable {
+  let bundleIdentifier: String
+  let shortVersion: String
+  let buildNumber: String
+
+  var cacheKey: String { "\(bundleIdentifier)|\(shortVersion)|\(buildNumber)" }
+
+  static var current: ModelAppBuildIdentity {
+    let info = Bundle.main.infoDictionary ?? [:]
+    return ModelAppBuildIdentity(
+      bundleIdentifier: Bundle.main.bundleIdentifier ?? "unknown.bundle",
+      shortVersion: info["CFBundleShortVersionString"] as? String ?? "0",
+      buildNumber: info["CFBundleVersion"] as? String ?? "0"
+    )
+  }
+}
+
+/// Durable evidence that a file matched one immutable descriptor. Bundled
+/// receipts are additionally keyed by app build and location kind so a changed
+/// artifact is never trusted merely because an older import was verified.
 struct ModelVerificationReceipt: Codable, Equatable, Sendable {
   let descriptorID: String
   let modelID: String
@@ -235,6 +373,30 @@ struct ModelVerificationReceipt: Codable, Equatable, Sendable {
   let importedBytes: Int64
   let importedSHA256: String
   let verifiedAt: Date
+  let locationKind: ModelLocation.Kind?
+  let appBuildIdentity: ModelAppBuildIdentity?
+
+  init(
+    descriptorID: String,
+    modelID: String,
+    sourceRevision: String,
+    artifactFilename: String,
+    importedBytes: Int64,
+    importedSHA256: String,
+    verifiedAt: Date,
+    locationKind: ModelLocation.Kind? = nil,
+    appBuildIdentity: ModelAppBuildIdentity? = nil
+  ) {
+    self.descriptorID = descriptorID
+    self.modelID = modelID
+    self.sourceRevision = sourceRevision
+    self.artifactFilename = artifactFilename
+    self.importedBytes = importedBytes
+    self.importedSHA256 = importedSHA256
+    self.verifiedAt = verifiedAt
+    self.locationKind = locationKind
+    self.appBuildIdentity = appBuildIdentity
+  }
 
   func matches(_ descriptor: ModelDescriptor) -> Bool {
     descriptorID == descriptor.id
@@ -244,6 +406,16 @@ struct ModelVerificationReceipt: Codable, Equatable, Sendable {
       && importedBytes == descriptor.expectedBytes
       && importedSHA256.caseInsensitiveCompare(descriptor.expectedSHA256) == .orderedSame
   }
+
+  func matches(
+    _ descriptor: ModelDescriptor,
+    location: ModelLocation,
+    appBuildIdentity: ModelAppBuildIdentity
+  ) -> Bool {
+    matches(descriptor)
+      && locationKind == location.kind
+      && self.appBuildIdentity == appBuildIdentity
+  }
 }
 
 /// A capability produced only after a descriptor-matching durable receipt and
@@ -251,17 +423,45 @@ struct ModelVerificationReceipt: Codable, Equatable, Sendable {
 /// consumes this value instead of accepting an arbitrary model path.
 struct VerifiedModel: Sendable {
   let descriptor: ModelDescriptor
-  let modelURL: URL
+  let location: ModelLocation
   let receipt: ModelVerificationReceipt
 
+  var modelURL: URL { location.url }
+
   init(validating descriptor: ModelDescriptor, modelURL: URL, receipt: ModelVerificationReceipt) throws {
-    guard receipt.matches(descriptor), modelURL.lastPathComponent == descriptor.artifactFilename else {
+    try self.init(
+      validating: descriptor,
+      location: .imported(modelURL),
+      receipt: receipt,
+      appBuildIdentity: nil
+    )
+  }
+
+  init(
+    validating descriptor: ModelDescriptor,
+    location: ModelLocation,
+    receipt: ModelVerificationReceipt,
+    appBuildIdentity: ModelAppBuildIdentity?
+  ) throws {
+    guard receipt.matches(descriptor), location.url.lastPathComponent == descriptor.artifactFilename else {
       throw GITimelineError.invalidModelReceipt
     }
+    if let appBuildIdentity {
+      guard receipt.matches(descriptor, location: location, appBuildIdentity: appBuildIdentity) else {
+        throw GITimelineError.invalidModelReceipt
+      }
+    }
     self.descriptor = descriptor
-    self.modelURL = modelURL
+    self.location = location
     self.receipt = receipt
   }
+}
+
+enum LocalAnalysisReadiness: Equatable, Sendable {
+  case verifying
+  case preparing
+  case ready
+  case failed(userFacingMessage: String, technicalDetail: String)
 }
 
 struct ModelImportResult: Sendable {
@@ -320,7 +520,7 @@ struct StagedInferenceError: LocalizedError, Sendable {
   var errorDescription: String? { "\(stage.rawValue): \(message)" }
 }
 
-#if DEBUG
+#if DEBUG || HACKATHON_EMBEDDED_GEMMA
 enum DominantColorResult: String, Codable, CaseIterable, Sendable {
   case brown = "BROWN"
   case green = "GREEN"
@@ -349,7 +549,9 @@ enum ModelCatalog {
   static let releaseSelection: ModelDescriptor? = nil
 
   static var normalFlowSelection: ModelDescriptor? {
-    #if DEBUG
+    #if HACKATHON_EMBEDDED_GEMMA
+    return .liteRTGemma4E4B
+    #elseif DEBUG
     return debugPOCSelection
     #else
     return releaseSelection
@@ -409,6 +611,10 @@ actor ModelRuntimeCoordinator {
   private let configuration: InferenceConfiguration
   private var activeService: (descriptorID: String, service: InferenceService)?
   private var coordinatorGate = RuntimeCoordinatorGate()
+  private var resolvedModels: [String: VerifiedModel] = [:]
+  private var verificationTasks: [String: Task<VerifiedModel, Error>] = [:]
+  private var localReadiness: LocalAnalysisReadiness = .verifying
+  private var localReadinessTask: Task<LocalAnalysisReadiness, Never>?
 
   init(
     importer: ModelImporter = ModelImporter(),
@@ -420,14 +626,89 @@ actor ModelRuntimeCoordinator {
 
   func configurationSnapshot() -> InferenceConfiguration { configuration }
 
-  func receipt(for descriptor: ModelDescriptor) throws -> ModelVerificationReceipt? {
+  func localAnalysisReadiness() -> LocalAnalysisReadiness { localReadiness }
+
+  /// Verifies the selected artifact off the actor and prepares exactly the same
+  /// app-scoped engine used by analysis and DEBUG diagnostics. Concurrent callers
+  /// join one task instead of starting another hash or initialization.
+  func prepareLocalAnalysis() async -> LocalAnalysisReadiness {
+    if localReadiness == .ready { return .ready }
+    if let localReadinessTask {
+      let result = await localReadinessTask.value
+      localReadiness = result
+      return result
+    }
+    guard let descriptor = ModelCatalog.normalFlowSelection else {
+      let failed = LocalAnalysisReadiness.failed(
+        userFacingMessage: "On-device analysis is not available in this build.",
+        technicalDetail: GITimelineError.missingModelDescriptor.localizedDescription
+      )
+      localReadiness = failed
+      return failed
+    }
+
+    localReadiness = .verifying
+    let task = Task { [weak self] () -> LocalAnalysisReadiness in
+      guard let self else {
+        return .failed(userFacingMessage: "Couldn’t get on-device analysis ready.", technicalDetail: "Runtime was released.")
+      }
+      do {
+        _ = try await self.resolveVerifiedModel(for: descriptor)
+        await self.setLocalReadiness(.preparing)
+        _ = try await self.prepareResolved(descriptor)
+        return .ready
+      } catch is CancellationError {
+        return .failed(
+          userFacingMessage: "On-device analysis setup was interrupted. Try again.",
+          technicalDetail: "Preparation cancelled."
+        )
+      } catch {
+        return .failed(
+          userFacingMessage: "Couldn’t get on-device analysis ready. Try again.",
+          technicalDetail: error.localizedDescription
+        )
+      }
+    }
+    localReadinessTask = task
+    let result = await task.value
+    localReadinessTask = nil
+    localReadiness = result
+    return result
+  }
+
+  func retryLocalAnalysisPreparation() async -> LocalAnalysisReadiness {
+    guard localReadinessTask == nil else { return await prepareLocalAnalysis() }
+    if let descriptor = ModelCatalog.normalFlowSelection {
+      await invalidate(descriptor)
+      resolvedModels[descriptor.id] = nil
+      verificationTasks[descriptor.id] = nil
+    }
+    localReadiness = .verifying
+    return await prepareLocalAnalysis()
+  }
+
+  private func setLocalReadiness(_ value: LocalAnalysisReadiness) {
+    localReadiness = value
+  }
+
+  func receipt(for descriptor: ModelDescriptor) async throws -> ModelVerificationReceipt? {
     guard !coordinatorGate.transitionInProgress else { throw GITimelineError.operationInProgress }
+    #if HACKATHON_EMBEDDED_GEMMA
+    return try await resolveVerifiedModel(for: descriptor).receipt
+    #else
     return try importer.receipt(for: descriptor)
+    #endif
   }
 
   func modelExists(for descriptor: ModelDescriptor) -> Bool {
     guard !coordinatorGate.transitionInProgress else { return false }
-    guard let url = try? importer.modelURL(for: descriptor) else { return false }
+    let url: URL?
+    #if HACKATHON_EMBEDDED_GEMMA
+    url = try? importer.bundledModelLocation(for: descriptor).url
+    #else
+    url = try? importer.modelURL(for: descriptor)
+    #endif
+    guard let url else { return false }
     return FileManager.default.fileExists(atPath: url.path)
   }
 
@@ -435,21 +716,46 @@ actor ModelRuntimeCoordinator {
     try await beginModelTransition()
     defer { coordinatorGate.endTransition() }
     let worker = importer
-    return try await Task.detached(priority: .userInitiated) {
+    let result = try await Task.detached(priority: .userInitiated) {
       try worker.importModel(descriptor)
     }.value
+    resolvedModels[descriptor.id] = result.verifiedModel
+    if descriptor.id == ModelCatalog.normalFlowSelection?.id { localReadiness = .verifying }
+    return result
   }
 
   func verifyInstalledModel(_ descriptor: ModelDescriptor) async throws -> VerifiedModel {
     try await beginModelTransition()
     defer { coordinatorGate.endTransition() }
     let worker = importer
-    return try await Task.detached(priority: .userInitiated) {
+    let verified = try await Task.detached(priority: .userInitiated) {
       try worker.verifyInstalledModel(descriptor)
     }.value
+    resolvedModels[descriptor.id] = verified
+    if descriptor.id == ModelCatalog.normalFlowSelection?.id { localReadiness = .verifying }
+    return verified
   }
 
   func prepare(_ descriptor: ModelDescriptor) async throws -> EnginePreparationResult {
+    let isNormalSelection = descriptor.id == ModelCatalog.normalFlowSelection?.id
+    do {
+      _ = try await resolveVerifiedModel(for: descriptor)
+      if isNormalSelection { localReadiness = .preparing }
+      let result = try await prepareResolved(descriptor)
+      if isNormalSelection { localReadiness = .ready }
+      return result
+    } catch {
+      if isNormalSelection {
+        localReadiness = .failed(
+          userFacingMessage: "Couldn’t get on-device analysis ready. Try again.",
+          technicalDetail: error.localizedDescription
+        )
+      }
+      throw error
+    }
+  }
+
+  private func prepareResolved(_ descriptor: ModelDescriptor) async throws -> EnginePreparationResult {
     let (service, token) = try await acquireServiceLease(for: descriptor, purpose: .transient)
     defer { coordinatorGate.release(token) }
     return try await service.prepare()
@@ -488,7 +794,7 @@ actor ModelRuntimeCoordinator {
     await activeService.service.discardRepairContext(draftURL: draftURL)
   }
 
-  #if DEBUG
+  #if DEBUG || HACKATHON_EMBEDDED_GEMMA
   func dominantColorProbe(_ descriptor: ModelDescriptor, draftURL: URL) async throws -> String {
     let (service, token) = try await acquireServiceLease(for: descriptor, purpose: .transient)
     defer { coordinatorGate.release(token) }
@@ -506,6 +812,9 @@ actor ModelRuntimeCoordinator {
   }
 
   private func beginModelTransition() async throws {
+    guard localReadinessTask == nil, verificationTasks.isEmpty else {
+      throw GITimelineError.operationInProgress
+    }
     try coordinatorGate.beginTransition()
     if let activeService {
       guard await activeService.service.canReleaseForModelChange() else {
@@ -513,6 +822,28 @@ actor ModelRuntimeCoordinator {
         throw GITimelineError.operationInProgress
       }
       self.activeService = nil
+    }
+    resolvedModels.removeAll()
+    verificationTasks.removeAll()
+  }
+
+  private func resolveVerifiedModel(for descriptor: ModelDescriptor) async throws -> VerifiedModel {
+    guard !coordinatorGate.transitionInProgress else { throw GITimelineError.operationInProgress }
+    if let verified = resolvedModels[descriptor.id] { return verified }
+    if let task = verificationTasks[descriptor.id] { return try await task.value }
+    let worker = importer
+    let task = Task.detached(priority: .userInitiated) {
+      try worker.resolveVerifiedModel(for: descriptor)
+    }
+    verificationTasks[descriptor.id] = task
+    do {
+      let verified = try await task.value
+      verificationTasks[descriptor.id] = nil
+      resolvedModels[descriptor.id] = verified
+      return verified
+    } catch {
+      verificationTasks[descriptor.id] = nil
+      throw error
     }
   }
 
@@ -526,10 +857,7 @@ actor ModelRuntimeCoordinator {
     guard !coordinatorGate.transitionInProgress, !coordinatorGate.hasLease else {
       throw GITimelineError.operationInProgress
     }
-    guard let verified = try importer.verifiedModel(for: descriptor) else {
-      if activeService?.descriptorID == descriptor.id { activeService = nil }
-      throw GITimelineError.modelNotVerified
-    }
+    let verified = try await resolveVerifiedModel(for: descriptor)
 
     if let activeService, activeService.descriptorID == descriptor.id {
       let token = try coordinatorGate.acquire(descriptorID: descriptor.id, purpose: purpose)
