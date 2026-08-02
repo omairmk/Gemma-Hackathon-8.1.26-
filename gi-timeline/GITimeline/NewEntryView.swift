@@ -417,6 +417,14 @@ private struct ReviewEntryView: View {
           .font(.largeTitle.bold())
           .accessibilityAddTraits(.isHeader)
 
+        if let notice = viewModel.analysisMethodNotice {
+          Label(notice, systemImage: "bolt.horizontal.circle")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .nativeCard()
+            .accessibilityIdentifier("localPixelBridgeNotice")
+        }
+
         ZStack(alignment: .bottomLeading) {
           if let image = viewModel.selectedImage {
             image.resizable().scaledToFit().frame(maxWidth: .infinity, maxHeight: 320)
@@ -453,14 +461,17 @@ private struct ReviewEntryView: View {
           VStack(spacing: 12) {
             ReviewFieldCard(field: .bristolType, viewModel: viewModel) {
               Picker("Bristol type", selection: Binding(
-                get: { observation.apparentBristolType ?? 4 },
+                get: { observation.apparentBristolType },
                 set: { newValue in
                   viewModel.updateReview(field: .bristolType) {
                     VisualObservation(imageUsable: $0.imageUsable, qualityIssue: $0.qualityIssue, apparentBristolType: newValue, apparentColor: $0.apparentColor, form: $0.form, redAppearingMaterial: $0.redAppearingMaterial, blackTarryAppearance: $0.blackTarryAppearance)
                   }
                 }
               )) {
-                ForEach(1...7, id: \.self) { Text("Type \($0) · \(bristolLabel($0))").tag($0) }
+                Text("Unable to assess").tag(nil as Int?)
+                ForEach(1...7, id: \.self) { type in
+                  Text("Type \(type) · \(bristolLabel(type))").tag(type as Int?)
+                }
               }
             }
             .opacity(revealedFieldCount >= 1 ? 1 : 0)

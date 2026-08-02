@@ -1,5 +1,7 @@
 # GI Timeline build status
 
+> **Historical snapshot:** Device status in this file predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
+
 Updated: 2026-08-01 14:40 EDT (America/New_York)
 
 | Gate | Result |

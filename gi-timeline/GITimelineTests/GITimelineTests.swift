@@ -875,6 +875,43 @@ import XCTest
     XCTAssertTrue(store.failNextSave)
   }
 
+  func testPhysicalLocalPixelBridgeKeepsExactModelTextPathExplicit() {
+    let bridge = InferenceConfiguration.physicalCPUVisualBridge
+    XCTAssertTrue(bridge.usesLocalPixelBridge)
+    XCTAssertEqual(bridge.engineBackend, "cpu")
+    XCTAssertEqual(bridge.visionBackend, "disabled")
+    XCTAssertEqual(bridge.maxNumTokens, 2_048)
+    XCTAssertTrue(bridge.imageMessageForm.contains("raw image is not sent"))
+  }
+
+  func testLocalPixelBridgeFindsBrownElongatedShapeAndBristolSuggestion() throws {
+    let root = temporaryRoot()
+    defer { try? FileManager.default.removeItem(at: root) }
+    let imageStore = ImageStore(
+      draftsDirectory: root.appendingPathComponent("Drafts"),
+      imagesDirectory: root.appendingPathComponent("Images")
+    )
+    let format = UIGraphicsImageRendererFormat.default()
+    format.scale = 1
+    let data = UIGraphicsImageRenderer(size: CGSize(width: 640, height: 480), format: format).image { context in
+      UIColor.white.setFill()
+      context.fill(CGRect(x: 0, y: 0, width: 640, height: 480))
+      UIColor(red: 0.48, green: 0.25, blue: 0.10, alpha: 1).setFill()
+      context.cgContext.fillEllipse(in: CGRect(x: 100, y: 180, width: 440, height: 120))
+    }.jpegData(compressionQuality: 0.9)!
+    let prepared = try imageStore.prepare(data)
+
+    let facts = try LocalPixelFeatureExtractor.extract(from: prepared.url)
+
+    XCTAssertEqual(facts.dominantColorHint, "brown")
+    XCTAssertEqual(facts.apparentColorHint, "brown")
+    XCTAssertEqual(facts.bristolTypeHint, 4)
+    XCTAssertEqual(facts.formHint, "smooth_formed")
+    XCTAssertEqual(facts.shapeSuggestionConfidence, "low_hackathon_approximation")
+    XCTAssertEqual(facts.coarseShapeGrid.count, 12)
+    XCTAssertTrue(facts.coarseShapeGrid.contains { $0.contains("B") })
+  }
+
   private func waitForAnalysis(_ viewModel: NewEntryViewModel) async {
     for _ in 0..<200 where viewModel.isBusy { try? await Task.sleep(for: .milliseconds(10)) }
     XCTAssertFalse(viewModel.isBusy, "analysis did not complete within the test window")

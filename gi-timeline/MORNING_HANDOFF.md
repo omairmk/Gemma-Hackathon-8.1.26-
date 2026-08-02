@@ -1,5 +1,7 @@
 # GI Timeline completion handoff
 
+> **Historical snapshot:** This 14:40 EDT handoff predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current architecture and claims.
+
 Updated: 2026-08-01 14:40 EDT (America/New_York)
 
 ## 1. What works now

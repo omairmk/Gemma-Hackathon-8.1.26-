@@ -1,17 +1,19 @@
 # GI Timeline test results
 
+> **Historical evidence note:** Timings and device availability below are the 14:40 EDT snapshot. The current phone architecture and final claim boundary are in the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md`. Publication revalidation passed the host suite 14/14 and arm64 app suite 41/41 on 2026-08-01.
+
 Updated: 2026-08-01 14:40 EDT (America/New_York)
 
 ## Current verdict
 
-Every unblocked build, regression, release-isolation, native-UI, and current-source Simulator real-Gemma gate is green. The optimized embedded-Hackathon app is signed and internally verified. Real E4B pixels pass smoke, the same provider reaches automatic review/edit/save/History, and terminate/relaunch reopens the record. The optimized physical install, physical image inference, physical persistence, and Airplane Mode gates are blocked because no physical iOS device is currently visible to Xcode.
+Every unblocked build, regression, release-isolation, native-UI, and current-source Simulator real-Gemma gate in this snapshot is green. Later phone evidence passed the disclosed local pixel-facts → embedded Gemma text bridge through persistence. Physical raw-image Gemma and Airplane Mode remain blocked.
 
 ## Result matrix
 
 | Check | Result |
 | --- | --- |
 | Host SwiftPM suite | **PASS: 14/14**, 0 failures at 14:24:30 EDT |
-| Arm64 app suite | **PASS: 37/37**, 0 failures or skips |
+| Arm64 app suite | **PASS: 41/41**, 0 failures or skips in publication revalidation |
 | Final exact-current UI suite | **PASS: 3/3** in 106.895 s |
 | Large iPhone Simulator UI journey | **PASS: 3/3** |
 | Smaller iPhone Simulator UI journey | **PASS: 3/3** |

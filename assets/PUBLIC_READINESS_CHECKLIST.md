@@ -1,6 +1,6 @@
 # Repository hygiene and public-readiness record
 
-Verified against the `codex/physical-gemma-prep` publication snapshot on 2026-08-01.
+Revalidated against the Kaggle phone-source publication candidate on 2026-08-01.
 
 - [x] Intended publication diff and commit range reviewed.
 - [x] `.gitignore` excludes credentials, signing profiles, user data, model weights, DerivedData, result bundles, local databases, and private logs.
@@ -9,11 +9,12 @@ Verified against the `codex/physical-gemma-prep` publication snapshot on 2026-08
 - [x] All retained screenshots and fixtures are synthetic, sanitized, and free of identifying metadata.
 - [x] The six stale pre-native screenshots were removed; `native-*` captures match the current review-first flow.
 - [x] `git diff --check` passes.
-- [x] The clean public-source Simulator suite passes 39/39 tests.
+- [x] The host SwiftPM suite passes 14/14 tests in the publication worktree.
+- [x] The arm64 iOS Simulator app suite passes 41/41 tests with pinned LiteRT-LM revision `f73637c57f0940b53da184e0d5adfc52a4e55eef`.
 - [x] The clean Hackathon arm64 Simulator build succeeds with the exact pinned model embedded.
 - [x] Current documentation distinguishes real-Gemma Simulator evidence from deterministic UI mocks and from unproved physical-iPhone/offline claims.
 - [x] The team-package archive passes integrity testing, strict ad-hoc code-signature verification, exact model SHA-256 verification, and split/reassembly checksum verification.
-- [x] The packaged model includes Apache-2.0 text and third-party notices. Repository-wide licensing status is stated explicitly in `HANDOFF.md` without inventing a license grant.
+- [x] Project-authored source is licensed under Apache-2.0; `NOTICE` identifies LiteRT-LM and the exact separately obtained E4B model.
 - [x] Public instructions do not advise bypassing platform security, licensing, or medical care.
 
 ## Current evidence boundary
@@ -21,7 +22,8 @@ Verified against the `codex/physical-gemma-prep` publication snapshot on 2026-08
 - Real Gemma 4 E4B in arm64 iPhone Simulator: **PASS**
 - Brown/green/control pixel dependence: **PASS**
 - Editable review/save/History/relaunch: **PASS**
-- Physical-iPhone Gemma inference: **BLOCKED / not claimed**
+- Physical-iPhone bridge: **PASS / local pixel facts → embedded Gemma text mode**
+- Physical raw-image Gemma inference: **BLOCKED / not claimed**
 - Offline iPhone operation: **BLOCKED / not claimed**
 
 Re-run this checklist if the source, package, model, or evidence set changes.

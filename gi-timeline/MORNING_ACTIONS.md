@@ -1,5 +1,7 @@
 # GI Timeline owner action
 
+> **Historical snapshot:** This owner-action note predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
+
 Updated: 2026-08-01 14:24 EDT (America/New_York)
 
 ## One action

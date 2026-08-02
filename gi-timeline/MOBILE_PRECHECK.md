@@ -1,3 +1,5 @@
+> **Historical snapshot:** This precheck predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
+
 STARTER_CODE_ALLOWED:
 STATUS:
 EVENT_STARTER_CODE_ALLOWED: UNANSWERED

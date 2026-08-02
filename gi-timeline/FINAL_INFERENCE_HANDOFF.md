@@ -2,7 +2,7 @@
 
 This file supersedes the July 31 pre-model planning snapshot.
 
-Use `MORNING_HANDOFF.md` for the current evidence-backed status and `EMBEDDED_GEMMA_RESULTS.md` for the embedded-model verification details.
+Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for the current evidence-backed status. `MORNING_HANDOFF.md` and `EMBEDDED_GEMMA_RESULTS.md` retain timestamped historical evidence.
 
 Current boundary:
 

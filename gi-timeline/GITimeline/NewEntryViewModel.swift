@@ -153,6 +153,10 @@ enum EntryFlowState: Sendable {
     if !isModelVerified { return "No verified selected model is available." }
     return isEngineReady ? "Verified on disk · ready in this process" : "Verified on disk · not initialized in this process"
   }
+  var analysisMethodNotice: String? {
+    guard configuration.usesLocalPixelBridge else { return nil }
+    return "Hackathon bridge: this iPhone creates a coarse local color/shape map, then embedded Gemma organizes low-confidence Bristol, form, and color suggestions. Gemma does not receive the raw photo. Review every field before saving."
+  }
   var analyzeUnavailableReason: String? {
     if descriptor == nil { return "Local analysis is not available in this build." }
     if !isModelVerified || !isEngineReady { return "Getting on-device analysis ready…" }

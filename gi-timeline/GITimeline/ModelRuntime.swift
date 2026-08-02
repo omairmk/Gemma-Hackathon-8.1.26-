@@ -134,6 +134,11 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
     "\(id) · \(engineBackend)/vision-\(visionBackend) · ctx \(maxNumTokens) · topK \(topK) · temp \(temperature)"
   }
 
+  /// The physical-iPhone proof-of-concept avoids the currently failing Gemma
+  /// 4 vision executor. The exact embedded Gemma model receives bounded local
+  /// pixel facts as text; the configuration/provenance records that boundary.
+  var usesLocalPixelBridge: Bool { visionBackend == "disabled" }
+
   static let deterministicBaseline = InferenceConfiguration(
     id: "baseline-v1",
     engineBackend: "gpu",
@@ -195,6 +200,22 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
     promptVersion: "gi-observation-v1",
     imageMessageForm: "Message(contents:[Content.imageFile(path),Content.text(prompt)])"
   )
+
+  /// Time-boxed physical-iPhone bridge for the exact E4B artifact. The phone
+  /// measures coarse image quality/color locally and Gemma produces a strict,
+  /// conservative review draft without invoking LiteRT's broken vision graph.
+  static let physicalCPUVisualBridge = InferenceConfiguration(
+    id: "physical-cpu-local-pixel-bridge-ctx2048-v1",
+    engineBackend: "cpu",
+    visionBackend: "disabled",
+    maxNumTokens: 2_048,
+    topK: 1,
+    topP: 1,
+    temperature: 0,
+    seed: 0,
+    promptVersion: "gi-local-pixel-bridge-v1",
+    imageMessageForm: "LocalPixelFacts(JSON) -> Message(text); raw image is not sent to Gemma"
+  )
   #endif
 
   #if DEBUG || HACKATHON_EMBEDDED_GEMMA
@@ -236,7 +257,7 @@ struct InferenceConfiguration: Codable, Equatable, Sendable {
   #if HACKATHON_EMBEDDED_GEMMA && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
   #elseif HACKATHON_EMBEDDED_GEMMA
-  static let runtimeDefault = physicalGPUCPUVision70
+  static let runtimeDefault = physicalCPUVisualBridge
   #elseif DEBUG && targetEnvironment(simulator)
   static let runtimeDefault = simulatorCPUFallback
   #elseif DEBUG && PHYSICAL_CPU_ENGINE_FALLBACK

@@ -21,8 +21,8 @@ Do not commit real health images, user-entered journal data, or photos containin
 | Mac fallback candidates | `mlx-community/gemma-4-e4b-it-4bit` and `gemma-4-e2b-it-4bit` at revisions recorded in `gi-journal/PRECHECK.md` | Not bundled in the iOS team package or Git history. Consult their model cards before separate redistribution. |
 | Apple frameworks | SwiftUI, SwiftData, PhotosUI, and system UI assets | Supplied by the Apple SDK; no third-party photo media is bundled. |
 
-The normal Git tree deliberately excludes model weights. The companion split GitHub prerelease is the only package in this project that contains the exact embedded E4B artifact, together with `LICENSE-APACHE-2.0.txt`, `THIRD_PARTY_NOTICES.md`, and `SHA256SUMS.txt`.
+The normal Git tree deliberately excludes model weights. Obtain the pinned artifact from the official model page and follow its license and distribution terms. The repository's Apache-2.0 license covers project-authored source, not separately obtained model weights.
 
 ## Claim boundary
 
-The saved evidence proves local Gemma image inference in an arm64 iPhone Simulator and the normal editable review/save/History/relaunch flow. It does not prove physical-iPhone inference or Airplane-Mode operation. The app is a prototype and not medical advice or diagnosis.
+The saved evidence proves local raw-image Gemma inference in an arm64 iPhone Simulator and the normal editable review/save/History/relaunch flow. A documented physical-iPhone run used a disclosed local pixel-facts extractor followed by the exact E4B model in text-only mode; the raw photo was not sent to Gemma. Physical raw-image Gemma and Airplane-Mode operation remain unproven. The app is a prototype and not medical advice or diagnosis.

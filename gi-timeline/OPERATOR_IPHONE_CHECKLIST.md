@@ -1,5 +1,7 @@
 # Operator iPhone checkpoint
 
+> **Historical snapshot:** This checkpoint predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
+
 ```text
 DEVICE_INFERENCE_STATUS: BLOCKED
 APP_END_TO_END_STATUS: NOT_RUN

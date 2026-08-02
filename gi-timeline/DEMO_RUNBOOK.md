@@ -1,12 +1,14 @@
 # GI Timeline demo runbook
 
+> **Historical evidence note:** The device-availability statements below were recorded at 14:36 EDT. For the final documented phone bridge and its claim boundary, use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md`. The build and synthetic-only acceptance commands remain the reproducibility procedure.
+
 Updated: 2026-08-01 14:36 EDT (America/New_York)
 
 ## Current truth
 
 `GITimeline Hackathon` embeds the exact verified Gemma 4 E4B model. The ordinary Debug and Release apps remain model-free. The optimized signed arm64 Hackathon artifact passes signature, bundle-identity, model-integrity, receipt, and production-surface checks. Fresh current-source arm64 Simulator evidence passes real brown/green/control image inference, automatic review/edit/save/History, and terminate/relaunch persistence.
 
-The physical iPhone is not currently visible to Xcode, so the optimized artifact has not been installed or launched on that phone. Physical image inference and Airplane Mode remain blocked. Simulator and deterministic UI-test evidence never upgrades those physical gates.
+At this snapshot, the physical iPhone was not visible to Xcode. A later documented run passed the disclosed local pixel-facts → embedded Gemma text bridge, while physical raw-image Gemma and Airplane Mode remained blocked. Simulator and deterministic UI-test evidence never upgrades those physical gates.
 
 ## 60-second product demo
 
@@ -88,7 +90,7 @@ Required markers:
 - `EMBEDDED_GEMMA_NORMAL_FLOW_PASS`
 - `EMBEDDED_GEMMA_RELAUNCH_PASS`
 
-Any `EMBEDDED_GEMMA_COMPLETION_FAIL` is a failure. Smoke qualifies only when real image pixels yield brown=`BROWN`, green=`GREEN`, control=`OTHER`, and all strict structured responses validate. The normal-flow marker must also record a human edit, save, History presence, and exact model/backend provenance; the relaunch marker must reopen that saved record.
+Any `EMBEDDED_GEMMA_COMPLETION_FAIL` is a failure. On Simulator, smoke qualifies only when raw image pixels yield brown=`BROWN`, green=`GREEN`, control=`OTHER`, and all strict structured responses validate. On physical iPhone, the bridge harness must disclose that a bounded local pixel-facts summary—not the raw photo—reaches Gemma. The normal-flow marker must also record a human edit, save, History presence, and exact model/backend provenance; the relaunch marker must reopen that saved record.
 
 ## Simulator acceptance
 

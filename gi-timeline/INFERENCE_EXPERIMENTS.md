@@ -1,5 +1,7 @@
 # Inference experiment ledger
 
+> **Historical experiment ledger:** Later phone behavior uses the disclosed local pixel-facts → Gemma text bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for final claims.
+
 Append-only. Supporting build experiments do not count as physical image-inference evidence.
 
 ## EXP-20260731-001 — exact dependency correction

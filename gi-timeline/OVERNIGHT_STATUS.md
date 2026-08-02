@@ -1,5 +1,7 @@
 # GI Timeline completion status
 
+> **Historical snapshot:** This 14:40 EDT status predates the final disclosed physical bridge. Use the repository root `README.md` and `DEVICE_INFERENCE_REPORT.md` for current claims.
+
 Updated: 2026-08-01 14:40 EDT (America/New_York)
 
 ## Current outcome
@@ -14,7 +16,7 @@ The physical completion goal is **BLOCKED** because a fresh sanitized Xcode quer
 | --- | --- |
 | Three-agent ownership/audit wave | **PASS:** runtime, native UI, and independent device/artifact QA completed |
 | Host suite | **PASS: 14/14** |
-| Arm64 app suite | **PASS: 37/37** |
+| Arm64 app suite | **PASS: 41/41** in publication revalidation |
 | Final exact-current native UI suite | **PASS: 3/3** in 106.895 s, with large/small device and dark/AXXL focused evidence |
 | Seven native states + error | **PASS:** visually inspected sanitized screenshots |
 | Optimized signed Hackathon app | **PASS:** arm64, strict signature, isolated bundle ID |
