@@ -1,0 +1,66 @@
+# macOS and Xcode user state
+.DS_Store
+**/xcuserdata/
+**/*.xcuserstate
+DerivedData/
+**/DerivedData*/
+.swiftpm/
+.build/
+build/
+*.xcarchive
+*.ipa
+*.xcresult
+*.app/
+*.dSYM/
+*.dSYM.zip
+*.xcactivitylog
+
+# Python/runtime environments and caches
+.venv/
+.python/
+.python-src/
+.deps-src/
+.openssl/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hf_cache/
+.devdata/
+.devdata_*/
+**/.devdata_inference/
+
+# Models, private journal data, generated media, and secrets
+**/Models/
+**/models/
+**/*.litertlm
+**/*.task
+**/*.safetensors
+**/*.gguf
+**/*.sqlite*
+**/.env
+**/.env.*
+!**/.env.example
+**/*.p12
+**/*.mobileprovision
+**/*.cer
+**/*.pem
+**/*.key
+
+# Runtime-only journal media and export directories (synthetic fixtures live elsewhere)
+**/Application Support/Images/
+**/Application Support/Drafts/
+**/Documents/Import/
+**/journal-images/
+**/Drafts/
+**/exports/
+**/GRADIO_TEMP_DIR/
+
+# Local logs and scratch work
+*.log
+work/
+/outputs/
+
+# Read-only upstream evidence checkout; app resolves the exact remote Swift package instead
+/gi-timeline/Vendor/LiteRT-LM/

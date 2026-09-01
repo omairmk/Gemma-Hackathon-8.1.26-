@@ -1,0 +1,1138 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00000000000000000000001 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* AppSupport.swift */; };
+		A00000000000000000000002 /* EntryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* EntryRecord.swift */; };
+		A00000000000000000000003 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000013 /* ImageStore.swift */; };
+		A00000000000000000000004 /* EntryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000014 /* EntryStore.swift */; };
+		A00000000000000000000005 /* ModelImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000015 /* ModelImporter.swift */; };
+		A00000000000000000000006 /* InferenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000016 /* InferenceService.swift */; };
+		A00000000000000000000007 /* NewEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000017 /* NewEntryViewModel.swift */; };
+		A00000000000000000000008 /* GITimelineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000018 /* GITimelineApp.swift */; };
+		A00000000000000000000009 /* NewEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000019 /* NewEntryView.swift */; };
+		A0000000000000000000000A /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000001A /* HistoryView.swift */; };
+		A0000000000000000000000D /* LiteRTLM in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000071 /* LiteRTLM */; };
+		A0000000000000000000000E /* GITimelineCore in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000072 /* GITimelineCore */; };
+		A0000000000000000000000F /* GITimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000001C /* GITimelineTests.swift */; };
+		A00000000000000000000010 /* PrivacyDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000001F /* PrivacyDiagnostics.swift */; };
+		A00000000000000000000020 /* GITimelineCore in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000073 /* GITimelineCore */; };
+		A00000000000000000000101 /* ModelRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000111 /* ModelRuntime.swift */; };
+		A00000000000000000000102 /* DeviceInferenceLab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000112 /* DeviceInferenceLab.swift */; };
+		A00000000000000000000103 /* ../Fixtures/synthetic-brown-clay.svg.png in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000113 /* ../Fixtures/synthetic-brown-clay.svg.png */; };
+		A00000000000000000000104 /* ../Fixtures/synthetic-green-clay.svg.png in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000114 /* ../Fixtures/synthetic-green-clay.svg.png */; };
+		A00000000000000000000105 /* ../Fixtures/synthetic-control-geometric.svg.png in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000115 /* ../Fixtures/synthetic-control-geometric.svg.png */; };
+		A00000000000000000000120 /* DraftSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000121 /* DraftSnapshotStore.swift */; };
+		C10000000000000000000001 /* ClinicalTimelineRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000011 /* ClinicalTimelineRecords.swift */; };
+		C10000000000000000000002 /* GIJournalHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000012 /* GIJournalHelp.swift */; };
+		C10000000000000000000003 /* GIJournalPatientComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000013 /* GIJournalPatientComponents.swift */; };
+		C10000000000000000000004 /* GIJournalTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000014 /* GIJournalTheme.swift */; };
+		C10000000000000000000005 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000015 /* ProgressView.swift */; };
+		C10000000000000000000006 /* JournalPDFExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000016 /* JournalPDFExport.swift */; };
+		D10000000000000000000001 /* ClinicalPersistenceAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000011 /* ClinicalPersistenceAndPDFTests.swift */; };
+		F30000000000000000000001 /* AppStoreReceiptProvenanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30000000000000000000011 /* AppStoreReceiptProvenanceTests.swift */; };
+		E10000000000000000000001 /* PhotoSuggestionAccuracyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000011 /* PhotoSuggestionAccuracyTests.swift */; };
+		E20000000000000000000001 /* PersistenceSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000011 /* PersistenceSchema.swift */; };
+		E20000000000000000000002 /* PersistenceBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000012 /* PersistenceBootstrap.swift */; };
+		E20000000000000000000003 /* ../Fixtures/legacy-v0-synthetic-entry.json in Resources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000013 /* ../Fixtures/legacy-v0-synthetic-entry.json */; };
+		F40000000000000000000001 /* LegacyPredecessorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40000000000000000000011 /* LegacyPredecessorStoreTests.swift */; };
+		F40000000000000000000002 /* legacy-predecessor-store-manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = F40000000000000000000012 /* legacy-predecessor-store-manifest.json */; };
+		F40000000000000000000003 /* legacy-predecessor.store in Resources */ = {isa = PBXBuildFile; fileRef = F40000000000000000000013 /* legacy-predecessor.store */; };
+		F40000000000000000000004 /* legacy-predecessor.store-shm in Resources */ = {isa = PBXBuildFile; fileRef = F40000000000000000000014 /* legacy-predecessor.store-shm */; };
+		F40000000000000000000005 /* legacy-predecessor.store-wal in Resources */ = {isa = PBXBuildFile; fileRef = F40000000000000000000015 /* legacy-predecessor.store-wal */; };
+		B00000000000000000000001 /* GITimelineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000011 /* GITimelineUITests.swift */; };
+		F20000000000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000011 /* Assets.xcassets */; };
+		F20000000000000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000012 /* PrivacyInfo.xcprivacy */; };
+		F20000000000000000000003 /* ThirdPartyNotices.txt in Resources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000016 /* ThirdPartyNotices.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		99C259BF301E4DC3002C76C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A000000000000000000000B1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000041;
+			remoteInfo = GITimeline;
+		};
+		99C259C0301E4DC3002C76C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A000000000000000000000B1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000041;
+			remoteInfo = GITimeline;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A00000000000000000000011 /* AppSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSupport.swift; sourceTree = "<group>"; };
+		A00000000000000000000012 /* EntryRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRecord.swift; sourceTree = "<group>"; };
+		A00000000000000000000013 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000014 /* EntryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000015 /* ModelImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelImporter.swift; sourceTree = "<group>"; };
+		A00000000000000000000016 /* InferenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferenceService.swift; sourceTree = "<group>"; };
+		A00000000000000000000017 /* NewEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryViewModel.swift; sourceTree = "<group>"; };
+		A00000000000000000000018 /* GITimelineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GITimelineApp.swift; sourceTree = "<group>"; };
+		A00000000000000000000019 /* NewEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryView.swift; sourceTree = "<group>"; };
+		A0000000000000000000001A /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		A0000000000000000000001B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A0000000000000000000001C /* GITimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GITimelineTests.swift; sourceTree = "<group>"; };
+		A0000000000000000000001D /* GITimeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = GITimeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0000000000000000000001E /* GITimelineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = GITimelineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0000000000000000000001F /* PrivacyDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyDiagnostics.swift; sourceTree = "<group>"; };
+		A00000000000000000000111 /* ModelRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRuntime.swift; sourceTree = "<group>"; };
+		A00000000000000000000112 /* DeviceInferenceLab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInferenceLab.swift; sourceTree = "<group>"; };
+		A00000000000000000000113 /* ../Fixtures/synthetic-brown-clay.svg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "../Fixtures/synthetic-brown-clay.svg.png"; sourceTree = "<group>"; };
+		A00000000000000000000114 /* ../Fixtures/synthetic-green-clay.svg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "../Fixtures/synthetic-green-clay.svg.png"; sourceTree = "<group>"; };
+		A00000000000000000000115 /* ../Fixtures/synthetic-control-geometric.svg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "../Fixtures/synthetic-control-geometric.svg.png"; sourceTree = "<group>"; };
+		A00000000000000000000121 /* DraftSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftSnapshotStore.swift; sourceTree = "<group>"; };
+		C10000000000000000000011 /* ClinicalTimelineRecords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicalTimelineRecords.swift; sourceTree = "<group>"; };
+		C10000000000000000000012 /* GIJournalHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIJournalHelp.swift; sourceTree = "<group>"; };
+		C10000000000000000000013 /* GIJournalPatientComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIJournalPatientComponents.swift; sourceTree = "<group>"; };
+		C10000000000000000000014 /* GIJournalTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIJournalTheme.swift; sourceTree = "<group>"; };
+		C10000000000000000000015 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		C10000000000000000000016 /* JournalPDFExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalPDFExport.swift; sourceTree = "<group>"; };
+		D10000000000000000000011 /* ClinicalPersistenceAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicalPersistenceAndPDFTests.swift; sourceTree = "<group>"; };
+		F30000000000000000000011 /* AppStoreReceiptProvenanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReceiptProvenanceTests.swift; sourceTree = "<group>"; };
+		E10000000000000000000011 /* PhotoSuggestionAccuracyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSuggestionAccuracyTests.swift; sourceTree = "<group>"; };
+		E20000000000000000000011 /* PersistenceSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceSchema.swift; sourceTree = "<group>"; };
+		E20000000000000000000012 /* PersistenceBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceBootstrap.swift; sourceTree = "<group>"; };
+		E20000000000000000000013 /* ../Fixtures/legacy-v0-synthetic-entry.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "../Fixtures/legacy-v0-synthetic-entry.json"; sourceTree = "<group>"; };
+		F40000000000000000000011 /* LegacyPredecessorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPredecessorStoreTests.swift; sourceTree = "<group>"; };
+		F40000000000000000000012 /* legacy-predecessor-store-manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Fixtures/LegacyPredecessorStore/legacy-predecessor-store-manifest.json; sourceTree = "<group>"; };
+		F40000000000000000000013 /* legacy-predecessor.store */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/LegacyPredecessorStore/legacy-predecessor.store; sourceTree = "<group>"; };
+		F40000000000000000000014 /* legacy-predecessor.store-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/LegacyPredecessorStore/legacy-predecessor.store-shm; sourceTree = "<group>"; };
+		F40000000000000000000015 /* legacy-predecessor.store-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/LegacyPredecessorStore/legacy-predecessor.store-wal; sourceTree = "<group>"; };
+		B00000000000000000000011 /* GITimelineUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GITimelineUITests.swift; sourceTree = "<group>"; };
+		B00000000000000000000012 /* GITimelineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = GITimelineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F20000000000000000000011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F20000000000000000000012 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		F20000000000000000000013 /* CLiteRTLMPrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CLiteRTLMPrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		F20000000000000000000014 /* InjectLiteRTPrivacyManifest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = InjectLiteRTPrivacyManifest.sh; sourceTree = "<group>"; };
+		F20000000000000000000015 /* ValidateAppStoreBuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ValidateAppStoreBuild.sh; sourceTree = "<group>"; };
+		F20000000000000000000017 /* RetiredRecoverySurfaceMarkers.zsh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = RetiredRecoverySurfaceMarkers.zsh; sourceTree = "<group>"; };
+		F20000000000000000000016 /* ThirdPartyNotices.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ThirdPartyNotices.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0000000000000000000000D /* LiteRTLM in Frameworks */,
+				A0000000000000000000000E /* GITimelineCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000022 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000020 /* GITimelineCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00000000000000000000021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000031 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000032 /* GITimeline */,
+				F20000000000000000000031 /* Scripts */,
+				A00000000000000000000033 /* GITimelineTests */,
+				B00000000000000000000031 /* GITimelineUITests */,
+				A00000000000000000000034 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000032 /* GITimeline */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000011 /* AppSupport.swift */,
+				A00000000000000000000012 /* EntryRecord.swift */,
+				A00000000000000000000013 /* ImageStore.swift */,
+				A00000000000000000000014 /* EntryStore.swift */,
+				A00000000000000000000015 /* ModelImporter.swift */,
+				A00000000000000000000016 /* InferenceService.swift */,
+				A00000000000000000000017 /* NewEntryViewModel.swift */,
+				A00000000000000000000018 /* GITimelineApp.swift */,
+				A00000000000000000000019 /* NewEntryView.swift */,
+				A0000000000000000000001A /* HistoryView.swift */,
+				A0000000000000000000001B /* Info.plist */,
+				F20000000000000000000011 /* Assets.xcassets */,
+				F20000000000000000000012 /* PrivacyInfo.xcprivacy */,
+				F20000000000000000000013 /* CLiteRTLMPrivacyInfo.xcprivacy */,
+				F20000000000000000000016 /* ThirdPartyNotices.txt */,
+				A0000000000000000000001F /* PrivacyDiagnostics.swift */,
+				A00000000000000000000111 /* ModelRuntime.swift */,
+				A00000000000000000000112 /* DeviceInferenceLab.swift */,
+				A00000000000000000000121 /* DraftSnapshotStore.swift */,
+				A00000000000000000000113 /* ../Fixtures/synthetic-brown-clay.svg.png */,
+				A00000000000000000000114 /* ../Fixtures/synthetic-green-clay.svg.png */,
+				A00000000000000000000115 /* ../Fixtures/synthetic-control-geometric.svg.png */,
+				C10000000000000000000011 /* ClinicalTimelineRecords.swift */,
+				C10000000000000000000012 /* GIJournalHelp.swift */,
+				C10000000000000000000013 /* GIJournalPatientComponents.swift */,
+				C10000000000000000000014 /* GIJournalTheme.swift */,
+				C10000000000000000000015 /* ProgressView.swift */,
+				C10000000000000000000016 /* JournalPDFExport.swift */,
+				E20000000000000000000011 /* PersistenceSchema.swift */,
+				E20000000000000000000012 /* PersistenceBootstrap.swift */,
+			);
+			path = GITimeline;
+			sourceTree = "<group>";
+		};
+		F20000000000000000000031 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				F20000000000000000000014 /* InjectLiteRTPrivacyManifest.sh */,
+				F20000000000000000000015 /* ValidateAppStoreBuild.sh */,
+				F20000000000000000000017 /* RetiredRecoverySurfaceMarkers.zsh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000033 /* GITimelineTests */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000001C /* GITimelineTests.swift */,
+				D10000000000000000000011 /* ClinicalPersistenceAndPDFTests.swift */,
+				F30000000000000000000011 /* AppStoreReceiptProvenanceTests.swift */,
+				E10000000000000000000011 /* PhotoSuggestionAccuracyTests.swift */,
+				E20000000000000000000013 /* ../Fixtures/legacy-v0-synthetic-entry.json */,
+				F40000000000000000000011 /* LegacyPredecessorStoreTests.swift */,
+				F40000000000000000000012 /* legacy-predecessor-store-manifest.json */,
+				F40000000000000000000013 /* legacy-predecessor.store */,
+				F40000000000000000000014 /* legacy-predecessor.store-shm */,
+				F40000000000000000000015 /* legacy-predecessor.store-wal */,
+			);
+			path = GITimelineTests;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000034 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000001D /* GITimeline.app */,
+				A0000000000000000000001E /* GITimelineTests.xctest */,
+				B00000000000000000000012 /* GITimelineUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B00000000000000000000031 /* GITimelineUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000011 /* GITimelineUITests.swift */,
+			);
+			path = GITimelineUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000041 /* GITimeline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000061 /* Build configuration list for PBXNativeTarget "GITimeline" */;
+			buildPhases = (
+				A00000000000000000000056 /* Embed verified Gemma E4B */,
+				A00000000000000000000051 /* Sources */,
+				A00000000000000000000021 /* Frameworks */,
+				A00000000000000000000052 /* Resources */,
+				F20000000000000000000041 /* Inject CLiteRTLM privacy manifest */,
+				F20000000000000000000042 /* Validate App Store package */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GITimeline;
+			packageProductDependencies = (
+				A00000000000000000000071 /* LiteRTLM */,
+				A00000000000000000000072 /* GITimelineCore */,
+			);
+			productName = GITimeline;
+			productReference = A0000000000000000000001D /* GITimeline.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000042 /* GITimelineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000062 /* Build configuration list for PBXNativeTarget "GITimelineTests" */;
+			buildPhases = (
+				A00000000000000000000053 /* Sources */,
+				A00000000000000000000022 /* Frameworks */,
+				A00000000000000000000054 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00000000000000000000081 /* PBXTargetDependency */,
+			);
+			name = GITimelineTests;
+			packageProductDependencies = (
+				A00000000000000000000073 /* GITimelineCore */,
+			);
+			productName = GITimelineTests;
+			productReference = A0000000000000000000001E /* GITimelineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B00000000000000000000041 /* GITimelineUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B00000000000000000000061 /* Build configuration list for PBXNativeTarget "GITimelineUITests" */;
+			buildPhases = (
+				B00000000000000000000051 /* Sources */,
+				B00000000000000000000021 /* Frameworks */,
+				B00000000000000000000052 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B00000000000000000000081 /* PBXTargetDependency */,
+			);
+			name = GITimelineUITests;
+			packageProductDependencies = (
+			);
+			productName = GITimelineUITests;
+			productReference = B00000000000000000000012 /* GITimelineUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A000000000000000000000B1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					A00000000000000000000041 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					A00000000000000000000042 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = A00000000000000000000041;
+					};
+					B00000000000000000000041 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = A00000000000000000000041;
+					};
+				};
+			};
+			buildConfigurationList = A000000000000000000000C1 /* Build configuration list for PBXProject "GITimeline" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00000000000000000000031;
+			packageReferences = (
+				A000000000000000000000A1 /* XCLocalSwiftPackageReference "Vendor/LiteRTLM" */,
+				A000000000000000000000A2 /* XCLocalSwiftPackageReference "." */,
+			);
+			productRefGroup = A00000000000000000000034 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000041 /* GITimeline */,
+				A00000000000000000000042 /* GITimelineTests */,
+				B00000000000000000000041 /* GITimelineUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20000000000000000000001 /* Assets.xcassets in Resources */,
+				F20000000000000000000002 /* PrivacyInfo.xcprivacy in Resources */,
+				F20000000000000000000003 /* ThirdPartyNotices.txt in Resources */,
+				A00000000000000000000103 /* ../Fixtures/synthetic-brown-clay.svg.png in Resources */,
+				A00000000000000000000104 /* ../Fixtures/synthetic-green-clay.svg.png in Resources */,
+				A00000000000000000000105 /* ../Fixtures/synthetic-control-geometric.svg.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000054 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E20000000000000000000003 /* ../Fixtures/legacy-v0-synthetic-entry.json in Resources */,
+				F40000000000000000000002 /* legacy-predecessor-store-manifest.json in Resources */,
+				F40000000000000000000003 /* legacy-predecessor.store in Resources */,
+				F40000000000000000000004 /* legacy-predecessor.store-shm in Resources */,
+				F40000000000000000000005 /* legacy-predecessor.store-wal in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00000000000000000000052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A00000000000000000000056 /* Embed verified Gemma E4B */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Scripts/EmbedGemmaE4B.sh",
+				"$(SRCROOT)/Scripts/ValidateAppSourceCheckout.sh",
+				"$(GEMMA_EMBED_DEPENDENCY)",
+				"$(SRCROOT)/GITimeline.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+			);
+			name = "Embed verified Gemma E4B";
+			outputPaths = (
+				"$(GEMMA_EMBED_OUTPUT_PATH)",
+				"$(GEMMA_EMBED_RECEIPT_OUTPUT_PATH)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "\"$SRCROOT/Scripts/EmbedGemmaE4B.sh\"";
+		};
+		F20000000000000000000041 /* Inject CLiteRTLM privacy manifest */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Scripts/InjectLiteRTPrivacyManifest.sh",
+				"$(LITERT_PRIVACY_MANIFEST_SOURCE)",
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CLiteRTLM.framework/CLiteRTLM",
+			);
+			name = "Inject CLiteRTLM privacy manifest";
+			outputPaths = (
+				"$(LITERT_PRIVACY_OUTPUT_PATH)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "\"$SRCROOT/Scripts/InjectLiteRTPrivacyManifest.sh\"";
+		};
+		F20000000000000000000042 /* Validate App Store package */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Scripts/ValidateAppStoreBuild.sh",
+				"$(SRCROOT)/Scripts/RetiredRecoverySurfaceMarkers.zsh",
+				"$(SRCROOT)/Scripts/ValidateAppSourceCheckout.sh",
+				"$(SRCROOT)/Scripts/NormalizedMachOExecutableHash.py",
+				"$(SRCROOT)/Scripts/ValidateMachOPlatform.py",
+				"$(GEMMA_EMBED_OUTPUT_PATH)",
+				"$(GEMMA_EMBED_RECEIPT_OUTPUT_PATH)",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/PrivacyInfo.xcprivacy",
+				"$(LITERT_PRIVACY_OUTPUT_PATH)",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Assets.car",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/ThirdPartyNotices.txt",
+				"$(SRCROOT)/GITimeline/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+				"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CLiteRTLM.framework/CLiteRTLM",
+			);
+			name = "Validate App Store package";
+			outputPaths = (
+				"$(APPSTORE_VALIDATION_STAMP)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "\"$SRCROOT/Scripts/ValidateAppStoreBuild.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000051 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000001 /* AppSupport.swift in Sources */,
+				A00000000000000000000002 /* EntryRecord.swift in Sources */,
+				A00000000000000000000003 /* ImageStore.swift in Sources */,
+				A00000000000000000000004 /* EntryStore.swift in Sources */,
+				A00000000000000000000005 /* ModelImporter.swift in Sources */,
+				A00000000000000000000006 /* InferenceService.swift in Sources */,
+				A00000000000000000000007 /* NewEntryViewModel.swift in Sources */,
+				A00000000000000000000008 /* GITimelineApp.swift in Sources */,
+				A00000000000000000000120 /* DraftSnapshotStore.swift in Sources */,
+				A00000000000000000000009 /* NewEntryView.swift in Sources */,
+				A0000000000000000000000A /* HistoryView.swift in Sources */,
+				A00000000000000000000010 /* PrivacyDiagnostics.swift in Sources */,
+				A00000000000000000000101 /* ModelRuntime.swift in Sources */,
+				A00000000000000000000102 /* DeviceInferenceLab.swift in Sources */,
+				C10000000000000000000001 /* ClinicalTimelineRecords.swift in Sources */,
+				C10000000000000000000002 /* GIJournalHelp.swift in Sources */,
+				C10000000000000000000003 /* GIJournalPatientComponents.swift in Sources */,
+				C10000000000000000000004 /* GIJournalTheme.swift in Sources */,
+				C10000000000000000000005 /* ProgressView.swift in Sources */,
+				C10000000000000000000006 /* JournalPDFExport.swift in Sources */,
+				E20000000000000000000001 /* PersistenceSchema.swift in Sources */,
+				E20000000000000000000002 /* PersistenceBootstrap.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000053 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0000000000000000000000F /* GITimelineTests.swift in Sources */,
+				D10000000000000000000001 /* ClinicalPersistenceAndPDFTests.swift in Sources */,
+				F30000000000000000000001 /* AppStoreReceiptProvenanceTests.swift in Sources */,
+				E10000000000000000000001 /* PhotoSuggestionAccuracyTests.swift in Sources */,
+				F40000000000000000000001 /* LegacyPredecessorStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00000000000000000000051 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B00000000000000000000001 /* GITimelineUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00000000000000000000081 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000041 /* GITimeline */;
+			targetProxy = 99C259BF301E4DC3002C76C3 /* PBXContainerItemProxy */;
+		};
+		B00000000000000000000081 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000041 /* GITimeline */;
+			targetProxy = 99C259C0301E4DC3002C76C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A00000000000000000000091 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_DISPLAY_NAME = "GI Journal";
+				APPSTORE_VALIDATION_ENABLED = NO;
+				APPSTORE_VALIDATION_STAMP = "$(DERIVED_FILE_DIR)/AppStoreValidation.stamp";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
+				CURRENT_PROJECT_VERSION = 8;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GEMMA_EMBED_DEPENDENCY = "$(SRCROOT)/Scripts/EmbedGemmaE4B.sh";
+				GEMMA_EMBED_ENABLED = NO;
+				GEMMA_EMBED_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.model.stamp";
+				GEMMA_EMBED_RECEIPT_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.receipt.stamp";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = GITimeline/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LITERT_PRIVACY_INJECTION_ENABLED = NO;
+				LITERT_PRIVACY_MANIFEST_SOURCE = "$(SRCROOT)/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy";
+				LITERT_PRIVACY_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/CLiteRTLMPrivacy.injection.stamp";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.debug;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A00000000000000000000092 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_DISPLAY_NAME = "GI Journal Internal";
+				APPSTORE_VALIDATION_ENABLED = NO;
+				APPSTORE_VALIDATION_STAMP = "$(DERIVED_FILE_DIR)/AppStoreValidation.stamp";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"synthetic-brown-clay.svg.png",
+					"synthetic-green-clay.svg.png",
+					"synthetic-control-geometric.svg.png",
+				);
+				GEMMA_EMBED_DEPENDENCY = "$(SRCROOT)/Scripts/EmbedGemmaE4B.sh";
+				GEMMA_EMBED_ENABLED = NO;
+				GEMMA_EMBED_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.model.stamp";
+				GEMMA_EMBED_RECEIPT_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.receipt.stamp";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = GITimeline/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LITERT_PRIVACY_INJECTION_ENABLED = NO;
+				LITERT_PRIVACY_MANIFEST_SOURCE = "$(SRCROOT)/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy";
+				LITERT_PRIVACY_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/CLiteRTLMPrivacy.injection.stamp";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.internal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A00000000000000000000095 /* Hackathon */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_DISPLAY_NAME = "GI Journal";
+				APPSTORE_VALIDATION_ENABLED = NO;
+				APPSTORE_VALIDATION_STAMP = "$(DERIVED_FILE_DIR)/AppStoreValidation.stamp";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
+				CURRENT_PROJECT_VERSION = 8;
+				ENABLE_DEBUG_DYLIB = NO;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GEMMA_E4B_SOURCE = "$(SRCROOT)/../work/models/gemma-4-E4B-it.litertlm";
+				GEMMA_EMBED_DEPENDENCY = "$(GEMMA_E4B_SOURCE)";
+				GEMMA_EMBED_ENABLED = YES;
+				GEMMA_EMBED_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/EmbeddedModels/gemma-4-E4B-it.litertlm";
+				GEMMA_EMBED_RECEIPT_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/EmbeddedModels/gemma-4-E4B-it.receipt";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = GITimeline/Info.plist;
+				GI_HACKATHON_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.debug;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LITERT_PRIVACY_INJECTION_ENABLED = NO;
+				LITERT_PRIVACY_MANIFEST_SOURCE = "$(SRCROOT)/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy";
+				LITERT_PRIVACY_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/CLiteRTLMPrivacy.injection.stamp";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(GI_HACKATHON_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = HACKATHON_EMBEDDED_GEMMA;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Hackathon;
+		};
+		F20000000000000000000091 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_DISPLAY_NAME = "GI Journal";
+				APPSTORE_VALIDATION_ENABLED = YES;
+				APPSTORE_VALIDATION_STAMP = "$(DERIVED_FILE_DIR)/AppStoreValidation.stamp";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_DEBUG_DYLIB = NO;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"synthetic-brown-clay.svg.png",
+					"synthetic-green-clay.svg.png",
+					"synthetic-control-geometric.svg.png",
+				);
+				GEMMA_EMBED_DEPENDENCY = "$(SRCROOT)/Scripts/EmbedGemmaE4B.sh";
+				GEMMA_EMBED_ENABLED = NO;
+				GEMMA_EMBED_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.model.stamp";
+				GEMMA_EMBED_RECEIPT_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.receipt.stamp";
+				GENERATE_INFOPLIST_FILE = NO;
+				GI_PRIVACY_POLICY_URL = GI_PRIVACY_POLICY_URL_REQUIRED;
+				GI_SOURCE_COMMIT = GI_SOURCE_COMMIT_REQUIRED;
+				GI_SOURCE_TREE = GI_SOURCE_TREE_REQUIRED;
+				GI_SUPPORT_URL = GI_SUPPORT_URL_REQUIRED;
+				INFOPLIST_FILE = "GITimeline/Info-AppStore.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LITERT_PRIVACY_INJECTION_ENABLED = YES;
+				LITERT_PRIVACY_MANIFEST_SOURCE = "$(SRCROOT)/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy";
+				LITERT_PRIVACY_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CLiteRTLM.framework/PrivacyInfo.xcprivacy";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE_RELEASE MANUAL_FALLBACK_RELEASE";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStore;
+		};
+		F20000000000000000000094 /* AppStoreTesting */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_DISPLAY_NAME = "GI Journal";
+				APPSTORE_VALIDATION_ENABLED = YES;
+				APPSTORE_VALIDATION_STAMP = "$(DERIVED_FILE_DIR)/AppStoreValidation.stamp";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_DEBUG_DYLIB = NO;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"synthetic-brown-clay.svg.png",
+					"synthetic-green-clay.svg.png",
+					"synthetic-control-geometric.svg.png",
+				);
+				GEMMA_EMBED_DEPENDENCY = "$(SRCROOT)/Scripts/EmbedGemmaE4B.sh";
+				GEMMA_EMBED_ENABLED = NO;
+				GEMMA_EMBED_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.model.stamp";
+				GEMMA_EMBED_RECEIPT_OUTPUT_PATH = "$(DERIVED_FILE_DIR)/GemmaEmbedding.receipt.stamp";
+				GENERATE_INFOPLIST_FILE = NO;
+				GI_PRIVACY_POLICY_URL = "https://example.invalid/gi-journal/privacy-policy";
+				GI_SOURCE_COMMIT = unrecorded;
+				GI_SOURCE_TREE = unrecorded;
+				GI_SUPPORT_URL = "https://example.invalid/gi-journal/support";
+				INFOPLIST_FILE = "GITimeline/Info-AppStore.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LITERT_PRIVACY_INJECTION_ENABLED = YES;
+				LITERT_PRIVACY_MANIFEST_SOURCE = "$(SRCROOT)/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy";
+				LITERT_PRIVACY_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CLiteRTLM.framework/PrivacyInfo.xcprivacy";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.appstoretesting;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE_RELEASE APPSTORE_RELEASE_TESTING MANUAL_FALLBACK_RELEASE";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStoreTesting;
+		};
+		F50000000000000000000091 /* PhysicalQualification */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_DISPLAY_NAME = "GI Journal QA";
+				APPSTORE_VALIDATION_ENABLED = YES;
+				APPSTORE_VALIDATION_STAMP = "$(DERIVED_FILE_DIR)/AppStoreValidation.stamp";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_DEBUG_DYLIB = NO;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"synthetic-brown-clay.svg.png",
+					"synthetic-green-clay.svg.png",
+					"synthetic-control-geometric.svg.png",
+				);
+				GEMMA_E4B_SOURCE = "$(SRCROOT)/../work/models/gemma-4-E4B-it.litertlm";
+				GEMMA_EMBED_DEPENDENCY = "$(GEMMA_E4B_SOURCE)";
+				GEMMA_EMBED_ENABLED = YES;
+				GEMMA_EMBED_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/EmbeddedModels/gemma-4-E4B-it.litertlm";
+				GEMMA_EMBED_RECEIPT_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/EmbeddedModels/gemma-4-E4B-it.receipt";
+				GENERATE_INFOPLIST_FILE = NO;
+				GI_PRIVACY_POLICY_URL = "https://example.invalid/gi-journal/physical-qualification/privacy-policy";
+				GI_SOURCE_COMMIT = PHYSICAL_QUALIFICATION_SOURCE_COMMIT_REQUIRED;
+				GI_SOURCE_TREE = PHYSICAL_QUALIFICATION_SOURCE_TREE_REQUIRED;
+				GI_SUPPORT_URL = "https://example.invalid/gi-journal/physical-qualification/support";
+				INFOPLIST_FILE = "GITimeline/Info-AppStore.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LITERT_PRIVACY_INJECTION_ENABLED = YES;
+				LITERT_PRIVACY_MANIFEST_SOURCE = "$(SRCROOT)/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy";
+				LITERT_PRIVACY_OUTPUT_PATH = "$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CLiteRTLM.framework/PrivacyInfo.xcprivacy";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.qualification;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = APPSTORE_RELEASE;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = PhysicalQualification;
+		};
+		A00000000000000000000093 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GITimeline.app/GITimeline";
+			};
+			name = Debug;
+		};
+		A00000000000000000000094 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GITimeline.app/GITimeline";
+			};
+			name = Release;
+		};
+		F20000000000000000000092 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					GITimelineTests.swift,
+					PhotoSuggestionAccuracyTests.swift,
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE_RELEASE_TESTING MANUAL_FALLBACK_RELEASE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GITimeline.app/GITimeline";
+			};
+			name = AppStore;
+		};
+		F20000000000000000000095 /* AppStoreTesting */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					GITimelineTests.swift,
+					PhotoSuggestionAccuracyTests.swift,
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE_RELEASE_TESTING MANUAL_FALLBACK_RELEASE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GITimeline.app/GITimeline";
+			};
+			name = AppStoreTesting;
+		};
+		F50000000000000000000092 /* PhysicalQualification */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					GITimelineTests.swift,
+					PhotoSuggestionAccuracyTests.swift,
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.qualification.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = APPSTORE_RELEASE_TESTING;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GITimeline.app/GITimeline";
+			};
+			name = PhysicalQualification;
+		};
+		A000000000000000000000C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		A000000000000000000000C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		A000000000000000000000C4 /* Hackathon */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Hackathon;
+		};
+		F200000000000000000000C1 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStore;
+		};
+		F200000000000000000000C5 /* AppStoreTesting */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStoreTesting;
+		};
+		F50000000000000000000093 /* PhysicalQualification */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = PhysicalQualification;
+		};
+		B00000000000000000000091 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = GITimeline;
+			};
+			name = Debug;
+		};
+		B00000000000000000000092 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE_FALLBACK_TESTING;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = GITimeline;
+			};
+			name = Release;
+		};
+		F20000000000000000000093 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE_RELEASE_TESTING MANUAL_FALLBACK_RELEASE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = GITimeline;
+			};
+			name = AppStore;
+		};
+		F20000000000000000000096 /* AppStoreTesting */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimelineUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE_RELEASE_TESTING MANUAL_FALLBACK_RELEASE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = GITimeline;
+			};
+			name = AppStoreTesting;
+		};
+		F50000000000000000000094 /* PhysicalQualification */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.omairmkhan.GITimeline.qualification.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = APPSTORE_RELEASE_TESTING;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = GITimeline;
+			};
+			name = PhysicalQualification;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000061 /* Build configuration list for PBXNativeTarget "GITimeline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000091 /* Debug */,
+				A00000000000000000000092 /* Release */,
+				A00000000000000000000095 /* Hackathon */,
+				F20000000000000000000091 /* AppStore */,
+				F20000000000000000000094 /* AppStoreTesting */,
+				F50000000000000000000091 /* PhysicalQualification */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000062 /* Build configuration list for PBXNativeTarget "GITimelineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000093 /* Debug */,
+				A00000000000000000000094 /* Release */,
+				F20000000000000000000092 /* AppStore */,
+				F20000000000000000000095 /* AppStoreTesting */,
+				F50000000000000000000092 /* PhysicalQualification */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A000000000000000000000C1 /* Build configuration list for PBXProject "GITimeline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000C2 /* Debug */,
+				A000000000000000000000C3 /* Release */,
+				A000000000000000000000C4 /* Hackathon */,
+				F200000000000000000000C1 /* AppStore */,
+				F200000000000000000000C5 /* AppStoreTesting */,
+				F50000000000000000000093 /* PhysicalQualification */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B00000000000000000000061 /* Build configuration list for PBXNativeTarget "GITimelineUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B00000000000000000000091 /* Debug */,
+				B00000000000000000000092 /* Release */,
+				F20000000000000000000093 /* AppStore */,
+				F20000000000000000000096 /* AppStoreTesting */,
+				F50000000000000000000094 /* PhysicalQualification */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A000000000000000000000A1 /* XCLocalSwiftPackageReference "Vendor/LiteRTLM" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Vendor/LiteRTLM;
+		};
+		A000000000000000000000A2 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A00000000000000000000071 /* LiteRTLM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A000000000000000000000A1 /* XCLocalSwiftPackageReference "Vendor/LiteRTLM" */;
+			productName = LiteRTLM;
+		};
+		A00000000000000000000072 /* GITimelineCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A000000000000000000000A2 /* XCLocalSwiftPackageReference "." */;
+			productName = GITimelineCore;
+		};
+		A00000000000000000000073 /* GITimelineCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A000000000000000000000A2 /* XCLocalSwiftPackageReference "." */;
+			productName = GITimelineCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A000000000000000000000B1 /* Project object */;
+}
