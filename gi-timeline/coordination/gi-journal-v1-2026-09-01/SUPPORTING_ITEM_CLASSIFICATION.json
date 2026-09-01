@@ -4,9 +4,9 @@
   "classifications": [
     {
       "path_or_group": "GITimeline app source, main Xcode project, Swift package, tests, deterministic fixtures, selected scripts, and selected release documents",
-      "source_commit": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
+      "source_commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
       "classification": "INCLUDED_IN_GIT",
-      "notes": "Selected blobs were copied into an orphan snapshot so unpublished local history is not reachable. Archive-only text neutralizations remove historical local paths, hardcoded physical-run paths, and a hardcoded team identifier. Sensitive-path scan is required again before push."
+      "notes": "The final content commit is hashed from immutable Git blobs by the parent-bound manifest. Public history excludes unsafe f25 evidence. Sensitive-path, payload, and local-only source scans are required again before push."
     },
     {
       "path_or_group": "local commit f25f89aa54b220f4155c2eb6cf8c463579901a68 and tag archive-2026-09-01-apple-native-v1-f25f89a",
@@ -101,9 +101,73 @@
       "notes": "Not deleted until pre-change archive, final archive, app verification, and inactive-process gates all pass."
     },
     {
-      "path_or_group": "49 registered Git worktrees after creation of the prearchive worktree",
+      "path_or_group": "50 registered Git worktrees at final pre-seal inventory",
       "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
       "notes": "No worktree is removed without clean/unique-commit/activity checks and verified remote preservation."
+    },
+    {
+      "path_or_group": "sanitized pre-change archive branch and tag",
+      "source_commit": "58420f66582a17e1d90540122bcb5a3d4c37c827",
+      "source_tree": "b070cfdf6416579987d6992215298213543b6735",
+      "classification": "INCLUDED_IN_GIT",
+      "notes": "Locally committed and annotated-tagged. GitHub branch/tag and fresh remote clone remain unverified because authentication was unavailable."
+    },
+    {
+      "path_or_group": "final manual-first archive branch, source manifest, and truthful tag",
+      "source_commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
+      "classification": "INCLUDED_IN_GIT",
+      "notes": "The seal commit adds only the machine-readable manifest over its content parent. Local verification is required before push; remote verification remains blocked."
+    },
+    {
+      "path_or_group": "intermediate tag archive-2026-09-01-manual-fallback-726fa24",
+      "source_commit": "726fa246eccca17fc74cda550343641401b9a394",
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Pre-accessibility-review implementation checkpoint. Preserved but not the final public archive tag."
+    },
+    {
+      "path_or_group": "Apple Vision feature-print directional evaluation",
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "checksum": {
+        "summary_sha256": "33c18af47b9a755972bfb0e1eeb50e2188258c7254d2352bf8a914774d10a432",
+        "plan_sha256": "39276de3179b708b8033f537576eaf25df40564036ea5acf1c80eda2546d4c9e"
+      },
+      "notes": "Synthetic local development evidence; complete directional gate failed; raw corpus publication provenance remains incomplete."
+    },
+    {
+      "path_or_group": "tiny Create ML transition evidence",
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "checksum": {
+        "scorecard_sha256": "2cd732db062854aad4347dacb89cdace0c94147a642817562cc7addd404b2248",
+        "confusions_sha256": "edf6be6b03ced8b010916009f21ff20b0b87b2abd31363d28ea3a96d7915e68e",
+        "protocol_sha256": "eac23dd20165e82e34f7007019e68d87123ffc0b53790354627f6f414d0d501a",
+        "raw_predictions_sha256": "c902077ea74fe6b9e801440878f232fa55e1e4ac0b34e8ceea079bf9448d6dc0"
+      },
+      "notes": "Synthetic local development evidence. Color and all positive red/black/tar display gates failed; no Core ML asset was integrated."
+    },
+    {
+      "path_or_group": "fresh Apple-native synthetic attempt: batches A, B, and C",
+      "file_count_expected": 24,
+      "file_count_stable_named": 23,
+      "decodable_count": 18,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Not scored or published: missing, zero-byte, undecodable, duplicate, and semantically out-of-scope files; no blind review artifact."
+    },
+    {
+      "path_or_group": "current UI/accessibility and app XCTest xcresult bundles",
+      "file_count": 2,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Local Simulator evidence with possible host metadata; result summaries are included in Git, raw bundles are not cleared for public publication."
+    },
+    {
+      "path_or_group": "pre-seal Python bytecode quarantine",
+      "file_count": 18,
+      "logical_bytes": 387443,
+      "classification": "EXCLUDED_REPRODUCIBLE",
+      "source": "tracked Python scripts and the local Python 3.14 interpreter",
+      "version": "cpython-314 bytecode",
+      "license": "not applicable to generated cache",
+      "checksum": "not required; generated files preserved intact in local quarantine",
+      "notes": "Moved reversibly out of the production source scope after the clean-source validator rejected it; not Phase 5 cleanup."
     },
     {
       "path_or_group": "GitHub release assets",

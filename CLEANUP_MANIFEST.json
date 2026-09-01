@@ -1,0 +1,55 @@
+{
+  "schema": "gi-journal-cleanup-manifest-v1",
+  "date": "2026-09-01",
+  "phase5_status": "NOT_STARTED_REMOTE_GATES_UNMET",
+  "required_gates": {
+    "prechange_remote_branch_and_tag_verified": false,
+    "final_remote_branch_and_tag_verified": false,
+    "fresh_remote_clone_verified": false,
+    "required_supporting_assets_verified": false,
+    "no_active_process_uses_each_target": "UNVERIFIED"
+  },
+  "phase5_removals": [],
+  "phase5_logical_bytes_removed": 0,
+  "actual_filesystem_free_space_change_attributable_to_phase5": 0,
+  "pre_seal_reversible_build_input_correction": {
+    "source": "repository-local:gi-timeline/Scripts/__pycache__",
+    "destination": "local-private:gi-source-cache-quarantine-20260901",
+    "type": "generated_python_bytecode_directory",
+    "file_count": 18,
+    "logical_bytes": 387443,
+    "reason": "ignored bytecode existed in a production build-input scope and correctly failed the clean-source validator",
+    "disposition": "MOVED_INTACT_RECOVERABLE_NOT_PHASE5_CLEANUP"
+  },
+  "retained_groups": [
+    {
+      "path_or_group": "local-private:unsafe-f25-history-and-tag",
+      "reason": "private raw evidence/runtime history; public publication rejected"
+    },
+    {
+      "path_or_group": "local-private:fresh-apple-native-synthetic-20260901",
+      "reason": "incomplete, duplicated, partly undecodable, semantically ineligible, and not remotely archived"
+    },
+    {
+      "path_or_group": "local-private:apple-feature-print-and-tiny-coreml-evidence",
+      "reason": "hash-pinned no-go evidence not yet remotely preserved"
+    },
+    {
+      "path_or_group": "repository-ignored:model-runtime-build-and-evaluation-material",
+      "reason": "ambiguous ownership, licensing, privacy, activity, or remote-preservation state"
+    },
+    {
+      "path_or_group": "registered-worktrees",
+      "reason": "unique commit, dirty-state, activity, and remote-preservation checks are incomplete"
+    },
+    {
+      "path_or_group": "local-private:gi-1024-resolution-20260831",
+      "reason": "explicitly protected while process/activity history remains relevant"
+    }
+  ],
+  "notes": [
+    "No git clean, reset, broad checkout, broad deletion, worktree removal, or Git garbage collection was performed.",
+    "Earlier generated-cache reclamation used to recover build capacity is not claimed as Phase 5 cleanup; exact per-path logical bytes were not recorded and global free-space movement was concurrent.",
+    "A private exact-path inventory must be regenerated immediately before any future deletion."
+  ]
+}

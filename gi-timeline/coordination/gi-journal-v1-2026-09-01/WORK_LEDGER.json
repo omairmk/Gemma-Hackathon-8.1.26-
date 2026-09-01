@@ -9,7 +9,7 @@
     "canonical_branch": "rescue/2026-08-23-storage-cleanup",
     "observed_starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
     "safe_source_baseline": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
-    "status": "IN_PROGRESS"
+    "status": "BLOCKED_EXTERNAL_GITHUB_AUTH_AND_RELEASE_INPUTS"
   },
   "tasks": [
     {
@@ -140,30 +140,164 @@
       "status": "FAILED_READ_ONLY_PROTOCOL_ROOT_ADJUDICATED_FINDINGS",
       "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
       "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave1-shipping-runtime-writer",
+      "agent_id": "/root/fresh_synth_reviewer",
+      "model": "gpt-5.6-sol-inherited",
+      "reasoning": "coordinator_inherited",
+      "role": "manual-fallback shipping-runtime implementation",
+      "worktree": "isolated final archive worktree",
+      "starting_head": "58420f66582a17e1d90540122bcb5a3d4c37c827",
+      "allowed_files": "shipping target, manual route, tests, release validators, and release documentation",
+      "commit": "726fa246eccca17fc74cda550343641401b9a394",
+      "tests": "SwiftPM 111/111; app XCTest 106/106; generic AppStoreTesting build; payload-negative 10/10; local-only source gate",
+      "artifacts": [
+        "gi-timeline/Release/APPLE_NATIVE_MANUAL_FALLBACK_STATUS_2026-09-01.md"
+      ],
+      "status": "CONFIRMED_AFTER_ROOT_DIFF_REVIEW_PROTOCOL_BOUNDARY_VIOLATION_RECORDED",
+      "archive_inclusion": "INCLUDED_IN_GIT",
+      "cleanup_disposition": "NOT_APPLICABLE",
+      "notes": "The child committed implementation despite a delayed ownership boundary. Root did not self-merge blindly: every diff and public gate was reviewed before continued integration."
+    },
+    {
+      "task_id": "wave1-accessibility-integration",
+      "agent_id": "/root",
+      "model": "gpt-5.6-sol",
+      "reasoning": "ultra_requested",
+      "role": "repair two exact public accessibility audit failures and integrate",
+      "worktree": "isolated final archive worktree",
+      "starting_head": "726fa246eccca17fc74cda550343641401b9a394",
+      "allowed_files": [
+        "gi-timeline/GITimeline/GITimelineApp.swift",
+        "gi-timeline/GITimeline/GIJournalPatientComponents.swift"
+      ],
+      "commit": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "tests": "unchanged public UI/accessibility test 1/1; app XCTest 106/106; SwiftPM 111/111",
+      "artifacts": [
+        "local-private:current-ui-accessibility-xcresult",
+        "local-private:current-app-xctest-xcresult"
+      ],
+      "status": "CONFIRMED",
+      "archive_inclusion": "INCLUDED_IN_GIT",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave2-shipping-source-review",
+      "agent_id": "/root/shipping_strip_review",
+      "model": "gpt-5.6-sol-inherited",
+      "reasoning": "coordinator_inherited",
+      "role": "independent manual-lane, dependency, lifecycle, persistence, PDF, and accessibility audit",
+      "worktree": "read-only final archive worktree",
+      "starting_head": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "allowed_files": [],
+      "commit": null,
+      "tests": "ValidateLocalOnlySource PASS; TestAppStoreModelGateNegative 10/10",
+      "artifacts": [],
+      "status": "CONFIRMED_NO_P0_P1_LOCAL_UNSIGNED_MANUAL_FIRST_ONLY",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave2-fresh-synthetic-audit",
+      "agent_id": "/root/fresh_synth_c",
+      "model": "gpt-5.6-sol-inherited",
+      "reasoning": "coordinator_inherited",
+      "role": "independent decoding, duplication, realism, and publication-eligibility audit",
+      "worktree": "read-only local-private synthetic directory",
+      "starting_head": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "allowed_files": [],
+      "commit": null,
+      "tests": "24 expected IDs; 23 files; 18 decodable; four substantive duplicate pairs; no eligible batch",
+      "artifacts": [
+        "local-private:fresh-apple-native-synthetic-20260901"
+      ],
+      "status": "FAILED_DATASET_FREEZE_AND_PUBLICATION_GATE",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY_ONLY",
+      "cleanup_disposition": "RETAIN_LOCAL_PENDING_CLARIFICATION"
+    },
+    {
+      "task_id": "wave2-appstore-provenance-audit",
+      "agent_id": "/root/appstore_gate_audit",
+      "model": "gpt-5.6-sol-inherited",
+      "reasoning": "coordinator_inherited",
+      "role": "read-only production build provenance and external-input audit",
+      "worktree": "read-only final archive worktree",
+      "starting_head": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "allowed_files": [],
+      "commit": null,
+      "tests": "AppStore compilation and 152-file clean source verification passed; package gate stopped at owner-approved HTTPS privacy/support URLs",
+      "artifacts": [],
+      "status": "CONFIRMED_EXTERNAL_URL_SIGNING_AND_ACCOUNT_BLOCKERS",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave3-archive-document-audit",
+      "agent_id": "/root/archive_docs_audit",
+      "model": "gpt-5.6-sol-inherited",
+      "reasoning": "coordinator_inherited",
+      "role": "read-only archive truth, public-safety, and immutable-manifest review",
+      "worktree": "read-only final archive worktree",
+      "starting_head": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "allowed_files": [],
+      "commit": null,
+      "tests": "identified stale 171-entry mutable-tree manifest against 174 tracked files and specified parent-bound Git-object seal",
+      "artifacts": [],
+      "status": "CONFIRMED_FINDINGS_ROOT_INTEGRATED",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave3-final-archive-content-and-seal",
+      "agent_id": "/root",
+      "model": "gpt-5.6-sol",
+      "reasoning": "ultra_requested",
+      "role": "sole final documentation integrator, content committer, manifest generator, tagger, and verifier",
+      "worktree": "isolated final archive worktree",
+      "starting_head": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "allowed_files": "archive/readme/restore/cleanup/ledger/classification/decision/status and final manifest scripts",
+      "commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
+      "tests": "parent-bound seal, local fresh clone, fsck, and final source gates recorded by final report",
+      "artifacts": [
+        "ARCHIVE_MANIFEST.md",
+        "FINAL_SOURCE_SNAPSHOT_MANIFEST.json",
+        "RESTORE.md",
+        "CLEANUP_MANIFEST.json"
+      ],
+      "status": "LOCAL_SEAL_IN_PROGRESS_REMOTE_BLOCKED",
+      "archive_inclusion": "INCLUDED_IN_GIT",
+      "cleanup_disposition": "NOT_APPLICABLE"
     }
   ],
   "archive": {
-    "prechange_branch": "archive/2026-09-01-pre-apple-native",
-    "prechange_snapshot_initial_commit": "08a8a1e2ac2c4b1dad33202b87a7638ac702770d",
-    "prechange_snapshot_initial_tree": "f6f90e45db191833362e7554c28fb3b01da23e96",
-    "prechange_tag": "gi-journal-pre-apple-native-2026-09-01",
-    "public_history_strategy": "SANITIZED_ORPHAN_SNAPSHOT",
-    "local_verification": {
-      "swiftpm": "CONFIRMED_111_OF_111",
-      "python_timeout_contract": "CONFIRMED_4_OF_4",
-      "python_resolution_contract": "CONFIRMED_14_OF_14",
-      "python_schema_focus": "CONFIRMED_9_OF_9",
-      "python_full_suite": "FAILED_26_PASSED_7_RESOURCE_DEPENDENT_FAILURES_BECAUSE_EXCLUDED_MODEL_AND_VENV_PAYLOADS_ARE_ABSENT",
-      "script_syntax": "CONFIRMED_ZSH_N_FOR_QWEN3_PHYSICAL_AND_V4_EXIT_TRAP",
-      "appstore_build": "CONFIRMED_SIGNING_DISABLED_GENERIC_IOS_APPSTORE_BUILD_EXIT0_BEFORE_FINAL_ARCHIVE_COMMIT_BINDING",
-      "xcode_build_for_testing": "FAILED_NO_SPACE_LEFT_ON_DEVICE_WRITING_DERIVEDDATA_LOGS_AND_OBJECTS",
-      "source_manifest": "PENDING_FINAL_REGENERATION"
+    "prechange": {
+      "branch": "archive/2026-09-01-pre-apple-native",
+      "commit": "58420f66582a17e1d90540122bcb5a3d4c37c827",
+      "tree": "b070cfdf6416579987d6992215298213543b6735",
+      "tag": "gi-journal-pre-apple-native-2026-09-01",
+      "tag_local": "CONFIRMED",
+      "remote": "BLOCKED_GITHUB_AUTH",
+      "fresh_remote_clone": "SKIPPED_REMOTE_REF_ABSENT",
+      "public_history_strategy": "SANITIZED_ORPHAN_SNAPSHOT",
+      "local_tests": "SwiftPM 111/111; timeout 4/4; resolution 14/14; schema 9/9; fsck PASS"
     },
-    "remote_verification": "PENDING",
-    "fresh_clone_verification": "PENDING"
+    "final": {
+      "branch": "archive/2026-09-01-apple-native-v1",
+      "semantic_base": "05ed742aebcff601d328a919beb405ef0a9183d2",
+      "tag": "gi-journal-manual-fallback-v1-2026-09-01",
+      "content_commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
+      "seal_commit": "TAG_TARGET",
+      "remote": "BLOCKED_GITHUB_AUTH",
+      "fresh_local_clone": "PENDING_SEAL",
+      "fresh_remote_clone": "SKIPPED_REMOTE_REF_ABSENT",
+      "product_outcome": "MANUAL_FIRST_LOCAL_CANDIDATE_APPLE_NATIVE_DIRECTIONAL_NO_GO"
+    }
   },
   "cleanup": {
-    "status": "NOT_STARTED",
-    "reason": "Both pre-change and final remote archive gates must pass first."
+    "status": "NOT_STARTED_REMOTE_GATES_UNMET",
+    "phase5_removals": 0,
+    "phase5_logical_bytes_removed": 0,
+    "reason": "Both pre-change and final remote archive gates plus fresh remote-clone verification must pass first."
   }
 }

@@ -1,38 +1,41 @@
 # GI Journal
 
-> **Current Build 8 boundary — 2026-08-04:** The milestone narrative below is historical and does not describe shipping V1. The current public product uses **Log / Journal / Settings**, embeds the full on-device Gemma model, has no treatment-change or Progress workflow, and creates photo-inclusive PDFs that fail closed if any expected attached photo cannot be verified. Use [`Release/APP_STORE_RELEASE_PLAN.md`](Release/APP_STORE_RELEASE_PLAN.md) and [`Release/SUBMISSION_PACKET_BUILD8_2026-08-03.md`](Release/SUBMISSION_PACKET_BUILD8_2026-08-03.md) as the active release boundary.
+GI Journal is a private, local-first iPhone record for bowel movements. The product-facing name is **GI Journal**; Xcode and module names remain `GITimeline` for build and data continuity.
 
-GI Journal is a private, local-first iPhone record for bowel movements. A person can log with or without a photo, review every photo-derived suggestion before saving, add symptoms and context themselves, mark entries for discussion, compare fixed seven-day periods around one treatment change, and export a clinician-readable PDF.
+## Current public lane
 
-The Xcode project and internal module names remain `GITimeline` to preserve build and data continuity. The product-facing name is **GI Journal**.
+The archived V1 public lane is manual-first and model-free:
 
-## Milestone status
+- A person can create an entry with or without a photo.
+- An attached photo is retained locally and shown during review; this public lane does not analyze it or prefill fields.
+- All visible fields, including red/blood-like and black/tar-like Yes / No / Not sure answers, remain editable.
+- One final confirmation saves the currently displayed person-confirmed entry.
+- Saved entries can be reopened and edited after relaunch.
+- The selected-entry clinician PDF includes the original retained photo and final person-confirmed values.
+- Failure-prone model preparation or inference cannot block the manual route because the public build selects no model.
 
-- The patient flow is now **Log / Journal / Progress**.
-- Attaching a photo starts analysis automatically. Suggestions remain visibly unconfirmed until the person reviews photo usability, Bristol stool type, and mixed form.
-- A photo-analysis failure, cancellation, or timeout retains the photo and draft and immediately opens manual entry. A late result from the revoked attempt is ignored.
-- No-photo entries, daily completeness, treatment markers, discussion marks, fixed seven-day comparisons with the full required metric/denominator set and explicit partial-window labeling, and inclusive-range PDF export are implemented.
-- The generated Letter PDF is searchable, repeats a compact header after page one, includes page footers and privacy language, and deletes its temporary copy after preview/share/cancel/failure.
-- Ordinary arm64 **Release** builds model-free, displays as GI Journal, and currently produces a 44 MB simulator app bundle.
-- Automated evidence currently passes: 38 core tests, 65 app tests, and 5 end-to-end UI tests.
+The `AppStore`, `AppStoreTesting`, and `PhysicalQualification` configurations compile with `MANUAL_FALLBACK_RELEASE`. The shipping target has no Qwen, Gemma, LiteRT, MLX, Apple classifier, model payload, or remote runtime dependency. Historical provider-compatible types and research strings remain in source for internal continuity; they are not an active public runtime path.
 
-## Model and evidence boundary
+## Apple-native decision
 
-The optional Hackathon configuration retains the pinned `litert-community/gemma-4-E4B-it-litert-lm` artifact and LiteRT-LM integration. The model is ignored from Git and is not included in ordinary Release.
+The bounded Vision feature-print and tiny Create ML experiments did not pass the complete directional gate, so no Apple-native classifier was integrated. See `Release/APPLE_NATIVE_DIRECTIONAL_DECISION_2026-09-01.md` for exact metrics and evidence hashes.
 
-The pinned physical raw-image path now executes in an isolated synthetic harness: brown passed alone, and brown plus green produced distinct strict observations in a launch-only suite. That suite still failed 2/3 because the non-target control returned `BROWN` instead of `OTHER`; a fresh-process control-only run repeated the same false positive. A separate local pixel-map-to-text bridge also has physical engineering evidence, but Gemma does **not** receive the raw photo on that route. Its synthetic labels are not clinical ground truth, and the candidate did not replace the baseline after bounded holdout runs stalled.
+## Build and test
 
-Do not interpret isolated raw-image execution, successful build/install/launch, Simulator inference, or the disclosed bridge as 3/3 physical raw acceptance or proof of the ordinary review/save flow. Real-photo accuracy and clinical validity are not established. See `DEVICE_INFERENCE_REPORT.md` and `PHOTO_SUGGESTION_EVALUATION.md` for the route-separated ledger.
+Open `GITimeline.xcodeproj` and select `GITimeline App Store`. `AppStoreTesting` is the locally executable unsigned test configuration. The production `AppStore` configuration deliberately requires an exact clean source commit/tree plus owner-approved HTTPS privacy and support URLs.
 
-## Build
+Core checks:
 
-Open `GITimeline.xcodeproj`, select the `GITimeline` scheme, and build the normal Release configuration for a model-free app. Use the Hackathon configuration only when the exact pinned model is available locally and the build-time verification script succeeds.
+```bash
+swift test
+Scripts/ValidateLocalOnlySource.sh
+Scripts/TestAppStoreModelGateNegative.sh
+```
 
-## Milestone evidence
+Release truth and remaining operator gates are in:
 
-- `GI_JOURNAL_MILESTONE_HANDOFF.md` — implementation, acceptance matrix, demo script, and remaining gates.
-- `PHOTO_SUGGESTION_EVALUATION.md` — frozen synthetic holdout protocol and route-separated results.
-- `DEVICE_INFERENCE_REPORT.md` — physical-device evidence and blockers.
-- `outputs/gi-journal-milestone/` — synthetic PDF and visual evidence.
+- `Release/APPLE_NATIVE_MANUAL_FALLBACK_STATUS_2026-09-01.md`
+- `Release/APP_STORE_RELEASE_PLAN.md`
+- `Release/APP_STORE_METADATA.md`
 
-Prototype only. GI Journal does not diagnose, triage, recommend treatment, or replace medical care.
+Prototype only. GI Journal is a documentation aid; it does not diagnose, triage, recommend treatment, identify pathogens, or replace medical care.
