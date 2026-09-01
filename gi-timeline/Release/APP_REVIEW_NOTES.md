@@ -14,7 +14,7 @@
 
 ## Access and payment
 
-GI Journal has no account, sign-in, activation, demo credential, or developer-server dependency. It is a paid-upfront app. The App Store purchase provides the complete feature set; the app contains no in-app purchases, subscriptions, trials, or additional paywalls.
+GI Journal has no account, sign-in, activation, demo credential, or developer-server dependency. The current binary contains no in-app purchases, subscriptions, trials, or additional paywalls. **[OPERATOR — BLOCKING]** Select and verify the final price and distribution model in App Store Connect before using these notes.
 
 ## What the app does
 

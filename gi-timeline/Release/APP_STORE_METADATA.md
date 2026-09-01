@@ -6,10 +6,10 @@
 
 ## Commercial model
 
-- Distribution: paid download.
-- Access: all features are available after the App Store purchase.
-- In-app purchases: none.
-- Subscriptions: none.
+- Distribution and price: **[OPERATOR — REQUIRED]** choose free or paid distribution in App Store Connect.
+- Access: the current app binary has no app-level purchase gate; App Store availability remains an account-holder decision.
+- In-app purchases: no in-app-purchase functionality exists in the current binary; reconcile this with App Store Connect before submission.
+- Subscriptions: no subscription functionality exists in the current binary; reconcile this with App Store Connect before submission.
 - Account or sign-in: none.
 - Advertising: none.
 
@@ -61,7 +61,7 @@ Privacy is built into the product:
 
 GI Journal is a documentation tool for people working with an established care team. It does not diagnose a condition, assess cause or severity, or recommend treatment. Every saved entry remains user-entered and editable.
 
-One paid download includes the complete app. There are no subscriptions or in-app purchases.
+The current binary has no subscription, in-app-purchase, or additional-paywall functionality. Final price and distribution remain operator decisions.
 
 ### Pre-publication approval — not listing copy
 

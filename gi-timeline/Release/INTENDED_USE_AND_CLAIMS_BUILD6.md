@@ -1,42 +1,22 @@
-# Intended use and claims boundary — historical Build 6 with current-tree draft
+# Historical Build 6 intended-use and claims note
 
-> **Status:** Draft language for operator and qualified legal/regulatory review. It is not a regulatory classification, App Store submission, or clinical-validation claim.
+Status: **retired historical record; not current AppStore copy**.
+Updated: 2026-09-01.
 
-> **Current-tree supersession — 2026-08-03:** Build 6 remains historical evidence. The current candidate exposes only Log, Journal, and Settings; supports a dated no-bowel-movement marker and editable saved entries; uses one whole-entry confirmation for Gemma-prefilled visible observations; removes treatment-change/Progress UI and the fixed urgent-care banner; and has no V1 journal-transfer feature. Journal data remains local, the app requests automatic-backup exclusion, app or device loss may permanently lose entries and photos, PDFs cannot restore the journal, and there is no developer backend or developer access. This candidate requires new frozen-source, physical-device, legal, and App Store evidence before release.
+This file previously described an earlier Build 6/Build 8 candidate that included model-assisted photo suggestions. That candidate is not the current public AppStore lane.
 
-## Intended use
+For the current branch, use `Release/APP_STORE_RELEASE_PLAN.md`, `Release/APP_STORE_METADATA.md`, `Release/APP_REVIEW_NOTES.md`, `Release/PRIVACY_POLICY.md`, `Release/PRIVACY_LABEL.md`, and `Release/SUPPORT.md`.
 
-GI Journal is a private, local tool for a person to document observations and journal information for their own review and optional discussion with a qualified health professional. Gemma may prefill conservative visible observations; the person reviews and may edit them, then chooses whether to confirm and save the whole entry once.
+The current public lane is manual-first:
 
-GI Journal is intended as a documentation tool, not as a diagnostic or treatment service. It does not diagnose a condition, determine its cause or severity, recommend treatment, prescribe a care change, or replace professional medical advice. Whether its functionality changes the product's medical-device or regional regulatory classification requires qualified legal/regulatory review before release.
+- The app supports manual logging with or without an attached photo.
+- The app stores attached photos locally with entries.
+- The public build does not analyze photos or prefill fields from photos.
+- The public build contains no third-party model or inference runtime payload.
+- The person reviews and confirms a complete visible entry before saving.
+- Saved entries remain editable.
+- Selected entries can be exported to a photo-inclusive PDF.
 
-## Current-candidate suggestion boundary
+GI Journal remains a documentation tool. It must not claim to diagnose, triage, identify cause/pathogen, assess clinical severity, recommend treatment, or provide emergency guidance.
 
-The current Build 8 candidate photo-suggestion route is deliberately bounded:
-
-1. Local code redraws the selected photo as a bounded, metadata-free JPEG and validates that app-created copy and its SHA-256 provenance.
-2. The exact validated JPEG bytes are given directly to the embedded Gemma model on the iPhone; the developer, model provider, and any server do not receive them.
-3. Gemma returns a strict, conservative appearance-only suggestion. Unsupported, non-stool, mixed, or unclear inputs must abstain instead of forcing a confident value.
-4. The app prefills supported visible fields. Red/blood-like and black/tar-like person answers remain independent and initially unselected; the person reviews and may edit or discard the suggestion, then confirms the complete entry once before saving.
-
-This current-candidate description does not retroactively relabel historical Build 6 text-facts-bridge evidence as direct image inference. It also does not establish patient-photo accuracy, diagnosis, physical-device qualification, Airplane Mode behavior, or App Store approval. Those gates require separate final-binary evidence.
-
-## Prohibited or unsupported claims
-
-Do not claim that GI Journal or its Gemma feature:
-
-- diagnoses, screens for, detects, predicts, grades, or clinically validates a condition or symptom;
-- uses a photo or Gemma output to infer symptoms, provide medical advice, perform triage, recommend treatment, or generate emergency guidance;
-- establishes clinical accuracy, sensitivity, specificity, real-world effectiveness, or raw-photo model performance;
-- sends a photo to a developer, model-provider, or remote inference service;
-- uses the direct prepared-image-byte route to claim diagnostic, clinical, or patient-photo accuracy;
-- has completed App Store review, TestFlight qualification, physical-device accessibility qualification, or regional medical-device analysis.
-
-## Required review before publication
-
-| Review | Status | Owner / evidence |
-|---|---|---|
-| Product copy matches this conservative intended use | **UNRESOLVED** |  |
-| Final binary behavior matches the shipped suggestion boundary | **UNRESOLVED** |  |
-| Legal/regulatory regional review of claims and intended use | **UNRESOLVED** |  |
-| Store metadata, screenshots, and review notes contain no unsupported claims | **UNRESOLVED** |  |
+Do not submit or reuse older model-enabled claim language without a separate AI-enabled admission packet, exact artifact validation, physical-device qualification, privacy/support/metadata reconciliation, and legal/account-holder approval.

@@ -25,7 +25,6 @@ for root, label in ((archive_root, "archive"), (exported_root, "exported")):
 
 special_macho_paths = {
     "GITimeline",
-    "Frameworks/CLiteRTLM.framework/CLiteRTLM",
 }
 
 

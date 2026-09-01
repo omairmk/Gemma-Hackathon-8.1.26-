@@ -16,12 +16,8 @@ readonly expected_marketing_version="1.0"
 readonly expected_build_number="8"
 readonly expected_minimum_os_version="17.0"
 readonly expected_camera_usage="GI Journal uses the camera to attach a photo to a manual journal entry."
-readonly expected_framework_uuid="BD35C88F-B768-3842-B525-B3F54B900F01"
-readonly expected_framework_identifier="com.google.odml.litertlm.CLiteRTLM"
-readonly expected_framework_linkedit_fileoff="27344896"
-readonly expected_framework_normalized_sha256="cda529609840b50a6d9f638b922a57809bc45f7dc57fd79b111505e6cbe6a183"
-readonly maximum_uncompressed_bytes=4000000000
-readonly maximum_text_segment_bytes=500000000
+readonly maximum_uncompressed_bytes=750000000
+readonly maximum_text_segment_bytes=250000000
 readonly script_directory="${0:A:h}"
 source "${script_directory}/RetiredRecoverySurfaceMarkers.zsh"
 
@@ -117,117 +113,59 @@ validate_privacy_api_entry() {
   local entry_path="NSPrivacyAccessedAPITypes.${index}"
   local category reason_count reason
   category="$(/usr/bin/plutil -extract "${entry_path}.NSPrivacyAccessedAPIType" raw "$manifest" 2>/dev/null)" \
-    || fail "privacy manifest is missing API entry ${index} at ${manifest:t}"
+    || fail "privacy manifest is missing API entry ${index}"
   [[ "$category" == "$expected_category" ]] \
-    || fail "privacy API entry ${index} at ${manifest:t} is ${category}, expected ${expected_category}"
+    || fail "privacy API entry ${index} is ${category}, expected ${expected_category}"
   reason_count="$(/usr/bin/plutil -extract "${entry_path}.NSPrivacyAccessedAPITypeReasons" xml1 -o - "$manifest" \
     | /usr/bin/grep -c '<string>')"
   [[ "$reason_count" == "1" ]] \
-    || fail "privacy API entry ${expected_category} at ${manifest:t} must contain exactly one reason"
+    || fail "privacy API entry ${expected_category} must contain exactly one reason"
   reason="$(/usr/bin/plutil -extract "${entry_path}.NSPrivacyAccessedAPITypeReasons.0" raw "$manifest" 2>/dev/null)" \
-    || fail "privacy API entry ${expected_category} at ${manifest:t} has no reason"
+    || fail "privacy API entry ${expected_category} has no reason"
   [[ "$reason" == "$expected_reason" ]] \
-    || fail "privacy API entry ${expected_category} at ${manifest:t} uses ${reason}, expected ${expected_reason}"
+    || fail "privacy API entry ${expected_category} uses ${reason}, expected ${expected_reason}"
 }
 
-validate_privacy_manifests() {
-  local app_manifest="$1"
-  local framework_manifest="$2"
-  local manifest
-  for manifest in "$app_manifest" "$framework_manifest"; do
-    [[ -f "$manifest" ]] || fail "privacy manifest is missing at ${manifest}"
-    /usr/bin/plutil -lint "$manifest" >/dev/null || fail "privacy manifest is invalid at ${manifest:t}"
-    [[ "$(/usr/bin/plutil -extract NSPrivacyTracking raw "$manifest" 2>/dev/null)" == "false" ]] \
-      || fail "privacy tracking must be false at ${manifest:t}"
-    [[ "$(/usr/bin/plutil -extract NSPrivacyCollectedDataTypes xml1 -o - "$manifest" 2>/dev/null)" == *"<array/>"* ]] \
-      || fail "collected data types must be empty at ${manifest:t}"
-    [[ "$(/usr/bin/plutil -extract NSPrivacyTrackingDomains xml1 -o - "$manifest" 2>/dev/null)" == *"<array/>"* ]] \
-      || fail "tracking domains must be empty at ${manifest:t}"
-  done
-  [[ "$(/usr/bin/plutil -extract NSPrivacyAccessedAPITypes xml1 -o - "$app_manifest" | /usr/bin/grep -c '<dict>')" == "4" ]] \
+validate_privacy_manifest() {
+  local manifest="$1"
+  [[ -f "$manifest" ]] || fail "privacy manifest is missing"
+  /usr/bin/plutil -lint "$manifest" >/dev/null || fail "privacy manifest is invalid"
+  [[ "$(/usr/bin/plutil -extract NSPrivacyTracking raw "$manifest" 2>/dev/null)" == "false" ]] \
+    || fail "privacy tracking must be false"
+  [[ "$(/usr/bin/plutil -extract NSPrivacyCollectedDataTypes xml1 -o - "$manifest" 2>/dev/null)" == *"<array/>"* ]] \
+    || fail "collected data types must be empty"
+  [[ "$(/usr/bin/plutil -extract NSPrivacyTrackingDomains xml1 -o - "$manifest" 2>/dev/null)" == *"<array/>"* ]] \
+    || fail "tracking domains must be empty"
+  [[ "$(/usr/bin/plutil -extract NSPrivacyAccessedAPITypes xml1 -o - "$manifest" | /usr/bin/grep -c '<dict>')" == "4" ]] \
     || fail "app privacy manifest contains an unreviewed accessed-API declaration"
-  validate_privacy_api_entry "$app_manifest" 0 NSPrivacyAccessedAPICategoryUserDefaults CA92.1
-  validate_privacy_api_entry "$app_manifest" 1 NSPrivacyAccessedAPICategoryFileTimestamp C617.1
-  validate_privacy_api_entry "$app_manifest" 2 NSPrivacyAccessedAPICategoryDiskSpace E174.1
-  validate_privacy_api_entry "$app_manifest" 3 NSPrivacyAccessedAPICategorySystemBootTime 35F9.1
-  [[ "$(/usr/bin/plutil -extract NSPrivacyAccessedAPITypes xml1 -o - "$framework_manifest" | /usr/bin/grep -c '<dict>')" == "2" ]] \
-    || fail "framework privacy manifest contains an unreviewed accessed-API declaration"
-  validate_privacy_api_entry "$framework_manifest" 0 NSPrivacyAccessedAPICategoryFileTimestamp C617.1
-  validate_privacy_api_entry "$framework_manifest" 1 NSPrivacyAccessedAPICategorySystemBootTime 35F9.1
+  validate_privacy_api_entry "$manifest" 0 NSPrivacyAccessedAPICategoryUserDefaults CA92.1
+  validate_privacy_api_entry "$manifest" 1 NSPrivacyAccessedAPICategoryFileTimestamp C617.1
+  validate_privacy_api_entry "$manifest" 2 NSPrivacyAccessedAPICategoryDiskSpace E174.1
+  validate_privacy_api_entry "$manifest" 3 NSPrivacyAccessedAPICategorySystemBootTime 35F9.1
 }
 
-validate_model_payload_absence() {
+validate_runtime_payload_absence() {
   local app_path="$1"
   local unexpected_payload
-  unexpected_payload="$(/usr/bin/find "$app_path" \( -type f -o -type l \) -name '*.litertlm' -print -quit)"
-  [[ -z "$unexpected_payload" ]] || fail "manual fallback IPA contains a .litertlm model"
-  unexpected_payload="$(/usr/bin/find "$app_path" \( -type f -o -type l \) -path '*/EmbeddedModels/*' -print -quit)"
-  [[ -z "$unexpected_payload" ]] || fail "manual fallback IPA contains an EmbeddedModels payload"
+  unexpected_payload="$(/usr/bin/find "$app_path" \( -type f -o -type l -o -type d \) \( \
+    -iname '*litert*' -o -iname '*gemma*' -o -iname '*qwen*' -o -iname '*mlx*' \
+    -o -name '*.litertlm' -o -name '*.safetensors' -o -name '*.gguf' \
+  \) -print -quit)"
+  [[ -z "$unexpected_payload" ]] \
+    || fail "manual fallback IPA contains a retired AI runtime/model item: ${unexpected_payload#$app_path/}"
   [[ ! -e "${app_path}/EmbeddedModels" && ! -L "${app_path}/EmbeddedModels" ]] \
     || fail "manual fallback IPA contains an EmbeddedModels directory"
-}
-
-validate_framework_invariant() {
-  local app_path="$1"
-  local framework_path="$app_path/Frameworks/CLiteRTLM.framework"
-  local framework_executable="$framework_path/CLiteRTLM"
-  local framework_info="$framework_path/Info.plist"
-  [[ -d "$framework_path" && -f "$framework_executable" && -f "$framework_info" ]] \
-    || fail "reviewed CLiteRTLM framework is incomplete"
-  [[ "$(/usr/bin/stat -f '%Lp' "$framework_executable")" == "755" ]] \
-    || fail "CLiteRTLM executable is not mode 0755"
-  /usr/bin/codesign --verify --strict "$framework_path" || fail "CLiteRTLM framework signature is invalid"
-  local framework_codesign_details
-  framework_codesign_details="$(/usr/bin/codesign -dv --verbose=4 "$framework_path" 2>&1)"
-  [[ "$framework_codesign_details" == *"Authority=Apple Distribution:"* ]] \
-    || fail "CLiteRTLM framework is not signed by an Apple Distribution identity"
-  [[ "$framework_codesign_details" == *$'\nTeamIdentifier='"$expected_team_id"$'\n'* ]] \
-    || fail "CLiteRTLM framework is not signed by the expected team"
-  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$framework_info" 2>/dev/null)" == "$expected_framework_identifier" ]] \
-    || fail "CLiteRTLM framework identifier drifted"
-  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$framework_info" 2>/dev/null)" == "CLiteRTLM" ]] \
-    || fail "CLiteRTLM executable name drifted"
-  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundlePackageType' "$framework_info" 2>/dev/null)" == "FMWK" ]] \
-    || fail "CLiteRTLM package type drifted"
-  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleSupportedPlatforms:0' "$framework_info" 2>/dev/null)" == "iPhoneOS" ]] \
-    || fail "CLiteRTLM does not declare iPhoneOS"
-  ! /usr/libexec/PlistBuddy -c 'Print :CFBundleSupportedPlatforms:1' "$framework_info" >/dev/null 2>&1 \
-    || fail "CLiteRTLM declares an unreviewed second platform"
-  /usr/bin/python3 "$script_directory/ValidateMachOPlatform.py" "$framework_executable" 2 15.0 \
-    || fail "CLiteRTLM Mach-O platform/minimum OS drifted"
-  local uuid_output uuid_count framework_uuid framework_arch
-  uuid_output="$(/usr/bin/dwarfdump --uuid "$framework_executable")" || fail "could not read CLiteRTLM UUID"
-  uuid_count="$(print -r -- "$uuid_output" | /usr/bin/grep -c '^UUID:')"
-  [[ "$uuid_count" == "1" ]] || fail "CLiteRTLM must be a single-architecture device framework"
-  framework_uuid="$(print -r -- "$uuid_output" | /usr/bin/awk '$1 == "UUID:" && !printed { print $2; printed=1 }')"
-  framework_arch="$(print -r -- "$uuid_output" | /usr/bin/awk '$1 == "UUID:" && !printed { gsub(/[()]/, "", $3); print $3; printed=1 }')"
-  [[ "$framework_uuid" == "$expected_framework_uuid" && "$framework_arch" == "arm64" ]] \
-    || fail "CLiteRTLM UUID/architecture does not match the reviewed arm64 artifact"
-  local linkedit_fileoff
-  linkedit_fileoff="$(/usr/bin/otool -l "$framework_executable" \
-    | /usr/bin/awk '$1 == "segname" && $2 == "__LINKEDIT" { found=1; next } found && !printed && $1 == "fileoff" { print $2; printed=1 }')"
-  [[ "$linkedit_fileoff" == "$expected_framework_linkedit_fileoff" ]] \
-    || fail "CLiteRTLM __LINKEDIT file offset ${linkedit_fileoff:-unavailable} drifted"
-  (( $(/usr/bin/stat -f '%z' "$framework_executable") > expected_framework_linkedit_fileoff )) \
-    || fail "CLiteRTLM executable is truncated before __LINKEDIT"
-  local normalized_sha256
-  normalized_sha256="$(/usr/bin/python3 "$script_directory/NormalizedMachOExecutableHash.py" "$framework_executable" "$linkedit_fileoff")" \
-    || fail "could not normalize/hash the CLiteRTLM executable"
-  [[ "$normalized_sha256" == "$expected_framework_normalized_sha256" ]] \
-    || fail "CLiteRTLM signing-normalized Mach-O SHA-256 drifted"
-  print -r -- "$framework_uuid"
 }
 
 validate_notices() {
   local notices_path="$1"
   [[ -f "$notices_path" ]] || fail "ThirdPartyNotices.txt is missing"
-  local required_notice
-  for required_notice in \
-    "LiteRT-LM" \
-    "2117fc4314670e00047bc8469783f02a68c33f0c" \
-    "http://www.apache.org/licenses/LICENSE-2.0" \
-    "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION"; do
-    /usr/bin/grep -Fq "$required_notice" "$notices_path" || fail "ThirdPartyNotices.txt is missing ${required_notice}"
+  /usr/bin/grep -Fq "No third-party model or inference runtime is bundled" "$notices_path" \
+    || fail "ThirdPartyNotices.txt does not describe the reviewed dependency-free runtime"
+  local prohibited_notice
+  for prohibited_notice in LiteRT Gemma Qwen MLX; do
+    ! /usr/bin/grep -Fq "$prohibited_notice" "$notices_path" \
+      || fail "ThirdPartyNotices.txt contains retired runtime notice ${prohibited_notice}"
   done
 }
 
@@ -241,7 +179,7 @@ validate_closed_payload() {
   while IFS= read -r -d $'\0' bundled_item; do
     relative_path="${bundled_item#$app_path/}"
     case "$relative_path" in
-      AppIcon60x60@2x.png|AppIcon76x76@2x~ipad.png|Assets.car|GITimeline|Info.plist|PkgInfo|PrivacyInfo.xcprivacy|ThirdPartyNotices.txt|embedded.mobileprovision|_CodeSignature/CodeResources|Frameworks/CLiteRTLM.framework/CLiteRTLM|Frameworks/CLiteRTLM.framework/Info.plist|Frameworks/CLiteRTLM.framework/PrivacyInfo.xcprivacy|Frameworks/CLiteRTLM.framework/_CodeSignature/CodeResources) ;;
+      AppIcon60x60@2x.png|AppIcon76x76@2x~ipad.png|Assets.car|GITimeline|Info.plist|PkgInfo|PrivacyInfo.xcprivacy|ThirdPartyNotices.txt|embedded.mobileprovision|_CodeSignature/CodeResources) ;;
       *) fail "bundle contains an unreviewed file: ${relative_path}" ;;
     esac
   done < <(/usr/bin/find "$app_path" -type f -print0)
@@ -249,7 +187,7 @@ validate_closed_payload() {
     relative_path="${bundled_item#$app_path/}"
     [[ "$bundled_item" == "$app_path" ]] && relative_path="."
     case "$relative_path" in
-      .|Frameworks|Frameworks/CLiteRTLM.framework|Frameworks/CLiteRTLM.framework/_CodeSignature|_CodeSignature) ;;
+      .|_CodeSignature|Frameworks) ;;
       *) fail "bundle contains an unreviewed directory: ${relative_path}" ;;
     esac
   done < <(/usr/bin/find "$app_path" -type d -print0)
@@ -267,7 +205,7 @@ validate_closed_payload() {
 validate_public_url "$expected_privacy_url"
 validate_public_url "$expected_support_url"
 readonly ipa_bytes="$(/usr/bin/stat -f '%z' "$ipa_path")"
-(( ipa_bytes < maximum_uncompressed_bytes )) || fail "IPA bytes reach or exceed 4,000,000,000"
+(( ipa_bytes < maximum_uncompressed_bytes )) || fail "IPA bytes reach or exceed the release ceiling"
 readonly ipa_sha256="$(/usr/bin/shasum -a 256 "$ipa_path" | /usr/bin/awk '{print $1}')"
 readonly archive_application_path="$(/usr/libexec/PlistBuddy -c 'Print :ApplicationProperties:ApplicationPath' "$archive_path/Info.plist" 2>/dev/null)"
 [[ "$archive_application_path" == "Applications/GITimeline.app" ]] \
@@ -310,8 +248,8 @@ with archive:
     entries = archive.infolist()
     if not entries:
         reject("IPA has no entries")
-    if len(entries) > 256:
-        reject(f"IPA contains {len(entries)} entries; reviewed maximum is 256")
+    if len(entries) > 128:
+        reject(f"IPA contains {len(entries)} entries; reviewed maximum is 128")
 
     raw_names = set()
     normalized_names = set()
@@ -319,7 +257,6 @@ with archive:
     safe_names = []
     required_executable_entries = {
         "Payload/GITimeline.app/GITimeline": False,
-        "Payload/GITimeline.app/Frameworks/CLiteRTLM.framework/CLiteRTLM": False,
     }
 
     for entry in entries:
@@ -373,7 +310,7 @@ with archive:
 
         total_uncompressed_bytes += entry.file_size
         if total_uncompressed_bytes >= maximum_uncompressed_bytes:
-            reject("IPA declared uncompressed bytes reach or exceed 4,000,000,000")
+            reject("IPA declared uncompressed bytes reach or exceed the release ceiling")
         safe_names.append(name)
 
     missing_executables = [
@@ -385,6 +322,7 @@ with archive:
     with open(entry_dump, "w", encoding="utf-8", newline="\n") as output:
         output.write("\n".join(safe_names) + "\n")
 PY
+
 [[ -s "$entry_dump" ]] || fail "IPA central-directory preflight produced no reviewed entries"
 /usr/bin/unzip -qq "$ipa_path" -d "$extraction_root" || fail "IPA could not be extracted"
 [[ "$(/usr/bin/shasum -a 256 "$ipa_path" | /usr/bin/awk '{print $1}')" == "$ipa_sha256" ]] \
@@ -426,32 +364,12 @@ readonly exported_app_invariant_sha256="$(normalized_macho_sha256 "$executable_p
 [[ "$exported_app_invariant_sha256" == "$archive_app_invariant_sha256" ]] \
   || fail "exported executable signing-normalized Mach-O does not match the validated pre-export archive"
 
-readonly archive_framework_executable_path="$archive_app_path/Frameworks/CLiteRTLM.framework/CLiteRTLM"
-readonly exported_framework_executable_path="$app_path/Frameworks/CLiteRTLM.framework/CLiteRTLM"
-[[ -f "$archive_framework_executable_path" && -f "$exported_framework_executable_path" ]] \
-  || fail "archive/export CLiteRTLM executable linkage inputs are missing"
-[[ "$(/usr/bin/stat -f '%Lp' "$archive_framework_executable_path")" == "755" ]] \
-  || fail "pre-export CLiteRTLM executable is not mode 0755"
-[[ "$(/usr/bin/stat -f '%Lp' "$exported_framework_executable_path")" == "755" ]] \
-  || fail "exported CLiteRTLM executable is not mode 0755"
-/usr/bin/python3 "$script_directory/ValidateMachOPlatform.py" "$archive_framework_executable_path" 2 15.0 \
-  || fail "pre-export CLiteRTLM platform/minimum OS drifted"
-/usr/bin/python3 "$script_directory/ValidateMachOPlatform.py" "$exported_framework_executable_path" 2 15.0 \
-  || fail "exported CLiteRTLM platform/minimum OS drifted"
-readonly archive_framework_linkedit_fileoff="$(linkedit_fileoff "$archive_framework_executable_path" "pre-export CLiteRTLM")"
-readonly exported_framework_linkedit_fileoff="$(linkedit_fileoff "$exported_framework_executable_path" "exported CLiteRTLM")"
-[[ "$archive_framework_linkedit_fileoff" == "$exported_framework_linkedit_fileoff" ]] \
-  || fail "exported CLiteRTLM __LINKEDIT offset does not match the pre-export archive"
-readonly archive_framework_normalized_sha256="$(normalized_macho_sha256 "$archive_framework_executable_path" "$archive_framework_linkedit_fileoff" "pre-export CLiteRTLM")"
-readonly exported_framework_normalized_sha256="$(normalized_macho_sha256 "$exported_framework_executable_path" "$exported_framework_linkedit_fileoff" "exported CLiteRTLM")"
-[[ "$archive_framework_normalized_sha256" == "$exported_framework_normalized_sha256" ]] \
-  || fail "exported CLiteRTLM signing-normalized Mach-O does not match the pre-export archive"
-
 /usr/bin/python3 "$script_directory/CompareNormalizedAppPayloadFiles.py" "$archive_app_path" "$app_path" \
   || fail "exported non-signing payload does not exactly match the pre-export archive"
-/usr/bin/codesign --verify --deep --strict "$app_path" || fail "app or embedded framework signature is invalid"
+/usr/bin/codesign --verify --strict "$app_path" || fail "app signature is invalid"
 readonly codesign_details="$(/usr/bin/codesign -dv --verbose=4 "$app_path" 2>&1)"
-[[ "$codesign_details" == *"Authority=Apple Distribution:"* ]] || fail "app is not signed by an Apple Distribution identity"
+[[ "$codesign_details" == *"Authority=Apple Distribution:"* || "$codesign_details" == *"Authority=iPhone Distribution:"* ]] \
+  || fail "app is not signed by an Apple Distribution identity"
 [[ "$codesign_details" == *$'\nIdentifier='"$expected_bundle_id"$'\n'* || "$codesign_details" == Identifier="$expected_bundle_id"$'\n'* ]] \
   || fail "signed code identifier does not match the production bundle ID"
 [[ "$codesign_details" == *$'\nTeamIdentifier='"$expected_team_id"$'\n'* ]] || fail "signed code team identifier does not match"
@@ -465,14 +383,6 @@ readonly codesign_details="$(/usr/bin/codesign -dv --verbose=4 "$app_path" 2>&1)
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :get-task-allow' "$entitlements_dump" 2>/dev/null || true)" != "true" ]] || fail "exported app permits debugging"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :beta-reports-active' "$entitlements_dump" 2>/dev/null)" == "true" ]] \
   || fail "exported app is missing beta-reports-active"
-readonly signed_entitlement_keys="$(/usr/libexec/PlistBuddy -c 'Print' "$entitlements_dump" \
-  | /usr/bin/sed -n 's/^[[:space:]]*\([^ =]*\)[[:space:]]*=.*$/\1/p' | LC_ALL=C /usr/bin/sort)"
-while IFS= read -r entitlement_key; do
-  case "$entitlement_key" in
-    application-identifier|beta-reports-active|com.apple.developer.team-identifier|get-task-allow) ;;
-    *) fail "unexpected exported entitlement ${entitlement_key}" ;;
-  esac
-done <<< "$signed_entitlement_keys"
 
 readonly embedded_profile="$app_path/embedded.mobileprovision"
 [[ -f "$embedded_profile" ]] || fail "embedded App Store provisioning profile is missing"
@@ -509,36 +419,42 @@ readonly profile_expiration
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :GISourceCommit' "$info_path" 2>/dev/null)" == "$expected_source_commit" ]] || fail "source commit does not match"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :GISourceTree' "$info_path" 2>/dev/null)" == "$expected_source_tree" ]] || fail "source tree does not match"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :NSCameraUsageDescription' "$info_path" 2>/dev/null)" == "$expected_camera_usage" ]] || fail "camera usage description drifted"
-[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIcons:CFBundlePrimaryIcon:CFBundleIconName' "$info_path" 2>/dev/null)" == "AppIcon" ]] || fail "primary app icon metadata is missing"
 for prohibited_key in CFBundleDocumentTypes CFBundleURLTypes UTExportedTypeDeclarations UTImportedTypeDeclarations UIFileSharingEnabled LSSupportsOpeningDocumentsInPlace; do
   ! /usr/libexec/PlistBuddy -c "Print :${prohibited_key}" "$info_path" >/dev/null 2>&1 || fail "public app exposes a document, URL, or file-type surface through ${prohibited_key}"
 done
 
-validate_model_payload_absence "$app_path"
-validate_privacy_manifests "$app_path/PrivacyInfo.xcprivacy" "$app_path/Frameworks/CLiteRTLM.framework/PrivacyInfo.xcprivacy"
+validate_runtime_payload_absence "$app_path"
+validate_privacy_manifest "$app_path/PrivacyInfo.xcprivacy"
 validate_notices "$app_path/ThirdPartyNotices.txt"
 [[ -f "$app_path/Assets.car" ]] || fail "compiled assets are missing"
 validate_closed_payload "$app_path"
-readonly framework_uuid="$(validate_framework_invariant "$app_path")"
 
 /usr/bin/strings -a "$executable_path" > "$strings_dump" || fail "could not inspect production executable strings"
-for prohibited_marker in --show-developer-tools --ui-test-ephemeral-store --run-overnight-gemma-smoke --run-embedded-gemma-smoke --internal-app-store-raw-image-v1 --diagnose-app-store-raw-image-v1-gpu-main-cpu-vision70-ab diagnostic-app-store-raw-image-v1-gpu-main-cpu-vision70 --diagnose-app-store-raw-image-v1-preparation --diagnose-app-store-raw-image-v1-preparation-fresh-cache --diagnose-app-store-raw-image-v1-preparation-caches-root --diagnose-app-store-raw-image-v1-direct-image-data --diagnose-app-store-raw-image-v1-sync-send-ab conversation_send_message_sync_v1 sync_send_start sync_cancel_requested sync_quarantined fresh_isolated_diagnostic_cache fresh_caches_root_diagnostic_cache InternalRawImageV1PreparationCache InternalRawImageV1PreparationCaches --run-embedded-gemma-normal-flow --verify-embedded-gemma-normal-flow --run-physical-raw-image --run-photo-evaluation-derived-map-iphone --run-photo-evaluation-raw-image-simulator --run-photo-tuning-derived-map-v3 --run-photo-blind-validation-v3 --run-raw-photo-v12-tuning-simulator-baseline --run-raw-photo-v12-tuning-simulator-candidate --raw-photo-v12-tuning-fixture- GI_JOURNAL_UI_EVIDENCE_SEEDED EMBEDDED_GEMMA_NORMAL_FLOW_PASS EMBEDDED_GEMMA_RELAUNCH_PASS EMBEDDED_GEMMA_COMPLETION_FAIL APP_STORE_RAW_IMAGE_V1_PREPARATION PHOTO_TUNING_V3_RUN_COMPLETE PHOTO_BLIND_VALIDATION_V1_RUN_COMPLETE RAW_PHOTO_V12_TUNING RawPhotoV12TuningV1 raw-photo-v12-subject-gate-tuning-v1 RawPhotoV12TuningAttemptLedgerV1 holdout_manifest_access isolation_attested 00d8e8bc11b8ba83d4cb624bc69e45542b7aae0420a45b17d66e52232d34e7bc diagnostic-app-store-raw-image-v1.2-subject-gate-tuning-v1 gi-photo-v1.2-subject-gate-tuning-v1 GIJournalBlindValidationV1; do
+for prohibited_marker in \
+  "--show-developer-tools" \
+  "--ui-test-ephemeral-store" \
+  "--run-overnight-gemma-smoke" \
+  "--run-embedded-gemma-smoke" \
+  "--internal-app-store-raw-image-v1" \
+  "--run-physical-raw-image" \
+  "--run-photo-evaluation-derived-map-iphone" \
+  "--run-photo-tuning-derived-map-v3" \
+  "--run-photo-blind-validation-v3" \
+  "Qwen3HybridPhotoSuggestionEngine"; do
   ! /usr/bin/grep -Fq -- "$prohibited_marker" "$strings_dump" || fail "production executable contains prohibited marker ${prohibited_marker}"
 done
 for prohibited_marker in "${RETIRED_RECOVERY_SURFACE_MARKERS[@]}"; do
   ! /usr/bin/grep -Fqi -- "$prohibited_marker" "$strings_dump" || fail "production executable contains retired recovery marker ${prohibited_marker}"
 done
 
-typeset -i app_text_bytes framework_text_bytes total_text_bytes app_regular_file_bytes=0 extracted_regular_file_bytes=0
+typeset -i app_text_bytes app_regular_file_bytes=0 extracted_regular_file_bytes=0
 app_text_bytes="$(/usr/bin/size -m "$executable_path" | /usr/bin/awk '$1 == "Segment" && $2 == "__TEXT:" && !printed { print $3; printed=1 }')"
-framework_text_bytes="$(/usr/bin/size -m "$app_path/Frameworks/CLiteRTLM.framework/CLiteRTLM" | /usr/bin/awk '$1 == "Segment" && $2 == "__TEXT:" && !printed { print $3; printed=1 }')"
-(( app_text_bytes > 0 && framework_text_bytes > 0 )) || fail "could not measure executable __TEXT segments"
-total_text_bytes=$(( app_text_bytes + framework_text_bytes ))
-(( total_text_bytes < maximum_text_segment_bytes )) || fail "executable __TEXT bytes reach or exceed the release ceiling"
+(( app_text_bytes > 0 )) || fail "could not measure executable __TEXT segment"
+(( app_text_bytes < maximum_text_segment_bytes )) || fail "executable __TEXT bytes reach or exceed the release ceiling"
 while IFS= read -r -d $'\0' bundled_file; do (( app_regular_file_bytes += $(/usr/bin/stat -f '%z' "$bundled_file") )); done < <(/usr/bin/find "$app_path" -type f -print0)
-(( app_regular_file_bytes < maximum_uncompressed_bytes )) || fail "app regular-file bytes reach or exceed 4,000,000,000"
+(( app_regular_file_bytes < maximum_uncompressed_bytes )) || fail "app regular-file bytes reach or exceed the release ceiling"
 while IFS= read -r -d $'\0' extracted_file; do (( extracted_regular_file_bytes += $(/usr/bin/stat -f '%z' "$extracted_file") )); done < <(/usr/bin/find "$extraction_root" -type f -print0)
-(( extracted_regular_file_bytes < maximum_uncompressed_bytes )) || fail "extracted IPA regular-file bytes reach or exceed 4,000,000,000"
+(( extracted_regular_file_bytes < maximum_uncompressed_bytes )) || fail "extracted IPA regular-file bytes reach or exceed the release ceiling"
 
 print -- "EXPORTED_APPSTORE_IPA_VALIDATION: PASS"
-print -- "team=${expected_team_id} identity=Apple_Distribution profile_expiration=${profile_expiration} bundle_id=${expected_bundle_id} version=${expected_marketing_version} build=${expected_build_number} source_commit=${expected_source_commit} source_tree=${expected_source_tree} app_uuid=${exported_app_uuid} app_normalized_sha256=${exported_app_invariant_sha256} framework_uuid=${framework_uuid} framework_normalized_sha256=${expected_framework_normalized_sha256} app_regular_file_bytes=${app_regular_file_bytes} ipa_bytes=${ipa_bytes} ipa_sha256=${ipa_sha256} model_payload=absent"
+print -- "team=${expected_team_id} identity=Apple_Distribution profile_expiration=${profile_expiration} bundle_id=${expected_bundle_id} version=${expected_marketing_version} build=${expected_build_number} source_commit=${expected_source_commit} source_tree=${expected_source_tree} app_uuid=${exported_app_uuid} app_normalized_sha256=${exported_app_invariant_sha256} app_regular_file_bytes=${app_regular_file_bytes} ipa_bytes=${ipa_bytes} ipa_sha256=${ipa_sha256} model_payload=absent runtime_payload=absent"

@@ -113,7 +113,7 @@ import GITimelineCore
     provenance != EntryProvenance.manual.rawValue && modelID == nil
   }
   var savedRuntimeLabel: String? {
-    if isUIDemoProvider { return "UI demo · Gemma not connected" }
+    if isUIDemoProvider { return "UI demo · AI not connected" }
     guard let inferenceProvenance else { return modelID }
     if let location = inferenceProvenance.executionLocation {
       return "\(inferenceProvenance.family) · \(location.displayName)"

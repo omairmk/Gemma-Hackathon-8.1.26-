@@ -1,7 +1,9 @@
 import XCTest
 import CryptoKit
 import GITimelineCore
+#if canImport(LiteRTLM)
 import LiteRTLM
+#endif
 import PDFKit
 import SwiftData
 import UIKit
@@ -549,8 +551,10 @@ import UIKit
     throw XCTSkip("The public acknowledgments are exercised by the AppStoreTesting configuration.")
     #else
     let acknowledgments = GIJournalThirdPartyAcknowledgments.summary.lowercased()
-    XCTAssertTrue(acknowledgments.contains("litert-lm runtime framework"))
-    XCTAssertTrue(acknowledgments.contains("does not include or run a gemma model"))
+    XCTAssertTrue(acknowledgments.contains("does not include or run a third-party ai model or runtime"))
+    XCTAssertFalse(acknowledgments.contains("litert"))
+    XCTAssertFalse(acknowledgments.contains("gemma"))
+    XCTAssertFalse(acknowledgments.contains("qwen"))
     XCTAssertFalse(acknowledgments.contains("embedded gemma"))
     XCTAssertFalse(acknowledgments.contains("the public release model is"))
     XCTAssertFalse(GIJournalThirdPartyAcknowledgments.includesGemmaModelLink)
@@ -823,6 +827,7 @@ import UIKit
     #endif
   }
 
+  #if canImport(LiteRTLM)
   func testAppStoreModelCacheRejectsJunkAndPartialReceiptAsCold() throws {
     #if !APPSTORE_RELEASE_TESTING
     throw XCTSkip("Shipping cache resource handling is exercised by the AppStoreTesting configuration.")
@@ -2020,6 +2025,7 @@ import UIKit
       options: [.sortedKeys]
     ).write(to: receiptURL, options: .atomic)
   }
+  #endif
 
   private static func shippingPhotoData() -> Data {
     let format = UIGraphicsImageRendererFormat.default()

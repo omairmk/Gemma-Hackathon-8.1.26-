@@ -942,8 +942,6 @@ private struct GIJournalSettingsView: View {
   @State private var showEraseFirstStep = false
   @State private var showEraseFinalStep = false
 
-  private let model = ModelDescriptor.liteRTGemma4E4B
-
   var body: some View {
     NavigationStack {
       Form {
@@ -1000,21 +998,26 @@ private struct GIJournalSettingsView: View {
           Text(GIJournalPublicManualLaneCopy.photoAttachmentDisclosure)
         }
         #else
-        Section("Photo suggestion model") {
+        Section("Photo suggestions") {
           #if APPSTORE_RELEASE
-          Text("GI Journal uses the full embedded Gemma 4 E4B model through LiteRT-LM. The app redraws the selected photo as a bounded, metadata-free JPEG and provides those validated image bytes directly to Gemma on this iPhone for a conservative, editable suggestion. Nothing is uploaded to the developer or model provider. You can always log without a photo.")
+          #if MANUAL_FALLBACK_RELEASE
+          Text("This build does not include automatic photo analysis. An attached photo stays with a complete manual entry and is not sent to the developer.")
+          #else
+          Text("GI Journal uses an on-device photo-suggestion pipeline. Photos and suggestions are not sent to the developer. You can always log without a photo.")
+          #endif
           #elseif HACKATHON_EMBEDDED_GEMMA
           Text("This internal build uses the full embedded Gemma 4 E4B model through LiteRT-LM. Its ordinary photo-suggestion route gives Gemma a simplified picture summary created on this device; direct prepared-image bytes are used only by isolated engineering diagnostics. Nothing is uploaded to the developer or model provider. You can always log without a photo.")
           #else
           Text("This internal build does not bundle the public-release Gemma model. If an authorized compatible model is installed locally, a prepared photo is processed on this device into a conservative, editable suggestion; otherwise you can log without a photo. The model provider does not receive the photo, prompt, suggestion, or journal record.")
           Text("Public release model identity")
             .font(.subheadline.weight(.semibold))
-          #endif
+          let model = ModelDescriptor.liteRTGemma4E4B
           modelIdentityRow("Family", model.family)
           modelIdentityRow("Model", model.modelID)
           modelIdentityRow("Artifact", model.artifactFilename)
           modelIdentityRow("Revision", model.sourceRevision)
           modelIdentityRow("SHA-256", model.expectedSHA256)
+          #endif
         }
         #endif
 
@@ -1024,11 +1027,14 @@ private struct GIJournalSettingsView: View {
 
         Section("Third-party acknowledgments") {
           Text(GIJournalThirdPartyAcknowledgments.summary)
+          #if !APPSTORE_RELEASE
           if GIJournalThirdPartyAcknowledgments.includesGemmaModelLink {
+            let model = ModelDescriptor.liteRTGemma4E4B
             Link("Pinned Gemma 4 E4B model", destination: URL(string: model.sourceURL)!)
           }
           Link("Apache License 2.0", destination: URL(string: "https://www.apache.org/licenses/LICENSE-2.0")!)
           Link("LiteRT-LM source", destination: URL(string: "https://github.com/google-ai-edge/LiteRT-LM")!)
+          #endif
           NavigationLink("Licenses and notices") {
             ThirdPartyNoticesView()
           }
@@ -1139,7 +1145,7 @@ private struct GIJournalSettingsView: View {
 enum GIJournalThirdPartyAcknowledgments {
   static var summary: String {
     #if MANUAL_FALLBACK_RELEASE
-    "GI Journal includes the LiteRT-LM runtime framework from Google and the LiteRT community under the Apache License 2.0. This public manual-first version does not include or run a Gemma model. Inclusion of the runtime does not imply endorsement of GI Journal. No third-party analytics or advertising SDK is included."
+    "This public manual-first build does not include or run a third-party AI model or runtime. No third-party analytics or advertising SDK is included."
     #elseif APPSTORE_RELEASE || HACKATHON_EMBEDDED_GEMMA
     "The embedded Gemma 4 E4B model and the LiteRT-LM on-device runtime are provided by Google and the LiteRT community under the Apache License 2.0. Their inclusion does not imply endorsement of GI Journal. No third-party analytics or advertising SDK is included."
     #else
@@ -1173,7 +1179,7 @@ private struct GIJournalPrivacyPolicyView: View {
         Text(GIJournalPublicManualLaneCopy.privacyPhotoDisclosure)
         #else
         Text("GI Journal keeps entries, retained photo copies, day markers, drafts, suggestion provenance, and temporary exports in this app's protected local container. It does not automatically transmit or collect that content for the developer. The developer operates no account, journal server, analytics, advertising, tracking, remote-inference, sync, or automatic journal-backup service and has no app-managed access to the journal.")
-        Text("A photo selected for an entry is redrawn as a bounded, metadata-free JPEG before local processing and storage. The validated prepared JPEG is provided directly to the embedded Gemma runtime on this iPhone; it is not sent to a server, the developer, or the model provider.")
+        Text("A photo selected for an entry is redrawn as a bounded, metadata-free JPEG before local processing and storage. If this build has photo suggestions enabled, analysis stays on this iPhone; it is not sent to a server, the developer, or a model provider.")
         #endif
         Text(AppFolders.restartRetentionLine)
         Text("A PDF leaves GI Journal only when you choose a destination. The destination's privacy and retention terms then apply. \(AppFolders.dataLossLine)")

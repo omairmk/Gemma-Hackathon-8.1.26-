@@ -41,7 +41,7 @@ struct ReviewSession: Sendable, Equatable {
     reviewed = observation
     originalMixedForm = ClinicalValidation.initialMixedFormSuggestion(from: observation) ?? .unsure
     reviewedMixedForm = originalMixedForm
-    // Gemma prefills one editable entry. The person's final Save action is the
+    // Photo analysis prefills one editable entry. The person's final Save action is the
     // single confirmation; no per-field confirmation taps are required.
     states = Dictionary(uniqueKeysWithValues: ReviewField.allCases.map { ($0, .confirmed) })
   }
@@ -339,7 +339,7 @@ private struct PhotoTransferCompletion {
   }
 
   /// Reopens only a complete, hash-validated local draft. A request that was
-  /// interrupted while Gemma was reading is restored as manual review rather
+  /// interrupted while photo analysis was running is restored as manual review rather
   /// than being re-run or allowed to overwrite newer user input.
   func restoreUnfinishedDraftIfAvailable() {
     handleDraftRestoreResult(draftSnapshotStore.restore())
@@ -761,17 +761,17 @@ private struct PhotoTransferCompletion {
   var modelExpectedHashLabel: String { descriptor.map { "\($0.shortSHA256)…" } ?? "Unavailable" }
   var runtimeBadgeLabel: String {
     if let runtimeBadgeOverride { return runtimeBadgeOverride }
-    guard let descriptor else { return "UI demo · Gemma not connected" }
+    guard let descriptor else { return "UI demo · AI not connected" }
     return "\(descriptor.family) · \(executionLocation.displayName)"
   }
   var modelStatusText: String {
-    if runtimeBadgeOverride != nil { return "Deterministic interface test — no Gemma model was called." }
+    if runtimeBadgeOverride != nil { return "Deterministic interface test — no AI model was called." }
     if !isModelVerified { return "No verified selected model is available." }
     return isEngineReady ? "Verified on disk · ready in this process" : "Verified on disk · not initialized in this process"
   }
   var analysisMethodNotice: String? {
     guard configuration.usesLocalPixelBridge else { return nil }
-    return "On-device suggestion: GI Journal used a simplified picture summary created on this iPhone. The full photo did not leave your device and was not sent to Gemma. Review the prefilled entry, change anything that is not right, then confirm it once."
+    return "On-device suggestion: GI Journal used a simplified picture summary created on this iPhone. The full photo did not leave your device or go to a server. Review the prefilled entry, change anything that is not right, then confirm it once."
   }
   var analyzeUnavailableReason: String? {
     if photoQualityRecommendation?.severity == .hard {
@@ -1434,7 +1434,7 @@ private struct PhotoTransferCompletion {
   }
 
   /// Records the person's subject decision before any candidate runtime work.
-  /// Only Yes keeps the sanitized photo eligible for one Gemma call.
+  /// Only Yes keeps the sanitized photo eligible for one analysis call.
   @discardableResult
   func chooseSubjectConfirmation(_ answer: PhotoSubjectConfirmation) -> Bool {
     guard usesSubjectFirstCandidate, let draft, canReplaceOrClear,
@@ -1453,7 +1453,7 @@ private struct PhotoTransferCompletion {
     withDraftSnapshotPersistenceSuppressed {
       subjectConfirmation = .yes
       // Candidate compatibility mirror: this is the person's answer to the
-      // exact subject question, never a value copied from Gemma.
+      // exact subject question, never a value copied from the analyzer.
       confirmedPhotoUsable = true
       didReviewPhotoUsability = true
       redBlood = nil
@@ -2376,7 +2376,7 @@ private struct PhotoTransferCompletion {
     guard canPrepareModel else { return }
     let preparationDraftID = draft?.reference.id
     isPreparingModel = true
-    statusMessage = autoAnalysisEnabled ? "Getting on-device analysis ready…" : "Preparing Gemma"
+    statusMessage = autoAnalysisEnabled ? "Getting on-device analysis ready…" : "Preparing photo review"
     defer { isPreparingModel = false }
     do {
       let result = try await inference.prepare()

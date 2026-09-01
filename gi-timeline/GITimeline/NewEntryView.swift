@@ -791,7 +791,7 @@ private struct ReviewEntryView: View {
           if viewModel.hasAnalysis {
             Text(viewModel.usesProviderNeutralPhotoReview
               ? "On-device photo analysis prefilled every photo-observable value below. Change anything that is not right; the one save action adopts all currently displayed values."
-              : "Gemma prefilled every photo-observable value below. Change anything that is not right; the one save action adopts all currently displayed values.")
+              : "Photo suggestions prefilled every photo-observable value below. Change anything that is not right; the one save action adopts all currently displayed values.")
               .font(.footnote)
               .foregroundStyle(GIJournalTheme.secondaryText)
               .accessibilityIdentifier("suggestionsNotYetConfirmed")
@@ -1470,7 +1470,7 @@ struct FirstRunInformationView: View {
             benefit("You enter; you save", detail: "Complete the entry yourself, review the displayed values, and save once.", icon: "checkmark.circle")
             #else
             benefit("Photo suggestions are optional", detail: "You can add a photo for a suggestion or enter the details yourself.", icon: "camera")
-            benefit("Gemma suggests; you confirm", detail: "Review the complete entry and change anything needed before one confirmation saves it.", icon: "checkmark.circle")
+            benefit("Photo suggestions; you confirm", detail: "Review the complete entry and change anything needed before one confirmation saves it.", icon: "checkmark.circle")
             #endif
             benefit("Made for conversations", detail: "Your reviewed record can help you discuss patterns with a clinician.", icon: "text.book.closed")
           }

@@ -1,4 +1,6 @@
+#if canImport(LiteRTLM)
 @preconcurrency import LiteRTLM
+#endif
 import CoreGraphics
 import CryptoKit
 import Darwin
@@ -2263,7 +2265,7 @@ private final class BoundedGenerationCancellationState: @unchecked Sendable {
   }
 }
 
-#if DEBUG || HACKATHON_EMBEDDED_GEMMA
+#if canImport(LiteRTLM) && (DEBUG || HACKATHON_EMBEDDED_GEMMA)
 /// Owns the only cross-thread action used by the synchronous diagnostic:
 /// LiteRT's public Conversation.cancel(). The native synchronous call cannot
 /// service an actor-isolated cancellation request while it is blocked in
@@ -2339,6 +2341,7 @@ final class SynchronousDiagnosticCancellation: @unchecked Sendable {
 }
 #endif
 
+#if canImport(LiteRTLM)
 /// Collects LiteRT's native async stream while enforcing bounds independently
 /// of tokenization. The cancellation closure must call Conversation.cancel(),
 /// which is the only supported way to interrupt native generation; cancelling
@@ -2630,6 +2633,7 @@ enum SyntheticVisionBoundedStreamingGeneration {
   }
 }
 #endif
+#endif
 
 enum StructuredInferenceOutput {
   /// A repaired response is terminal: unlike the first response, it gets no
@@ -2644,6 +2648,7 @@ enum StructuredInferenceOutput {
 /// conversation API. Keeping the visual budget on the Conversation avoids the
 /// package's process-global experimental fallback and applies identically to
 /// synchronous and streaming sends.
+#if canImport(LiteRTLM)
 struct LiteRTConversationConfigPlan: Equatable, Sendable {
   let topK: Int
   let topP: Float
@@ -4599,6 +4604,48 @@ actor InferenceService: TimelineInferenceServing {
   """ + "\n"
   #endif
 }
+#else
+/// Shipping compatibility shell for historical coordinator call sites.
+/// The intended app target has no LiteRT package, framework, model payload, or
+/// native runtime. Public construction therefore fails closed into the existing
+/// complete manual-entry path while retained receipts remain decodable above.
+actor InferenceService: TimelineInferenceServing {
+  let descriptor: ModelDescriptor
+
+  init(
+    verifiedModel: VerifiedModel,
+    configuration: InferenceConfiguration,
+    cacheURL: URL,
+    cacheProfile: LiteRTEngineCacheProfileV1,
+    cacheMode: ModelRuntimeEngineCacheMode,
+    cacheDisposition: ModelCacheDisposition
+  ) {
+    descriptor = verifiedModel.descriptor
+  }
+
+  func prepare() throws -> EnginePreparationResult {
+    throw GITimelineError.missingModelDescriptor
+  }
+
+  func engineState() -> EngineProcessState { .uninitialized }
+
+  func analyze(draftURL: URL) throws -> String {
+    throw GITimelineError.missingModelDescriptor
+  }
+
+  func analyze(draftURL: URL, expectedSHA256: String) throws -> String {
+    throw GITimelineError.missingModelDescriptor
+  }
+
+  func repair(draftURL: URL, errors: String) throws -> String {
+    throw GITimelineError.missingModelDescriptor
+  }
+
+  func discardRepairContext(draftURL: URL) {}
+
+  func canReleaseForModelChange() -> Bool { true }
+}
+#endif
 
 #if DEBUG
 actor MockInferenceService: TimelineInferenceServing {

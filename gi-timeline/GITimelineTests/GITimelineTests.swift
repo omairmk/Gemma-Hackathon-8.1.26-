@@ -292,7 +292,7 @@ import XCTest
   func testRuntimeBadgeAndAnalyzeUnavailableReasonsReflectReadiness() throws {
     let disconnected = try makeHarness(modelReady: false, descriptor: nil)
     defer { disconnected.cleanup() }
-    XCTAssertEqual(disconnected.viewModel.runtimeBadgeLabel, "UI demo · Gemma not connected")
+    XCTAssertEqual(disconnected.viewModel.runtimeBadgeLabel, "UI demo · AI not connected")
     XCTAssertEqual(disconnected.viewModel.analyzeUnavailableReason, "Local analysis is not available in this build.")
 
     let unverified = try makeHarness(
@@ -340,7 +340,7 @@ import XCTest
     XCTAssertEqual(demoEntry.demoKind, SyntheticFixture.brown.rawValue)
     XCTAssertTrue(DemoDataPolicy.isSyntheticDemo(demoEntry))
     XCTAssertTrue(demoEntry.isUIDemoProvider)
-    XCTAssertEqual(demoEntry.savedRuntimeLabel, "UI demo · Gemma not connected")
+    XCTAssertEqual(demoEntry.savedRuntimeLabel, "UI demo · AI not connected")
 
     let manual = try makeHarness()
     defer { manual.cleanup() }

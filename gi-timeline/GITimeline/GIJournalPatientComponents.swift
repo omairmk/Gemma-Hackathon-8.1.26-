@@ -309,7 +309,7 @@ struct GIJournalSuggestionDisclosure: View {
   private var explanation: String {
     switch source {
     case "gemma_derived_map":
-      "On-device suggestion: GI Journal created a simplified picture summary on this iPhone. The embedded Gemma model received only that summary, not the photo. Review the prefilled entry, change anything that is not right, then confirm it once."
+      "Historical on-device suggestion: GI Journal created a simplified picture summary on this iPhone. Review the prefilled entry, change anything that is not right, then confirm it once."
     case "gemma_raw_image" where rawImageOnDeviceAccepted:
       "On-device suggestion: GI Journal used the selected photo on this iPhone. Please confirm or change the result."
     case "gemma_raw_image":
