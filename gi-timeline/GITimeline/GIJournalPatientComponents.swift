@@ -204,7 +204,6 @@ struct GIJournalBooleanRows: View {
 struct GIJournalUrgencyRows: View {
   @Binding var selection: UrgencyLevel?
   @Binding var helpRoute: GIJournalHelpRoute?
-  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
   var body: some View {
     VStack(alignment: .leading, spacing: 10) {
@@ -215,11 +214,10 @@ struct GIJournalUrgencyRows: View {
         Spacer()
         GIJournalHelpButton(route: .urgency, routeToPresent: $helpRoute)
       }
-      if dynamicTypeSize.isAccessibilitySize {
-        VStack(alignment: .leading, spacing: 8) { optionButtons }
-      } else {
-        HStack(spacing: 8) { optionButtons }
-      }
+      // Keep all three choices at full readable width. A compact horizontal
+      // row can compress these labels into narrow multi-line columns while
+      // XCTest (and a person) is using an accessibility text size.
+      VStack(alignment: .leading, spacing: 8) { optionButtons }
     }
   }
 
@@ -228,7 +226,11 @@ struct GIJournalUrgencyRows: View {
       Button { selection = value } label: {
         HStack(spacing: 7) {
           Image(systemName: selection == value ? "checkmark.circle.fill" : "circle")
+            .foregroundStyle(
+              selection == value ? GIJournalTheme.primary : GIJournalTheme.secondaryText
+            )
           Text(label(for: value))
+            .foregroundStyle(GIJournalTheme.text)
           Spacer(minLength: 0)
         }
         .font(.subheadline.weight(.semibold))
@@ -241,7 +243,6 @@ struct GIJournalUrgencyRows: View {
         }
       }
       .buttonStyle(.plain)
-      .foregroundStyle(selection == value ? GIJournalTheme.primary : GIJournalTheme.text)
       .accessibilityValue(selection == value ? "Selected" : "Not selected")
     }
   }

@@ -963,6 +963,12 @@ private struct GIJournalSettingsView: View {
         }
 
         Section {
+          Text("Local privacy notice")
+            .font(.headline)
+            .foregroundStyle(GIJournalTheme.text)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityAddTraits(.isHeader)
+
           #if MANUAL_FALLBACK_RELEASE
           settingsBody("Journal entries can include dates, bowel-movement and symptom answers, notes, and photos. Older compatible entries may also retain their original model provenance. They remain inside this app's protected local container unless you explicitly export a PDF. GI Journal requests backup exclusion for its app-created journal files; iOS controls backup behavior.")
           #else
@@ -976,8 +982,6 @@ private struct GIJournalSettingsView: View {
           settingsBody("Attached photos are redrawn as metadata-free, bounded JPEGs before local analysis and storage. User-confirmed and user-reported values drive clinical journal values and aggregates. The original on-device suggestion remains local and is used only for provenance and the visible count of photo suggestions changed during review.")
           #endif
           settingsBody("PDF export happens only when you request it. A PDF saved outside GI Journal is governed by the destination you choose and cannot restore the journal.")
-        } header: {
-          settingsSectionHeader("Local privacy notice")
         }
 
         Section {
