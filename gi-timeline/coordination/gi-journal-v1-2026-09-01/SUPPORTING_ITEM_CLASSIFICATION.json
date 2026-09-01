@@ -116,7 +116,7 @@
       "path_or_group": "final manual-first archive branch, source manifest, and truthful tag",
       "source_commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
       "classification": "INCLUDED_IN_GIT",
-      "notes": "The seal commit adds only the machine-readable manifest over its content parent. Local verification is required before push; remote verification remains blocked."
+      "notes": "The final -v2 seal commit adds only the machine-readable manifest over its content parent. Parent-bound verification, fsck, SwiftPM 111/111, and source gates passed from a fresh local clone; remote verification remains blocked."
     },
     {
       "path_or_group": "intermediate tag archive-2026-09-01-manual-fallback-726fa24",

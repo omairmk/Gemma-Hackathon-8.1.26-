@@ -6,7 +6,7 @@ Status: `LOCAL_SEAL_PENDING_REMOTE_VERIFICATION`
 
 Final branch: `archive/2026-09-01-apple-native-v1`
 
-Truthful final tag: `gi-journal-manual-fallback-v1-2026-09-01`
+Truthful final tag: `gi-journal-manual-fallback-v1-2026-09-01-v2`
 
 The branch name records the mission that produced this archive. The tag records the actual product outcome: the Apple-native experiments failed the complete directional gate, no classifier was integrated, and the preserved public lane is manual-first.
 
@@ -18,7 +18,7 @@ The branch name records the mission that produced this archive. The tag records 
 - Final content commit: recorded as `source_commit` in `FINAL_SOURCE_SNAPSHOT_MANIFEST.json`.
 - Seal commit: the final tag target; it has the content commit as its only parent and adds only `FINAL_SOURCE_SNAPSHOT_MANIFEST.json`.
 
-The earlier local tag `archive-2026-09-01-manual-fallback-726fa24` points to an intermediate, pre-accessibility-review commit. It is preserved as history but is not the final archive tag. The local `archive-2026-09-01-apple-native-v1-f25f89a` tag points to private/unsafe evidence history and must not be pushed.
+The earlier local tag `archive-2026-09-01-manual-fallback-726fa24` points to an intermediate, pre-accessibility-review commit. The local tag `gi-journal-manual-fallback-v1-2026-09-01` points to the first valid seal created before the fresh-clone result was written into the durable ledger. Both are preserved as history, but `-v2` is the final archive tag. The local `archive-2026-09-01-apple-native-v1-f25f89a` tag points to private/unsafe evidence history and must not be pushed.
 
 ## Included in Git
 

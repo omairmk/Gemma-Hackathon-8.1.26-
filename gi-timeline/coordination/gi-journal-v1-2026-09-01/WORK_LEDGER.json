@@ -258,14 +258,14 @@
       "starting_head": "05ed742aebcff601d328a919beb405ef0a9183d2",
       "allowed_files": "archive/readme/restore/cleanup/ledger/classification/decision/status and final manifest scripts",
       "commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
-      "tests": "parent-bound seal, local fresh clone, fsck, and final source gates recorded by final report",
+      "tests": "parent-bound seal PASS; fresh local non-local clone PASS; Git fsck PASS; fresh-clone SwiftPM 111/111; local-only and payload-negative source gates PASS",
       "artifacts": [
         "ARCHIVE_MANIFEST.md",
         "FINAL_SOURCE_SNAPSHOT_MANIFEST.json",
         "RESTORE.md",
         "CLEANUP_MANIFEST.json"
       ],
-      "status": "LOCAL_SEAL_IN_PROGRESS_REMOTE_BLOCKED",
+      "status": "CONFIRMED_LOCAL_SEAL_AND_FRESH_LOCAL_CLONE_REMOTE_BLOCKED",
       "archive_inclusion": "INCLUDED_IN_GIT",
       "cleanup_disposition": "NOT_APPLICABLE"
     }
@@ -285,11 +285,12 @@
     "final": {
       "branch": "archive/2026-09-01-apple-native-v1",
       "semantic_base": "05ed742aebcff601d328a919beb405ef0a9183d2",
-      "tag": "gi-journal-manual-fallback-v1-2026-09-01",
+      "tag": "gi-journal-manual-fallback-v1-2026-09-01-v2",
+      "initial_seal_tag": "gi-journal-manual-fallback-v1-2026-09-01",
       "content_commit": "RECORDED_BY_FINAL_SOURCE_SNAPSHOT_MANIFEST",
       "seal_commit": "TAG_TARGET",
       "remote": "BLOCKED_GITHUB_AUTH",
-      "fresh_local_clone": "PENDING_SEAL",
+      "fresh_local_clone": "CONFIRMED_PARENT_BOUND_MANIFEST_FSCK_SWIFTPM_111_AND_SOURCE_GATES",
       "fresh_remote_clone": "SKIPPED_REMOTE_REF_ABSENT",
       "product_outcome": "MANUAL_FIRST_LOCAL_CANDIDATE_APPLE_NATIVE_DIRECTIONAL_NO_GO"
     }

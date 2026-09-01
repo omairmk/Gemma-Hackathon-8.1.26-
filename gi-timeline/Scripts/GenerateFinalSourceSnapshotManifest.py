@@ -74,7 +74,7 @@ def main() -> int:
         "schema": "gi-journal-final-source-snapshot-v1",
         "snapshot_kind": "FINAL_MANUAL_FALLBACK_LOCAL_ARCHIVE",
         "branch": "archive/2026-09-01-apple-native-v1",
-        "tag": "gi-journal-manual-fallback-v1-2026-09-01",
+        "tag": "gi-journal-manual-fallback-v1-2026-09-01-v2",
         "source_commit": source_commit,
         "source_tree": source_tree,
         "manifest_path": MANIFEST_PATH,

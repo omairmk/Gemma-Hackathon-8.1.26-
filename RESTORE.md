@@ -6,15 +6,15 @@ Remote verification is currently blocked. After the archive branch and tag have 
 git clone --single-branch --branch archive/2026-09-01-apple-native-v1 \
   https://github.com/omairmk/Gemma-Hackathon-8.1.26-.git gi-journal-manual-fallback-v1
 cd gi-journal-manual-fallback-v1
-git fetch origin tag gi-journal-manual-fallback-v1-2026-09-01
-git checkout --detach gi-journal-manual-fallback-v1-2026-09-01
+git fetch origin tag gi-journal-manual-fallback-v1-2026-09-01-v2
+git checkout --detach gi-journal-manual-fallback-v1-2026-09-01-v2
 ```
 
 Verify the immutable parent-bound seal and Git object graph:
 
 ```bash
 python3 gi-timeline/Scripts/VerifyFinalSourceSnapshotManifest.py \
-  gi-journal-manual-fallback-v1-2026-09-01
+  gi-journal-manual-fallback-v1-2026-09-01-v2
 git fsck --full
 ```
 
