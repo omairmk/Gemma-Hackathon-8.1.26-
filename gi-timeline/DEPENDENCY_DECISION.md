@@ -83,10 +83,10 @@ configuration, security, and scratch directories, also passed:
 
 ```sh
 swift package --disable-dependency-cache \
-  --cache-path /private/tmp/litert-phase0-swiftpm-fresh/cache \
-  --config-path /private/tmp/litert-phase0-swiftpm-fresh/config \
-  --security-path /private/tmp/litert-phase0-swiftpm-fresh/security \
-  --scratch-path /private/tmp/litert-phase0-swiftpm-fresh/scratch \
+  --cache-path "$PWD/work/litert-phase0-swiftpm-fresh/cache" \
+  --config-path "$PWD/work/litert-phase0-swiftpm-fresh/config" \
+  --security-path "$PWD/work/litert-phase0-swiftpm-fresh/security" \
+  --scratch-path "$PWD/work/litert-phase0-swiftpm-fresh/scratch" \
   resolve
 ```
 
@@ -100,13 +100,13 @@ iOS binary framework for `arm64-apple-ios15.0` against the iPhoneOS 26.5 SDK:
 
 ```sh
 swift build --disable-dependency-cache \
-  --cache-path /private/tmp/litert-phase0-swiftpm-fresh/cache \
-  --config-path /private/tmp/litert-phase0-swiftpm-fresh/config \
-  --security-path /private/tmp/litert-phase0-swiftpm-fresh/security \
-  --scratch-path /private/tmp/litert-phase0-swiftpm-fresh/scratch \
+  --cache-path "$PWD/work/litert-phase0-swiftpm-fresh/cache" \
+  --config-path "$PWD/work/litert-phase0-swiftpm-fresh/config" \
+  --security-path "$PWD/work/litert-phase0-swiftpm-fresh/security" \
+  --scratch-path "$PWD/work/litert-phase0-swiftpm-fresh/scratch" \
   --target LiteRTLM \
   --triple arm64-apple-ios15.0 \
-  --sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk
+  --sdk "$DEVELOPER_DIR/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
 ```
 
 Result: `Build of target: 'LiteRTLM' complete!`, exit 0.

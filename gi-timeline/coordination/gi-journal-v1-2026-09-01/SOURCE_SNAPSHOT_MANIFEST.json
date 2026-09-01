@@ -1,0 +1,864 @@
+{
+  "files": [
+    {
+      "bytes": 1063,
+      "path": ".gitignore",
+      "sha256": "d9e8dcc961a20eb3d385d14f29204abcd9c7a85f9b3aa68a27888efe037cf8ba"
+    },
+    {
+      "bytes": 2613,
+      "path": "ARCHIVE_README.md",
+      "sha256": "36e454a6c834b6f811671d8e99ba7538bc4e8614be0145cfcb00e4d6f2672ec4"
+    },
+    {
+      "bytes": 268,
+      "path": "gi-journal/.gitignore",
+      "sha256": "eb2c4f966a4d5325f1cbd87fbe21eeaad4b3e173b943c3371d56d9eeccb8c161"
+    },
+    {
+      "bytes": 310,
+      "path": "gi-journal/Makefile",
+      "sha256": "cf4da10b94a5f72a3d10a6fded35907f2f6729aa46d7c1e47b366373512b1c0e"
+    },
+    {
+      "bytes": 81471,
+      "path": "gi-journal/data/demo/synthetic_brown_clay_prop.png",
+      "sha256": "d33914eadebc700f251adec2231aa8a21e8e9bcd95a458d8abe25042b6f3a445"
+    },
+    {
+      "bytes": 80942,
+      "path": "gi-journal/data/demo/synthetic_green_clay_prop.png",
+      "sha256": "094899ca02b325f5743404943d0d66db7d8c1516931c52ef13cbc302d6cdbbf4"
+    },
+    {
+      "bytes": 578,
+      "path": "gi-journal/model_manifest.json",
+      "sha256": "d743650cc4bd660c1c4d08760f0e7aad4678f46501cd7b3de7d014fbbd2fc346"
+    },
+    {
+      "bytes": 3098,
+      "path": "gi-journal/prompts.py",
+      "sha256": "627aea943115011ead535b18db4c655356365d75000c20989d5723311cd151ec"
+    },
+    {
+      "bytes": 109,
+      "path": "gi-journal/requirements.txt",
+      "sha256": "170f68569779e29df62f7b450a03a721734307929ed3f1af8cefa25d4b6d10b6"
+    },
+    {
+      "bytes": 5428,
+      "path": "gi-journal/schemas.py",
+      "sha256": "3af3947fb94237592e9ddc3d32130ff7da7a7bfc75a4779619b281832d309f23"
+    },
+    {
+      "bytes": 16391,
+      "path": "gi-journal/scripts/create_eligible_candidate.py",
+      "sha256": "c0db29007b1ae2f72f9ef4c96149d93de6357206a503c1641d305510d24cf52f"
+    },
+    {
+      "bytes": 1176,
+      "path": "gi-journal/scripts/download_models.py",
+      "sha256": "aeda2fd2ec20d80c30af9776732ab22ae79d1c682dcc452af2058e7846e37958"
+    },
+    {
+      "bytes": 4340,
+      "path": "gi-journal/scripts/make_fixtures.py",
+      "sha256": "4b31dd0639ef32790d675972011f94ea73a46dec2935f661c55157aef08248f0"
+    },
+    {
+      "bytes": 6620,
+      "path": "gi-journal/scripts/offline_test.sh",
+      "sha256": "c504110bd1cda8c362e22357f26c9ff0273990f1ab2ee1ac504f2e2859380c98"
+    },
+    {
+      "bytes": 4291,
+      "path": "gi-journal/scripts/primary_manifest.py",
+      "sha256": "a6387b943c3d655622cd79e99f1569154d769685e9122adc5880ea344054d941"
+    },
+    {
+      "bytes": 9038,
+      "path": "gi-journal/scripts/server_process.py",
+      "sha256": "67960d5ce3e897b3f40dbb6169998ef3fe6d769023c05868af173e04e74db31d"
+    },
+    {
+      "bytes": 23985,
+      "path": "gi-journal/scripts/smoke_test_model.py",
+      "sha256": "7ce3b7ee2883df6bd5bd878e0adc0d57f2b33414f2daea37cff82c64fc120d2b"
+    },
+    {
+      "bytes": 3127,
+      "path": "gi-journal/scripts/start_model.sh",
+      "sha256": "1e98732d653e4a284b6cd7fd115f6d42ddcfd7a9627419606f974b91ceb48875"
+    },
+    {
+      "bytes": 1067,
+      "path": "gi-journal/scripts/verify_socket.sh",
+      "sha256": "97045853ec14ee6823f950f93f8a86d37f56d8f2c7e95b474aff06e9cbce58f1"
+    },
+    {
+      "bytes": 6006,
+      "path": "gi-journal/tests/test_os_boundary_hardening.py",
+      "sha256": "a1b5871dcad027a1b8ea3bd2f596808027ec9e23cc202c5160633358ef3efc4a"
+    },
+    {
+      "bytes": 4087,
+      "path": "gi-journal/tests/test_schemas.py",
+      "sha256": "4d696b59ad00043096c51852c9c3f116b9b41bb2c651fa141b8ae228b0835c9e"
+    },
+    {
+      "bytes": 12987,
+      "path": "gi-journal/tests/test_smoke_offline.py",
+      "sha256": "07e8d7a06b36ab82eab556154aaf9b5af79e33f1a8c41cb236a3ff76e0ecf492"
+    },
+    {
+      "bytes": 74,
+      "path": "gi-timeline/.gitignore",
+      "sha256": "21ff35810a8ecd2f1090443da1f404b92febd99f4e70e178b0a103f9bd43e17d"
+    },
+    {
+      "bytes": 6372,
+      "path": "gi-timeline/DEPENDENCY_DECISION.md",
+      "sha256": "15113cd0f77a579c9e5190114c180a1fe89207032fb29a01e1616cafd88d3bb7"
+    },
+    {
+      "bytes": 1025,
+      "path": "gi-timeline/Fixtures/legacy-v0-synthetic-entry.json",
+      "sha256": "6b101b109589bdc75e765b7d91fa354e36c4b7ceed71b3679d6a71bfa7d020e6"
+    },
+    {
+      "bytes": 505,
+      "path": "gi-timeline/Fixtures/synthetic-brown-clay.svg",
+      "sha256": "8fc1890bba6377a69a1430c30d6f203659ee3c72d6a95f5ec9f8fc10fad7be73"
+    },
+    {
+      "bytes": 54434,
+      "path": "gi-timeline/Fixtures/synthetic-brown-clay.svg.png",
+      "sha256": "de793203c6665ecddf280092d2c09154d3e91abd254e078f04ff1c118f3490ca"
+    },
+    {
+      "bytes": 678,
+      "path": "gi-timeline/Fixtures/synthetic-control-geometric.svg",
+      "sha256": "99d7bbedcefa6172fa09dd03add7df27b0a0c96bda66a707bc5e5110610c604e"
+    },
+    {
+      "bytes": 63438,
+      "path": "gi-timeline/Fixtures/synthetic-control-geometric.svg.png",
+      "sha256": "1c51c348c0eab49d94959039de5816dbed8f4725c744271b0b34eb36cf75a9d0"
+    },
+    {
+      "bytes": 505,
+      "path": "gi-timeline/Fixtures/synthetic-green-clay.svg",
+      "sha256": "5b8b50f08cd7802b8f6fbfb7ed14940e309aceef953eed24b6eee1586939580c"
+    },
+    {
+      "bytes": 52079,
+      "path": "gi-timeline/Fixtures/synthetic-green-clay.svg.png",
+      "sha256": "040b71e3de49ae23dfcfed1387a56f32321acf61380a11cf5c6c5bb8a4ba2a73"
+    },
+    {
+      "bytes": 55755,
+      "path": "gi-timeline/GITimeline.xcodeproj/project.pbxproj",
+      "sha256": "6d2a60981ac6cc0419703565999763e3d5573bd8d9e8ba6f73b552f73306ff02"
+    },
+    {
+      "bytes": 104,
+      "path": "gi-timeline/GITimeline.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "sha256": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93"
+    },
+    {
+      "bytes": 39,
+      "path": "gi-timeline/GITimeline.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+      "sha256": "90798d0becbb33b4f42aa0e8ea7bd7a8cc2a8c752fc94417b6fd6b2f7b844a8f"
+    },
+    {
+      "bytes": 5029,
+      "path": "gi-timeline/GITimeline.xcodeproj/xcshareddata/xcschemes/GITimeline App Store.xcscheme",
+      "sha256": "f39905bcf9725bd2fccde216598a855d4831b06f5cbd57b19c4c86afedd2eaa1"
+    },
+    {
+      "bytes": 2722,
+      "path": "gi-timeline/GITimeline.xcodeproj/xcshareddata/xcschemes/GITimeline Hackathon.xcscheme",
+      "sha256": "2d95001ef336071a0ae27b58fbaf1dbb01b3fd691561e2ae65d5046aabc2e192"
+    },
+    {
+      "bytes": 3862,
+      "path": "gi-timeline/GITimeline.xcodeproj/xcshareddata/xcschemes/GITimeline Physical Qualification.xcscheme",
+      "sha256": "3d8512f7026dafb50c52e9596d418914c5a2118bf3befaf0232fd52fc536e12e"
+    },
+    {
+      "bytes": 2793,
+      "path": "gi-timeline/GITimeline.xcodeproj/xcshareddata/xcschemes/GITimeline Release Fallback.xcscheme",
+      "sha256": "a9a3edef8ac98ecad3f148abf39657c91ee8fb0e90dcaef16a422471989151cf"
+    },
+    {
+      "bytes": 2498,
+      "path": "gi-timeline/GITimeline.xcodeproj/xcshareddata/xcschemes/GITimeline.xcscheme",
+      "sha256": "b3c6ae05932d085baf457101f53d9bedb7046a5fa17afeeb16d527bb6b3ae3c8"
+    },
+    {
+      "bytes": 62109,
+      "path": "gi-timeline/GITimeline/AppSupport.swift",
+      "sha256": "77b7e9a170463c224cc7cb31846d293646dd93c1d65c303699826191d9f1497a"
+    },
+    {
+      "bytes": 1557875,
+      "path": "gi-timeline/GITimeline/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+      "sha256": "effaa78e7bfa68c87de93adee60436e394b33176d0874c47ddb3f71325519734"
+    },
+    {
+      "bytes": 216,
+      "path": "gi-timeline/GITimeline/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "sha256": "9cf2928dad89427abd581b6852db081352417f400afb65e60c479228cdc4f4da"
+    },
+    {
+      "bytes": 63,
+      "path": "gi-timeline/GITimeline/Assets.xcassets/Contents.json",
+      "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+    },
+    {
+      "bytes": 872,
+      "path": "gi-timeline/GITimeline/CLiteRTLMPrivacyInfo.xcprivacy",
+      "sha256": "c708a6cff73398fee755667344f6450544304b8f40720144511735196ae0e550"
+    },
+    {
+      "bytes": 8258,
+      "path": "gi-timeline/GITimeline/ClinicalTimelineRecords.swift",
+      "sha256": "5ab72c75d368ca9f985b0ecc019f884ac905cac9a2660efb142d708e048a7b04"
+    },
+    {
+      "bytes": 332825,
+      "path": "gi-timeline/GITimeline/DeviceInferenceLab.swift",
+      "sha256": "cc32b5b41abae2f0609817788404bd6994365f17e91078be6b3a2230e66e705a"
+    },
+    {
+      "bytes": 40481,
+      "path": "gi-timeline/GITimeline/DraftSnapshotStore.swift",
+      "sha256": "861c70eea79df63ae945deb32dd3218bbcca5fdeae2d64d94f62b9c2448565ad"
+    },
+    {
+      "bytes": 29135,
+      "path": "gi-timeline/GITimeline/EntryRecord.swift",
+      "sha256": "93c6482a9a9765b356b6e164df9e3b13d1188d3b77c22dc9cc5cd321ccab58f2"
+    },
+    {
+      "bytes": 75418,
+      "path": "gi-timeline/GITimeline/EntryStore.swift",
+      "sha256": "606dacc0efff4c450fdafa1e7250757818d72a418c6a46793ba852f62043cb4c"
+    },
+    {
+      "bytes": 7491,
+      "path": "gi-timeline/GITimeline/GIJournalHelp.swift",
+      "sha256": "7e85982cf3e467f2182968c1f08bd54b3108b48a14fd0dd2ad192d34d16fbe94"
+    },
+    {
+      "bytes": 18354,
+      "path": "gi-timeline/GITimeline/GIJournalPatientComponents.swift",
+      "sha256": "af7baa3ea440f1af0d2231bda3b24565cf2d051ce1c74735c140e6649ffe767f"
+    },
+    {
+      "bytes": 5205,
+      "path": "gi-timeline/GITimeline/GIJournalTheme.swift",
+      "sha256": "620c450066aec5efa79fd829c8dc87b7cf7de4823a680d6c0192ebfe596319c7"
+    },
+    {
+      "bytes": 56837,
+      "path": "gi-timeline/GITimeline/GITimelineApp.swift",
+      "sha256": "c09da839bc99fd07a68b02bf30543406653008ac53039d9c91808a790d3f79df"
+    },
+    {
+      "bytes": 42691,
+      "path": "gi-timeline/GITimeline/HistoryView.swift",
+      "sha256": "e505c74eeef7c18a4679e57211eb4965c23093f292a368f5c055e5e81241658b"
+    },
+    {
+      "bytes": 40181,
+      "path": "gi-timeline/GITimeline/ImageStore.swift",
+      "sha256": "034544c2c9edaa8186e3e18a743472b8482ca2932c763046b0061d6123466b0b"
+    },
+    {
+      "bytes": 181624,
+      "path": "gi-timeline/GITimeline/InferenceService.swift",
+      "sha256": "32dcd5eebc2022dfd5e6db8e636dbecbd85ec81bc735df0009cb652ae22b9038"
+    },
+    {
+      "bytes": 1448,
+      "path": "gi-timeline/GITimeline/Info-AppStore.plist",
+      "sha256": "0f5b02cc12b5ff562377895429a947e0193bc9e3aacf1cfd50399ccb1062ffb4"
+    },
+    {
+      "bytes": 1191,
+      "path": "gi-timeline/GITimeline/Info.plist",
+      "sha256": "82d21e59fd780400446706f905f06ce5a855d1b8563f6312daaa513c72fd73aa"
+    },
+    {
+      "bytes": 56206,
+      "path": "gi-timeline/GITimeline/JournalPDFExport.swift",
+      "sha256": "240e297a87fd136f6934e8912a4e41b9287f2b95de659423078f47aa881c3a6e"
+    },
+    {
+      "bytes": 17082,
+      "path": "gi-timeline/GITimeline/ModelImporter.swift",
+      "sha256": "dc5dd3bc34d823e8cee77310c7d6211f6fe6cbfc57da951eeb867a2554ac83c8"
+    },
+    {
+      "bytes": 97613,
+      "path": "gi-timeline/GITimeline/ModelRuntime.swift",
+      "sha256": "f3a1e43e73f15f2db0193f4b360901d97d26a0acf12d1c23f9ecb66bda216f92"
+    },
+    {
+      "bytes": 68369,
+      "path": "gi-timeline/GITimeline/NewEntryView.swift",
+      "sha256": "ef25911a9f0b93af723a50b7fb11ea9c65070ddf332e78ca6ffd1a0138cac573"
+    },
+    {
+      "bytes": 134303,
+      "path": "gi-timeline/GITimeline/NewEntryViewModel.swift",
+      "sha256": "e9b79248891e339970357bc9fd6d629835e88bb3f445a23d4191df3b36a95bea"
+    },
+    {
+      "bytes": 9382,
+      "path": "gi-timeline/GITimeline/PersistenceBootstrap.swift",
+      "sha256": "d91d7637ceee56be41ce071aaca14ccc76bc11d41083e9e8141bf2e1ad09161d"
+    },
+    {
+      "bytes": 1805,
+      "path": "gi-timeline/GITimeline/PersistenceSchema.swift",
+      "sha256": "d0b5ea50b93f312d499632976e2098d6913b4253c0bdf90b7e31cbcc4cdca27c"
+    },
+    {
+      "bytes": 1121,
+      "path": "gi-timeline/GITimeline/PrivacyDiagnostics.swift",
+      "sha256": "3673ab23a387b3987cb14fdcb11670beac9441e883aefa5e1fc8f20035565d70"
+    },
+    {
+      "bytes": 1347,
+      "path": "gi-timeline/GITimeline/PrivacyInfo.xcprivacy",
+      "sha256": "02679a0a090e0011dac947bb5ff5633411348921f7b65b70bfd03bdc21a5ac95"
+    },
+    {
+      "bytes": 16710,
+      "path": "gi-timeline/GITimeline/ProgressView.swift",
+      "sha256": "434303700300b858968b4d51d6c6754137756b2a362190b614c7b9bdf430aa6d"
+    },
+    {
+      "bytes": 102678,
+      "path": "gi-timeline/GITimeline/Qwen3HybridPhotoSuggestionEngine.swift",
+      "sha256": "dde7302453080c48b3a7a29fbbb20cd41c76b2e0cab53134af994437cf851038"
+    },
+    {
+      "bytes": 14399,
+      "path": "gi-timeline/GITimeline/ThirdPartyNotices.txt",
+      "sha256": "c7e13f38747886477ac7971b788f6b2fdbb47f8750820bd71dd39ce344539f6b"
+    },
+    {
+      "bytes": 81937,
+      "path": "gi-timeline/GITimelineTests/AppStoreReceiptProvenanceTests.swift",
+      "sha256": "99a56eae8b355300b2f2f48adaceaa5bf74677092195c55ab0e2e431c3f0baee"
+    },
+    {
+      "bytes": 203427,
+      "path": "gi-timeline/GITimelineTests/ClinicalPersistenceAndPDFTests.swift",
+      "sha256": "2bdeb62b0ca42543e497f5a6de1313281fe03a0b4a27e8e51d330823891c4050"
+    },
+    {
+      "bytes": 4183,
+      "path": "gi-timeline/GITimelineTests/Fixtures/LegacyPredecessorStore/legacy-predecessor-store-manifest.json",
+      "sha256": "aa33f7ef6afc7cdac0963c83c660dab91320d39b16a4daf970cceeaa9c659507"
+    },
+    {
+      "bytes": 94208,
+      "path": "gi-timeline/GITimelineTests/Fixtures/LegacyPredecessorStore/legacy-predecessor.store",
+      "sha256": "680469f13fc9e3b9ca197cc127439b4071b3e2b6f5dc90066615060c7da5ea21"
+    },
+    {
+      "bytes": 32768,
+      "path": "gi-timeline/GITimelineTests/Fixtures/LegacyPredecessorStore/legacy-predecessor.store-shm",
+      "sha256": "6df96d7cbcd5abd1ffc4babfe76faf103d19a826e116f9364a6288ba6fd78337"
+    },
+    {
+      "bytes": 0,
+      "path": "gi-timeline/GITimelineTests/Fixtures/LegacyPredecessorStore/legacy-predecessor.store-wal",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 413701,
+      "path": "gi-timeline/GITimelineTests/GITimelineTests.swift",
+      "sha256": "0ce795546391481f0a86d4a852d2f2c690e6171780ab093da22912593b0cd57b"
+    },
+    {
+      "bytes": 14912,
+      "path": "gi-timeline/GITimelineTests/LegacyPredecessorStoreTests.swift",
+      "sha256": "8f1e9c0853c20be1532869ce355cb242d81cf215e59d72a96241b5bd8542d6de"
+    },
+    {
+      "bytes": 63818,
+      "path": "gi-timeline/GITimelineTests/PhotoSuggestionAccuracyTests.swift",
+      "sha256": "ea362716dd6ebdae77d65423cb73c60fa508b98c65547a97e4aa65ba2280a51b"
+    },
+    {
+      "bytes": 56493,
+      "path": "gi-timeline/GITimelineUITests/GITimelineUITests.swift",
+      "sha256": "705c5a35739a61bbb41136716a5c05752bffd9a6cc32322b00aa85b354913baf"
+    },
+    {
+      "bytes": 25834,
+      "path": "gi-timeline/PHOTO_SUGGESTION_EVALUATION.md",
+      "sha256": "51d5d3a8348cafe47e7d93038fd0a9c56a5a5dfcce39afec975d1368145aef0c"
+    },
+    {
+      "bytes": 600,
+      "path": "gi-timeline/Package.swift",
+      "sha256": "6c327c484072c942f529309907ec06c7d01fb800ed3b242a526d6e592b9ff202"
+    },
+    {
+      "bytes": 4130,
+      "path": "gi-timeline/README.md",
+      "sha256": "9503354f183565eea012f9f348e1f491831722fe9d091ef09a0d678478d98610"
+    },
+    {
+      "bytes": 2476,
+      "path": "gi-timeline/Release/AI_APPEARANCE_SUGGESTION_CONTRACT.md",
+      "sha256": "23c5cdaf178fa010076fb643b4b6b4b93c267f72cde358ba7d9f3ea97c9ab2c3"
+    },
+    {
+      "bytes": 8642,
+      "path": "gi-timeline/Release/APP_REVIEW_NOTES.md",
+      "sha256": "968c53b2bec300dd5e94a0585557fced461c55a5a86935b56d6431392595d314"
+    },
+    {
+      "bytes": 8476,
+      "path": "gi-timeline/Release/APP_STORE_METADATA.md",
+      "sha256": "1aebc7f3c30010034d5dac3c25304f30b42bdab02576a41ac27ef4c525f8771a"
+    },
+    {
+      "bytes": 45884,
+      "path": "gi-timeline/Release/APP_STORE_RELEASE_PLAN.md",
+      "sha256": "b21a0774c622be13b432435409127cbb7e002e413775f7d9703c4a4373f4d8f6"
+    },
+    {
+      "bytes": 484,
+      "path": "gi-timeline/Release/ExportOptions-AppStore.plist",
+      "sha256": "8d7f8a805b9298470851b3f5d59fe1b465028602ba92c56f907de202d15abe42"
+    },
+    {
+      "bytes": 4131,
+      "path": "gi-timeline/Release/INTENDED_USE_AND_CLAIMS_BUILD6.md",
+      "sha256": "a627c21889cbe51b07fcd712c7da67916bbd3bceaaf407431c550b73ce3a0094"
+    },
+    {
+      "bytes": 12508,
+      "path": "gi-timeline/Release/MIGRATION_ARCHITECTURE.md",
+      "sha256": "d29ddb0c364332b144930cd31d511ba9aa2dbeecda3c840ee36cb1647ddf5186"
+    },
+    {
+      "bytes": 4856,
+      "path": "gi-timeline/Release/PERSISTENCE_RECOVERY_AND_SCHEMA.md",
+      "sha256": "23f56e87096720582900fa98b2e005f454a1da3c68a2432bb14a76e1eb9e391c"
+    },
+    {
+      "bytes": 7004,
+      "path": "gi-timeline/Release/PRIVACY_LABEL.md",
+      "sha256": "3d5c6f2ab97f7ba0e81c82018bcdaddebab8b5d533f799b0b1f1f9475e5573eb"
+    },
+    {
+      "bytes": 9956,
+      "path": "gi-timeline/Release/PRIVACY_POLICY.md",
+      "sha256": "7d5a6efd50579dd7beed0243733f7cdbceabdff214f49a3129144babc9c324e6"
+    },
+    {
+      "bytes": 17844,
+      "path": "gi-timeline/Release/SBOM.md",
+      "sha256": "34c15608f9972e1e9984fd025a3090eed5ec85c74c54fe39614574c822604fb5"
+    },
+    {
+      "bytes": 3720,
+      "path": "gi-timeline/Release/SUPPORT.md",
+      "sha256": "dd978b9b1ed45fb72e5c8d12bf24d4b4016c96a1ec51b553245ce9fcdc1574da"
+    },
+    {
+      "bytes": 10296,
+      "path": "gi-timeline/Release/THIRD_PARTY_NOTICES.md",
+      "sha256": "5e1106245e63325d1061070965b552fe091d31bdfb58c6d0ab227e1ffed9acc8"
+    },
+    {
+      "bytes": 4276,
+      "path": "gi-timeline/Scripts/CompareNormalizedAppPayloadFiles.py",
+      "sha256": "5b2baa6a26b141715f53b99e59a807271b90c493a61a228d0fa8b0ebfaa184f9"
+    },
+    {
+      "bytes": 9983,
+      "path": "gi-timeline/Scripts/EmbedGemmaE4B.sh",
+      "sha256": "f3f7adf644d190227df704b756a0b2a4fc5553d302502f49d39b99f6566796ec"
+    },
+    {
+      "bytes": 4618,
+      "path": "gi-timeline/Scripts/EmbedQwen3Decomposed.sh",
+      "sha256": "aa461733d38cfd7bf499c00f852a6fc133e6dd70d3ad308d5bb8c4137a4c715a"
+    },
+    {
+      "bytes": 3969,
+      "path": "gi-timeline/Scripts/GenerateArchiveInventory.sh",
+      "sha256": "112afe92cc9a37bb44b1003748beecdc1f4579a477f384de1dfaba41abf361c2"
+    },
+    {
+      "bytes": 3784,
+      "path": "gi-timeline/Scripts/GenerateLegacyPredecessorStoreFixture.sh",
+      "sha256": "218f85c1664bf98434ecfc0584fce5d9e9b62033e110129163e55591db567dd0"
+    },
+    {
+      "bytes": 22180,
+      "path": "gi-timeline/Scripts/GenerateLegacyPredecessorStoreFixture.swift",
+      "sha256": "6cccea8aebc5afa6faa3e6ef0c486b4911aa10e131b6bdc8566c1c94d06dc7e7"
+    },
+    {
+      "bytes": 1659,
+      "path": "gi-timeline/Scripts/InjectLiteRTPrivacyManifest.sh",
+      "sha256": "e4801e6db17e960b90d3defb55ec94dc1f36ae903f7152036c4dfcdb8a091368"
+    },
+    {
+      "bytes": 4367,
+      "path": "gi-timeline/Scripts/NormalizedMachOExecutableHash.py",
+      "sha256": "a2f587bed859654af2628f17056806abe9a4bf4caa07c14a5fb5e52ceeb56ec3"
+    },
+    {
+      "bytes": 1176,
+      "path": "gi-timeline/Scripts/RetiredRecoverySurfaceMarkers.zsh",
+      "sha256": "86ce6d48b22c56e54fd26d6c8e5c6ee23411426fc65461403c45623a2aab8016"
+    },
+    {
+      "bytes": 30799,
+      "path": "gi-timeline/Scripts/RunFullPrefillNormalizationAB.py",
+      "sha256": "05e50e633f53b75180497c5927bc0da82714d0e7e0fc54addbe2e1d9d7b55d5f"
+    },
+    {
+      "bytes": 5790,
+      "path": "gi-timeline/Scripts/RunFullPrefillNormalizationABSimulator.sh",
+      "sha256": "15b2d9a64c156b287844559fac26e3c4277b0bb66d8108a850db17008e323f37"
+    },
+    {
+      "bytes": 44517,
+      "path": "gi-timeline/Scripts/RunQwen3HostDevAB.py",
+      "sha256": "9d976b1f8be083e3ecc2be5d1f496ce70ccd19a6a6b5ef3c73830afc0108f855"
+    },
+    {
+      "bytes": 18513,
+      "path": "gi-timeline/Scripts/RunQwen3HostSemanticProxy.py",
+      "sha256": "a490fb70608cf02a31bafda82bc3ef1d274b01054ac287f5f93761b34e75d981"
+    },
+    {
+      "bytes": 25915,
+      "path": "gi-timeline/Scripts/RunQwen3PhysicalQualification.sh",
+      "sha256": "d8e4e9124822fc8841a369970572c617a929f48704bffd5b6c10a265a58995b6"
+    },
+    {
+      "bytes": 8482,
+      "path": "gi-timeline/Scripts/RunWithTimeout.py",
+      "sha256": "fa74c03a9ec8e1025494613972ecc73f1fde2030730e46f2fae008e82c883a69"
+    },
+    {
+      "bytes": 10041,
+      "path": "gi-timeline/Scripts/TestAppStoreModelGateNegative.sh",
+      "sha256": "a6e221156b0568df72026a9a88eed69c307dfd0903006202c327ecfc71c15c58"
+    },
+    {
+      "bytes": 18787,
+      "path": "gi-timeline/Scripts/TestFullPrefillNormalizationABRunner.py",
+      "sha256": "0bacade048bc0e16bb9cd386cc2229eece3bd21e6f1500a979b452a1a488c012"
+    },
+    {
+      "bytes": 3037,
+      "path": "gi-timeline/Scripts/TestPhysicalV4RunnerExitTrap.sh",
+      "sha256": "9b07ce22cc8ecba04bd9f5be99a5f680c6989190beb2fa9a6246568412006e84"
+    },
+    {
+      "bytes": 7814,
+      "path": "gi-timeline/Scripts/TestQwen3HostBatchContract.py",
+      "sha256": "6933b0567a5b1ad437dacedf72003a84b41fc73e602470a360dbbe17c2b8e8aa"
+    },
+    {
+      "bytes": 30900,
+      "path": "gi-timeline/Scripts/TestQwen3HostDevABContract.py",
+      "sha256": "4fee15f1ad21e48ab127902db02da5102bac2e19cf170dc1fd66295b332d5656"
+    },
+    {
+      "bytes": 4424,
+      "path": "gi-timeline/Scripts/TestQwen3HostEvidenceContract.py",
+      "sha256": "a997fb2737a07eae22a59da697a90ab15140cb4902b553a5e3d4ad246bbe6922"
+    },
+    {
+      "bytes": 14757,
+      "path": "gi-timeline/Scripts/TestQwen3ResolutionEvidenceContract.py",
+      "sha256": "6341059ad80c9bef1c25e3229093ce1ad5097f68a0d47b2d461283f8ac2c879c"
+    },
+    {
+      "bytes": 1778,
+      "path": "gi-timeline/Scripts/TestRetiredRecoverySurfaceNegative.sh",
+      "sha256": "ef34ee1dd4d3cdb2a15bd0bbc48a48775a88e3afc180949f2ca39b5811a6d846"
+    },
+    {
+      "bytes": 8853,
+      "path": "gi-timeline/Scripts/TestRunWithTimeout.py",
+      "sha256": "941ca5e28998fd5786d39832dfccf9ace28ba7ac4fefdcbff7e31e3825adea90"
+    },
+    {
+      "bytes": 7839,
+      "path": "gi-timeline/Scripts/ValidateAppSourceCheckout.sh",
+      "sha256": "37d48d2f3b1ed316faf9939ff1e28f65e76d359604ee963e59239cef901606fe"
+    },
+    {
+      "bytes": 44320,
+      "path": "gi-timeline/Scripts/ValidateAppStoreBuild.sh",
+      "sha256": "8b92839382afb2dd736da87ddafa77e12f15b416a226eae4f92d7ef5bfaffb68"
+    },
+    {
+      "bytes": 7857,
+      "path": "gi-timeline/Scripts/ValidateAppStoreSchemeSource.py",
+      "sha256": "4e3cdd6fe3cbdf5639898c37d0e923ef193014a0ae9b57a5991dd1ac13549d8c"
+    },
+    {
+      "bytes": 28544,
+      "path": "gi-timeline/Scripts/ValidateDevelopmentSignedAppStoreArchive.sh",
+      "sha256": "fffedb55e667744998253d45a3aa0666a21f6bdb789bcb5427db5fbb61fb0d94"
+    },
+    {
+      "bytes": 38398,
+      "path": "gi-timeline/Scripts/ValidateExportedAppStoreIPA.sh",
+      "sha256": "935f73f9c4567e11bcb93b92e86dacc743398e209ca9435be5fb5f04e6eba77c"
+    },
+    {
+      "bytes": 19626,
+      "path": "gi-timeline/Scripts/ValidateGemmaPrefillContext.py",
+      "sha256": "5ae44eac654bb01b51b6dee01660423348cbcb640236596c628167b886a2127d"
+    },
+    {
+      "bytes": 2980,
+      "path": "gi-timeline/Scripts/ValidateMachOPlatform.py",
+      "sha256": "7de77ec49d9c76662df0e0c2c59499a361fc801db41ae9349ef403df8a783014"
+    },
+    {
+      "bytes": 11362,
+      "path": "gi-timeline/Scripts/ValidatePhysicalQualificationSource.py",
+      "sha256": "c37855268112d33fb72ce6a200c9965908bb752e95cc6313a55b9de29985f5b6"
+    },
+    {
+      "bytes": 3519,
+      "path": "gi-timeline/Scripts/ValidatePublicReleaseURL.sh",
+      "sha256": "7cde9a32c16218145580cab0f9ca88fdd94992dc479c572d9893bf1dabacf528"
+    },
+    {
+      "bytes": 12969,
+      "path": "gi-timeline/Scripts/ValidateQwen3ResolutionEvidence.py",
+      "sha256": "ae426fc2162b6d0578bd0ca22bcb44aaff891fbe1e49a42c7432a8d06358a43b"
+    },
+    {
+      "bytes": 10597,
+      "path": "gi-timeline/Scripts/ValidateResolvedSourcePackages.sh",
+      "sha256": "cbb6844273edac7b5508ac4a6a84b132a81dffd8ac84d2ea4aeaf80076ffc4a2"
+    },
+    {
+      "bytes": 2193,
+      "path": "gi-timeline/Scripts/ValidateSignedAppStoreArchive.sh",
+      "sha256": "e2818411d3c854dc8b0c9523fe4f4081da9bd4e650e55d83c1594daadae3fe37"
+    },
+    {
+      "bytes": 163,
+      "path": "gi-timeline/Scripts/ValidateSignedPhysicalQualificationProducts.sh",
+      "sha256": "798c7112766999e3e6e6c1eace9abb99507ba27329aea98e9b1d8a7d580c5b67"
+    },
+    {
+      "bytes": 2352,
+      "path": "gi-timeline/Scripts/VerifySourceSnapshotManifest.py",
+      "sha256": "1a0cc5f6edc708155dca1b10212f3bea1e13af050f85f21485e9b4bf90ba587a"
+    },
+    {
+      "bytes": 20555,
+      "path": "gi-timeline/Sources/GITimelineCore/ClinicalTimeline.swift",
+      "sha256": "c36a9aa1bd5604c881f8bcff47dc9c1ca8d7ab5ee935a212d77e84bd74249f1f"
+    },
+    {
+      "bytes": 19184,
+      "path": "gi-timeline/Sources/GITimelineCore/ConfirmationProvenance.swift",
+      "sha256": "f781da589c5aa5a10a6124dc38c86627e322d8a1decf1af1dd9abc09a5f26889"
+    },
+    {
+      "bytes": 17892,
+      "path": "gi-timeline/Sources/GITimelineCore/JournalExport.swift",
+      "sha256": "a68e5e7ce239c32e006359142d91b831551dc4fa8391930d6f5bcb8cf103ee0f"
+    },
+    {
+      "bytes": 4158,
+      "path": "gi-timeline/Sources/GITimelineCore/NewEntryWorkflow.swift",
+      "sha256": "8f0bb1e900993cbc6134d7c3f52063ef8bcee91ce34a32073a8e58fa518bbb76"
+    },
+    {
+      "bytes": 8346,
+      "path": "gi-timeline/Sources/GITimelineCore/Observation.swift",
+      "sha256": "0e0fde99bb3e76127548e8e06a07b0e5420a1f99cbba6344dc93d872d9aeaa28"
+    },
+    {
+      "bytes": 30299,
+      "path": "gi-timeline/Sources/GITimelineCore/PhotoSuggestionEvaluation.swift",
+      "sha256": "a0ecf2cddb3e1d6a3fc8caeccb264358a51d257e4368dd96620bfc3b055b4a1a"
+    },
+    {
+      "bytes": 54632,
+      "path": "gi-timeline/Sources/GITimelineCore/PhotoSuggestionHybrid.swift",
+      "sha256": "9fbdbeff89335107ae4a76bb5fce7eca9124a9545f32726db95ab4e4bb0c59b9"
+    },
+    {
+      "bytes": 44928,
+      "path": "gi-timeline/Sources/GITimelineCore/PhotoSuggestionV1.swift",
+      "sha256": "35f8ab84c2ec5ccfe9dacbbcefccb03fc08ee9532a6ee3d6b17b09e2d9154c48"
+    },
+    {
+      "bytes": 10431,
+      "path": "gi-timeline/Sources/GITimelineCore/PhotoSuggestionV2.swift",
+      "sha256": "561d1bd1228e24797e67986652e0eb731cd6508b63f0811ac5d4f6f485f621db"
+    },
+    {
+      "bytes": 2937,
+      "path": "gi-timeline/Sources/GITimelineCore/SafetyRules.swift",
+      "sha256": "2a7c058d500e23ea1236d94d017a4ca18baee1884bb0762610a9fa5826681f3c"
+    },
+    {
+      "bytes": 9190,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/ClinicalTimelineTests.swift",
+      "sha256": "9c57666e812158cc1a9e2c45a251f3c1f625d18b304e1a8fa3bdac032d357140"
+    },
+    {
+      "bytes": 6627,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/GITimelineCoreTests.swift",
+      "sha256": "6de85cf14e681aee9f2e1ba7bfddfd1e38b7f8a9dc42faf194db5564db0e3eb6"
+    },
+    {
+      "bytes": 8657,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/JournalExportTests.swift",
+      "sha256": "11113e3495188459b5f74655541228042838ca852702264552b3b694dbe13bcb"
+    },
+    {
+      "bytes": 15690,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/PhotoSuggestionEvaluationTests.swift",
+      "sha256": "fcb44d2d72069c42f69c322569e6d02b48ec95a752411fcd818e11ab60cbed2c"
+    },
+    {
+      "bytes": 32952,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/PhotoSuggestionHybridTests.swift",
+      "sha256": "33ae3426660518ae762de22629ff718f611a918673ef6431a59066ef44afa5df"
+    },
+    {
+      "bytes": 31522,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/PhotoSuggestionV1Tests.swift",
+      "sha256": "9bfaa3f5d0277d42953c895b19206a8581cdc6b44a3be311d788070a812c87a3"
+    },
+    {
+      "bytes": 5362,
+      "path": "gi-timeline/Tests/GITimelineCoreTests/PhotoSuggestionV2Tests.swift",
+      "sha256": "b488c0cbee8fcbbb46afe3fa903fe54c5618e77f9bf11a8a766082eff6746d41"
+    },
+    {
+      "bytes": 17626,
+      "path": "gi-timeline/Tools/Qwen3HostEvidenceFuse/main.swift",
+      "sha256": "8778ca4b234362306e28cd7f408b92ab529e60e1a472901624e2612622759503"
+    },
+    {
+      "bytes": 11357,
+      "path": "gi-timeline/Vendor/LiteRTLM/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "bytes": 1786,
+      "path": "gi-timeline/Vendor/LiteRTLM/Package.swift",
+      "sha256": "2b0198141da34376a445942a3e93ca0a4eb9f16c811d3d342ac3d3d4947d4428"
+    },
+    {
+      "bytes": 3577,
+      "path": "gi-timeline/Vendor/LiteRTLM/UPSTREAM_PROVENANCE.md",
+      "sha256": "5ae7140e0228f2c7f1cf51701d0a442036969819deaff4e59a8d93779e70b155"
+    },
+    {
+      "bytes": 3579,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Benchmark.swift",
+      "sha256": "9096200cb1ad930cb6ac9af72747c430621739838b9f18ec8d3b2ea4fce7fd74"
+    },
+    {
+      "bytes": 1335,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Capabilities.swift",
+      "sha256": "30bc7cd1057f9100ef19249863266481a61e4c80d2a28ccb6098236318dee020"
+    },
+    {
+      "bytes": 13972,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Config.swift",
+      "sha256": "721289dc0bc213c2371119eaf49e24b6d5324572990c6ac2a9de1926423731da"
+    },
+    {
+      "bytes": 34070,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Conversation.swift",
+      "sha256": "49701ac6c3856bb921e191a260fb19e58ec49b2f057a211093796dffc22e6b9e"
+    },
+    {
+      "bytes": 11525,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Engine.swift",
+      "sha256": "098853a2a0ba79ed2b3ced53799178b86579619c0de8a3b67e7006239325514b"
+    },
+    {
+      "bytes": 6884,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/ExperimentalFlags.swift",
+      "sha256": "e7aa8ed306d0ab5c84557512da020a140af4c7b90c4d8cb54a53f585182fdbfc"
+    },
+    {
+      "bytes": 6509,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/LiteRTLMError.swift",
+      "sha256": "35226ebc4ba514db9f886bc2153ba3de93e9a500d3f4c2946a87f177069441b2"
+    },
+    {
+      "bytes": 8695,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Message.swift",
+      "sha256": "23631912d2caf0a63f971e5da869ef9e385fa1b93e459e1ea3232cc6a99fa637"
+    },
+    {
+      "bytes": 2645,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/ResponseFormat.swift",
+      "sha256": "071705a8d9e9916a83b2197514d58bdbd3a30e643903a9e826a500fb67772067"
+    },
+    {
+      "bytes": 10166,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/Tool.swift",
+      "sha256": "d9698c6c7f8425cfa1f479cec5070fe94d9ca732b3e20b171e3dd90ca1545422"
+    },
+    {
+      "bytes": 5602,
+      "path": "gi-timeline/Vendor/LiteRTLM/swift/ToolManager.swift",
+      "sha256": "7fed45d66e562a153dd61e57a8cc67cbd89fa063d1c09d9d20626ea48574d3f7"
+    },
+    {
+      "bytes": 2990,
+      "path": "gi-timeline/coordination/gi-journal-v1-2026-09-01/GITHUB_ARCHIVE_MANIFEST.md",
+      "sha256": "ed0566dfff11e4a026ea78976aa6cda29bad5f654d5a6060ff8bc497fe8827f5"
+    },
+    {
+      "bytes": 2310,
+      "path": "gi-timeline/coordination/gi-journal-v1-2026-09-01/PRECHANGE_STATE.json",
+      "sha256": "11669c70338fd5f2a6d25ff67a06690c0384ba21a375e368462a29b5ab08e5a4"
+    },
+    {
+      "bytes": 1543,
+      "path": "gi-timeline/coordination/gi-journal-v1-2026-09-01/RESTORE.md",
+      "sha256": "ceeb3b7bde41589b0ddbf33ac69b562e5a756634e6cc636af408d6bccfe465cb"
+    },
+    {
+      "bytes": 6017,
+      "path": "gi-timeline/coordination/gi-journal-v1-2026-09-01/SUPPORTING_ITEM_CLASSIFICATION.json",
+      "sha256": "f14a2396fd96b34d580a66c78787f97d3df787862d50b7e5f945407908d76ccd"
+    },
+    {
+      "bytes": 7782,
+      "path": "gi-timeline/coordination/gi-journal-v1-2026-09-01/WORK_LEDGER.json",
+      "sha256": "3dce5c585e5d521570b390079712cec59356848517e438a6158d4c1820602166"
+    }
+  ],
+  "schema": "gi-journal-source-snapshot-manifest-v1",
+  "snapshot_branch": "archive/2026-09-01-pre-apple-native",
+  "snapshot_kind": "SANITIZED_ORPHAN_SNAPSHOT",
+  "source_commit": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
+  "source_tree": "0fb19b1f3cbbabfc4887bd438799ec23efb36503"
+}

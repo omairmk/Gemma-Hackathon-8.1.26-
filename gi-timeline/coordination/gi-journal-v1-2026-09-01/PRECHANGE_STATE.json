@@ -1,0 +1,56 @@
+{
+  "schema": "gi-journal-prechange-state-v1",
+  "observed_at": "2026-09-01T12:46:04-04:00",
+  "repository": {
+    "expected_branch": "rescue/2026-08-23-storage-cleanup",
+    "actual_branch": "rescue/2026-08-23-storage-cleanup",
+    "expected_head": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
+    "actual_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+    "expected_tree": "0fb19b1f3cbbabfc4887bd438799ec23efb36503",
+    "actual_tree": "7dee9292937eb7c2f6603db464113e23109cef8a",
+    "working_tree": "CLEAN",
+    "ordinary_untracked_count": 0,
+    "tracked_file_count_at_actual_head": 2900,
+    "actual_head_logical_bytes": 1208843681,
+    "remote_url": "https://github.com/omairmk/Gemma-Hackathon-8.1.26-.git",
+    "remote_is_anonymously_readable": true,
+    "local_preservation_tag": "archive-2026-09-01-apple-native-v1-f25f89a",
+    "local_preservation_tag_signed": false
+  },
+  "remote_refs_before_archive": {
+    "heads": {
+      "avalon": "b399ef59eea71ea47f44cec7cca12de6dfc0f2c5",
+      "codex/physical-gemma-prep": "068109798ad58ec80898865d1517e43d78a0838c",
+      "main": "454f5d467aa3c96954e1049b0258727cf1ded6f2"
+    },
+    "tags": {
+      "gi-timeline-gemma4-e4b-simulator-poc-2026-08-01": "a4fb1eec880fc5a0640dd039b9462a8b1626777c"
+    },
+    "prechange_archive_branch_present": false,
+    "prechange_archive_tag_present": false
+  },
+  "filesystem": {
+    "repository_kib": 16874560,
+    "app_kib": 6549720,
+    "available_kib_before_archive_worktree": 4202624,
+    "filesystem_percent_reported": 100
+  },
+  "worktrees": {
+    "registered_count_before_archive_worktree": 48,
+    "registered_count_after_archive_worktree": 49,
+    "active_or_ambiguous_worktrees_must_be_retained": true
+  },
+  "processes": {
+    "xcodebuild_observed": false,
+    "qwen_generation_observed": false,
+    "core_simulator_observed": true,
+    "dt_service_hub_observed": true,
+    "cleanup_authorized_by_process_state": false
+  },
+  "source_reconciliation": {
+    "actual_head_parent": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
+    "app_test_package_project_diff": "NO_DIFFERENCE",
+    "actual_head_archive_commit_publication": "REJECTED_UNSAFE",
+    "reason": "The child commit adds host wheels, a built executable, raw evidence, and local-path-bearing records that contradict the public archive policy."
+  }
+}

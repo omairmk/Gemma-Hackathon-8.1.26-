@@ -40,7 +40,7 @@ This bounded qualification receipt preserves observed candidate facts without fi
 | Source commit | `cdfa897421806b3bc3fd9b66e727664b40b4f225` |
 | Version/build | `1.0 (4)` |
 | Toolchain | Xcode 26.6 build `17F113`; Apple Swift 6.3.3 (`swiftlang-6.3.3.1.3`, `clang-2100.1.1.101`) |
-| Qualification-only AppStore archive | `/private/tmp/GIJournal-Distribution-Build4-20260802.xcarchive` |
+| Qualification-only AppStore archive | `[local archive path omitted]` |
 | Signing | Apple Development; `codesign --verify --deep --strict` passed; not Apple Distribution |
 | Signed-validator result | Failed: `archive signing identity is not an Apple distribution identity` |
 | Archived app bytes | `3,707,342,811` |
@@ -60,7 +60,7 @@ This receipt supersedes build 4 only as the current engineering candidate; the b
 |---|---|
 | Source commit | `9df1d4e1ccf0fe90093c7bf368e8ce9eb85d8cbd` |
 | Version/build | `1.0 (5)` |
-| Qualification-only AppStore archive | `/private/tmp/GIJournal-Distribution-Build5-20260802.xcarchive` |
+| Qualification-only AppStore archive | `[local archive path omitted]` |
 | Signing | Apple Development; archive succeeded but is not Apple Distribution |
 | Signed-validator result | Failed: `archive signing identity is not an Apple distribution identity` |
 | Build-time app bytes / margin | `3,710,372,226` / `289,627,774` beneath the local 4,000,000,000-byte gate |

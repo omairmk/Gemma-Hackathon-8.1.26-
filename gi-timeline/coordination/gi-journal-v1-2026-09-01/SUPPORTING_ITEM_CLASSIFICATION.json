@@ -1,0 +1,115 @@
+{
+  "schema": "gi-journal-supporting-item-classification-v1",
+  "public_repository": true,
+  "classifications": [
+    {
+      "path_or_group": "GITimeline app source, main Xcode project, Swift package, tests, deterministic fixtures, selected scripts, and selected release documents",
+      "source_commit": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
+      "classification": "INCLUDED_IN_GIT",
+      "notes": "Selected blobs were copied into an orphan snapshot so unpublished local history is not reachable. Archive-only text neutralizations remove historical local paths, hardcoded physical-run paths, and a hardcoded team identifier. Sensitive-path scan is required again before push."
+    },
+    {
+      "path_or_group": "local commit f25f89aa54b220f4155c2eb6cf8c463579901a68 and tag archive-2026-09-01-apple-native-v1-f25f89a",
+      "file_count": 367,
+      "logical_bytes": 580144005,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Exact local preservation exists. Do not push the commit or tag because they make runtime wheels, a built binary, raw evidence, and local-path records reachable."
+    },
+    {
+      "path_or_group": "gi-timeline/handoff-2026-08-22-linux-surface/qwen-directional-mission-2026-08-29/dataset/dev/frozen-v4",
+      "file_count": 58,
+      "image_count": 49,
+      "logical_bytes": 89605719,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Synthetic/non-device evidence, but raw-image publication rights, metadata, and visual provenance were not fully cleared at the pre-change gate. Hash-only evidence remains local."
+    },
+    {
+      "path_or_group": "f25 directional source, rejected, and frozen-v1 through frozen-v3 additions",
+      "file_count": 240,
+      "logical_bytes": 397628388,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Synthetic experiment history; redundant for the app snapshot and not yet cleared for public raw-image publication."
+    },
+    {
+      "path_or_group": "f25 morphology downstream processor source, contracts, receipts, scorer, and source-pool tooling excluding runtime and prepared images",
+      "file_count": 40,
+      "logical_bytes": 727690,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Qwen campaign tooling is not needed for the Apple-native public source snapshot and contains local-path/runtime history."
+    },
+    {
+      "path_or_group": "f25 morphology downstream prepared images",
+      "file_count": 28,
+      "logical_bytes": 6285309,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Synthetic prepared evidence; public provenance and metadata review incomplete."
+    },
+    {
+      "path_or_group": "f25 morphology downstream runtime/wheels",
+      "file_count": 55,
+      "logical_bytes": 173632163,
+      "classification": "EXCLUDED_REPRODUCIBLE",
+      "source": "Python package indexes named in the local PYTHON_DEPENDENCY_CLOSURE.json",
+      "version": "55 exact versions recorded locally",
+      "license": "per-package; not re-cleared for republication",
+      "checksum": "55 SHA-256 values recorded locally",
+      "notes": "Downloaded host wheels are not source evidence and must not be public Git blobs."
+    },
+    {
+      "path_or_group": "f25 morphology downstream runtime/bin/Qwen3HostEvidenceFuse",
+      "file_count": 1,
+      "logical_bytes": 1857848,
+      "classification": "EXCLUDED_REPRODUCIBLE",
+      "source": "gi-timeline/Tools/Qwen3HostEvidenceFuse source at the recorded local commit",
+      "version": "build receipt retained locally",
+      "license": "project source license posture",
+      "checksum": "recorded in the local SWIFT_BUILD_RECEIPT.json",
+      "notes": "Temporary Mach-O build product."
+    },
+    {
+      "path_or_group": "LiteRT-LM v0.15.0 downloaded iOS/macOS XCFrameworks",
+      "classification": "EXCLUDED_REPRODUCIBLE",
+      "source": "https://github.com/google-ai-edge/LiteRT-LM/releases/tag/v0.15.0",
+      "version": "v0.15.0",
+      "license": "Apache-2.0",
+      "checksum": {
+        "ios_swiftpm": "d6ccf6b54362d894ff71a7580c7e446d36767dab908aecfbb16ffca0fa0bc59b",
+        "macos_swiftpm": "d23cf189ce8f6bb2556c0a023805e245d1ec862434e501eb60f353488033c1b5"
+      },
+      "notes": "Wrapper source, upstream provenance, and license are included; downloaded binaries are not."
+    },
+    {
+      "path_or_group": "work/models/gemma-4-E4B-it.litertlm",
+      "file_count": 1,
+      "logical_bytes": 3659530240,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Ignored model payload. Redistribution rights and final cleanup are not yet cleared."
+    },
+    {
+      "path_or_group": "work/team-release and split Gemma publication assets",
+      "logical_bytes_approximate": 3000000000,
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "Mixed-content owner/release material explicitly left untouched."
+    },
+    {
+      "path_or_group": "enumerated .build, DerivedData, xcresult, Python environment, cache, and generated test-output directories",
+      "classification": "EXCLUDED_REPRODUCIBLE",
+      "source": "tracked source and recorded dependency pins",
+      "version": "current local toolchain",
+      "license": "not applicable to local build output",
+      "checksum": "to be recorded per exact cleanup target",
+      "notes": "Not deleted until pre-change archive, final archive, app verification, and inactive-process gates all pass."
+    },
+    {
+      "path_or_group": "49 registered Git worktrees after creation of the prearchive worktree",
+      "classification": "RETAIN_LOCAL_PENDING_CLARIFICATION",
+      "notes": "No worktree is removed without clean/unique-commit/activity checks and verified remote preservation."
+    },
+    {
+      "path_or_group": "GitHub release assets",
+      "classification": "INCLUDED_AS_GITHUB_RELEASE_ASSET",
+      "file_count": 0,
+      "notes": "No pre-change release asset is required or uploaded."
+    }
+  ]
+}

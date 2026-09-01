@@ -1,0 +1,169 @@
+{
+  "schema": "gi-journal-apple-native-work-ledger-v1",
+  "mission_id": "gi-journal-apple-native-v1-2026-09-01",
+  "coordinator": {
+    "agent_id": "/root",
+    "model": "gpt-5.6-sol",
+    "reasoning": "ultra_requested",
+    "role": "sole coordinator and integrator",
+    "canonical_branch": "rescue/2026-08-23-storage-cleanup",
+    "observed_starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+    "safe_source_baseline": "fed4a2db5cc59e9eea9ed75e83ee70ed31ce8cbc",
+    "status": "IN_PROGRESS"
+  },
+  "tasks": [
+    {
+      "task_id": "wave0-apple-architecture",
+      "agent_id": "/root/wave0_apple_arch",
+      "model": "gpt-5.6-terra",
+      "reasoning": "high",
+      "role": "Apple Vision/Core ML architecture and lifecycle audit",
+      "worktree": "read-only canonical checkout",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "SKIPPED_READ_ONLY_AUDIT",
+      "artifacts": [],
+      "status": "CONFIRMED",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave0-repository-inventory",
+      "agent_id": "/root/wave0_repo_inventory",
+      "model": "gpt-5.6-luna",
+      "reasoning": "high",
+      "role": "repository, dependency, and test inventory; authorized Spark substitution",
+      "worktree": "read-only canonical checkout",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "SKIPPED_STATIC_INVENTORY",
+      "artifacts": [],
+      "status": "CONFIRMED",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave0-archive-acceptance",
+      "agent_id": "/root/wave0_archive_acceptance",
+      "model": "gpt-5.5",
+      "reasoning": "xhigh",
+      "role": "independent privacy, GitHub archive, and acceptance-gate review",
+      "worktree": "read-only canonical checkout",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "SKIPPED_READ_ONLY_AUDIT",
+      "artifacts": [],
+      "status": "FAILED_F25_PUBLICATION_CONFIRMED",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave1-dataset-split",
+      "agent_id": "/root/wave1_dataset_split",
+      "model": "gpt-5.6-luna",
+      "reasoning": "high",
+      "role": "reference/evaluation split and leakage audit",
+      "worktree": "read-only canonical checkout and private temporary outputs",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "28-image duplicate and perceptual-leakage audit; no exact or near duplicate within the proposed 8-reference/20-evaluation split",
+      "artifacts": [
+        "local-private:qwen-mild-utility-v2-2026-08-31/dataset/frozen-dev-v1"
+      ],
+      "status": "CONFIRMED_SYNTHETIC_SMOKE_SCAFFOLD_ONLY",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "RETAIN_LOCAL_PENDING_PUBLICATION_REVIEW"
+    },
+    {
+      "task_id": "wave1-apple-evaluator",
+      "agent_id": "/root/wave1_apple_evaluator",
+      "model": "gpt-5.4",
+      "reasoning": "xhigh",
+      "role": "bounded cross-set Vision and deterministic-cue evaluator",
+      "worktree": "read-only canonical checkout and private temporary prototype",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "28 Vision feature-print requests; three predeclared out-of-fold variants; all three missed the complete synthetic utility gate",
+      "artifacts": [
+        "local-private:apple-crossset-eval-8NPQZK/output/INDEX.json",
+        "local-private:apple-crossset-eval-8NPQZK/output/SUMMARY.md"
+      ],
+      "status": "FAILED_APPLE_NATIVE_FEATURE_PRINT_GATE",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "RETAIN_LOCAL_UNTIL_FINAL_ARCHIVE"
+    },
+    {
+      "task_id": "wave1-release-strip",
+      "agent_id": "/root/wave1_release_strip",
+      "model": "gpt-5.6-terra",
+      "reasoning": "high",
+      "role": "intended shipping runtime and dependency-removal audit",
+      "worktree": "read-only canonical checkout",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "SKIPPED_READ_ONLY_AUDIT",
+      "artifacts": [],
+      "status": "CONFIRMED",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    },
+    {
+      "task_id": "wave1-tiny-coreml",
+      "agent_id": "/root/wave1_tiny_coreml",
+      "model": "gpt-5.6-terra",
+      "reasoning": "high",
+      "role": "one bounded transition to a tiny Apple-native classifier",
+      "worktree": "read-only canonical checkout and private temporary prototype",
+      "starting_head": "f25f89aa54b220f4155c2eb6cf8c463579901a68",
+      "commit": null,
+      "tests": "24 fixed four-fold CreateML heads: subject BA 0.975; Bristol exact 0.55 and adjacent 0.70; color macro 0.2067; useful stool rate 0.95; concrete correct/wrong 92/31; red, black, and tar each produced no correct displayed Yes example",
+      "artifacts": [
+        "local-private:gi-tiny-coreml-copied-retry-20260901-iti7IQ",
+        "local-private:gi-tiny-coreml-full-20260901/SCORECARD.json",
+        "local-private:gi-tiny-coreml-full-20260901/CONFUSIONS.json"
+      ],
+      "status": "FAILED_TINY_COREML_DIRECTIONAL_GATE",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "RETAIN_LOCAL_UNTIL_FINAL_ARCHIVE"
+    },
+    {
+      "task_id": "wave1-archive-red-team",
+      "agent_id": "/root/wave1_archive_redteam",
+      "model": "gpt-5.5",
+      "reasoning": "xhigh",
+      "role": "independent public-safety and reproducibility audit",
+      "worktree": "read-only pre-change archive worktree",
+      "starting_head": "08a8a1e2ac2c4b1dad33202b87a7638ac702770d",
+      "commit": null,
+      "tests": "Publication scan found additional host-specific documentation and runner defaults; agent violated the read-only boundary by editing them, and root independently reviewed each diff",
+      "artifacts": [],
+      "status": "FAILED_READ_ONLY_PROTOCOL_ROOT_ADJUDICATED_FINDINGS",
+      "archive_inclusion": "INCLUDED_IN_GIT_AS_LEDGER_SUMMARY",
+      "cleanup_disposition": "NOT_APPLICABLE"
+    }
+  ],
+  "archive": {
+    "prechange_branch": "archive/2026-09-01-pre-apple-native",
+    "prechange_snapshot_initial_commit": "08a8a1e2ac2c4b1dad33202b87a7638ac702770d",
+    "prechange_snapshot_initial_tree": "f6f90e45db191833362e7554c28fb3b01da23e96",
+    "prechange_tag": "gi-journal-pre-apple-native-2026-09-01",
+    "public_history_strategy": "SANITIZED_ORPHAN_SNAPSHOT",
+    "local_verification": {
+      "swiftpm": "CONFIRMED_111_OF_111",
+      "python_timeout_contract": "CONFIRMED_4_OF_4",
+      "python_resolution_contract": "CONFIRMED_14_OF_14",
+      "python_schema_focus": "CONFIRMED_9_OF_9",
+      "python_full_suite": "FAILED_26_PASSED_7_RESOURCE_DEPENDENT_FAILURES_BECAUSE_EXCLUDED_MODEL_AND_VENV_PAYLOADS_ARE_ABSENT",
+      "script_syntax": "CONFIRMED_ZSH_N_FOR_QWEN3_PHYSICAL_AND_V4_EXIT_TRAP",
+      "appstore_build": "CONFIRMED_SIGNING_DISABLED_GENERIC_IOS_APPSTORE_BUILD_EXIT0_BEFORE_FINAL_ARCHIVE_COMMIT_BINDING",
+      "xcode_build_for_testing": "FAILED_NO_SPACE_LEFT_ON_DEVICE_WRITING_DERIVEDDATA_LOGS_AND_OBJECTS",
+      "source_manifest": "PENDING_FINAL_REGENERATION"
+    },
+    "remote_verification": "PENDING",
+    "fresh_clone_verification": "PENDING"
+  },
+  "cleanup": {
+    "status": "NOT_STARTED",
+    "reason": "Both pre-change and final remote archive gates must pass first."
+  }
+}
